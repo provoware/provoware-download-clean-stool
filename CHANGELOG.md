@@ -19,3 +19,8 @@
 - **Was:** README auf barrierearme, einheitliche Standards mit klaren Pflichtbefehlen aktualisiert.
 - **Warum:** Anforderungen zu einfacher Sprache, automatischer Prüfung/Startroutine und klaren Qualitätsstandards mussten zentral und verständlich dokumentiert werden.
 - **Wirkung:** Nutzer:innen und Support sehen jetzt sofort ein konsistentes Vorgehen inkl. Next Steps, Qualitäts-Gates und laienfreundlicher Empfehlungen.
+
+## 2026-02-10 – Fehlerdialog-Iteration: Next-Step-Buttons ergänzt
+- **Was:** `tools/boot_error_gui.py` zeigt im Zenity-Dialog jetzt klare Next-Step-Aktionen: „Erneut versuchen“, „Reparatur“ und „Protokoll“.
+- **Warum:** Offener Punkt aus `todo.txt`: Fehlerfälle sollten direkt bedienbare Hilfewege statt nur einer Schließen-Aktion bieten.
+- **Wirkung:** Bessere Barrierefreiheit und Nutzerführung durch verständliche Auswahl direkt im Fehlerdialog.

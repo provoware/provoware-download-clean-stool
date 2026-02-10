@@ -34,22 +34,36 @@ def _zenity_available() -> bool:
     return shutil.which("zenity") is not None
 
 def _show_zenity(title: str, details: str) -> int:
-    # zenity kann Buttons, aber begrenzt. Wir zeigen 2 Aktionen:
-    # 1) Diagnose öffnen (Ordner exports)
-    # 2) Schließen
-    msg = details.strip()
+    msg = (
+        details.strip()
+        + "\n\nNächster Schritt:\n"
+        + "• Erneut versuchen\n"
+        + "• Reparatur öffnen\n"
+        + "• Protokoll öffnen"
+    )
     cmd = [
         "zenity",
-        "--error",
+        "--question",
         "--title", title,
-        "--width=700",
+        "--width=720",
         "--text", msg[:4000],
-        "--ok-label=Schließen",
+        "--ok-label=Erneut versuchen",
+        "--cancel-label=Schließen",
+        "--extra-button=Reparatur",
+        "--extra-button=Protokoll",
     ]
-    subprocess.run(cmd, check=False)
-    # Optional: Ordner öffnen, wenn xdg-open vorhanden
-    if shutil.which("xdg-open"):
-        subprocess.run(["xdg-open", str(EXPORTS)], check=False)
+    result = subprocess.run(cmd, check=False, capture_output=True, text=True)
+    choice = (result.stdout or "").strip()
+
+    if choice == "Reparatur":
+        subprocess.run([sys.executable, str(APP_DIR / "tools" / "repair_center_gui.py")], check=False)
+        return 0
+    if choice == "Protokoll":
+        if shutil.which("xdg-open"):
+            subprocess.run(["xdg-open", str(OUT_FILE)], check=False)
+        return 0
+    if result.returncode == 0:
+        return 10
     return 0
 
 def _show_terminal(title: str, details: str) -> int:

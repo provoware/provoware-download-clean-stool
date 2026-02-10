@@ -1,2 +1,2 @@
-DONE: Headless-Start in start.sh abgefangen (DISPLAY/WAYLAND_DISPLAY), damit ohne GUI-Session ein klarer Hinweis statt Crash erscheint. (2026-02-10)
-NEXT: Fehlerdialog im GUI-Start um direkte Schaltflächen für „Erneut versuchen“, „Reparatur“ und „Protokoll“ erweitern. (2026-02-10)
+DONE: Fehlerdialog im GUI-Start um direkte Schaltflächen für „Erneut versuchen“, „Reparatur“ und „Protokoll“ erweitert. (2026-02-10)
+NEXT: Start-Status um sichtbaren Hinweis „Auto-Reparatur lief erfolgreich/nicht möglich“ ergänzen, damit Laien den Ergebniszustand sofort verstehen. (2026-02-10)
