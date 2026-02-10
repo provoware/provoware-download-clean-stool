@@ -1,3 +1,8 @@
+## 2026-02-10 – Smoke-Iteration: Zusätzlicher Planner-Test im Smoke-Test integriert
+- **Was:** `tools/smoke_test.py` prüft jetzt zusätzlich die Planungslogik (`build_plan`) inkl. Duplikat-Kennzeichnung, relativem Zielpfad und `summary()`-Ergebnissen.
+- **Warum:** Der offene Release-Punkt „zusätzliche automatische Tests pro Kernmodul“ wurde für das Modul `core.planner` konkret weiter reduziert.
+- **Wirkung:** Frühere Erkennung von Planungsfehlern ohne GUI-Start und damit stabilerer Qualitätslauf in der Startroutine.
+
 
 ## 2026-02-10 – Quality-Iteration: Smoke-Test ohne Ruff-E402-Sonderregel
 - **Was:** `tools/smoke_test.py` entfernt die Datei-Sonderregel `# ruff: noqa: E402` und nutzt stattdessen einen `main()`-Ablauf mit verzögerten Imports via `importlib`.

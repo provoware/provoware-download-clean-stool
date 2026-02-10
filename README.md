@@ -11,13 +11,14 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **80%**
-- **Abgeschlossene Punkte:** **16**
+- **Entwicklungsfortschritt:** **82%**
+- **Abgeschlossene Punkte:** **17**
 - **Offene Punkte:** **2**
-- **Nächster Schritt:** Pro Kernmodul einen zusätzlichen automatischen Test ergänzen und danach A11y-Checks automatisieren.
+- **Nächster Schritt:** Für `core.scanner` den nächsten zusätzlichen automatischen Test ergänzen und danach A11y-Checks automatisieren.
 
 **Abgeschlossen:**
 - Quality-Gate führt bei Format-/Lint-Warnungen jetzt automatisch Reparaturläufe aus und prüft danach erneut.
+- Smoke-Test enthält jetzt einen zusätzlichen automatischen Planner-Check (Duplikat-Grund, relativer Zielpfad, Summary-Werte).
 - Smoke-Test erfüllt Ruff-E402 jetzt ohne Sonderregel (`# ruff: noqa: E402`) durch saubere, verzögerte Importe.
 - Startroutine mit Auto-Prüfung, Auto-Reparatur und klaren Endstatusmeldungen.
 - Qualitäts- und Smoke-Gates sind vorhanden und ausführbar.
