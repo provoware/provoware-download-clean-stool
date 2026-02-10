@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Qualitäts-Iteration: Fast-Mode mit Prüflauf-Merkzettel
+- **Was:** `tools/run_quality_checks.sh` speichert nach einem grünen Lauf eine kleine Signatur in `data/quality_state.json` und überspringt identische Wiederholungs-Checks automatisch.
+- **Warum:** So werden nicht immer dieselben Prüfungen erneut ausgeführt, wenn am relevanten Code nichts geändert wurde.
+- **Wirkung:** Schnellere Iterationen mit klarer Hilfe: Vollprüfung bleibt jederzeit mit `FAST_MODE=0` erzwingbar.
+
 ## 2026-02-10 – Start-Iteration: Auto-Reparatur-Endstatus klar ausgewiesen
 - **Was:** `start.sh` zeigt jetzt zusätzlich einen expliziten Auto-Reparatur-Status (`nicht nötig`, `erfolgreich`, `nicht möglich`) inklusive Symbol und einfacher Statusmeldung.
 - **Warum:** Offener Punkt aus `todo.txt`: Der Reparaturausgang sollte ohne Fachwissen sofort verständlich sein.

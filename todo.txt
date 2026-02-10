@@ -1,2 +1,2 @@
-DONE: start.sh um expliziten Auto-Reparatur-Endstatus „nicht nötig/erfolgreich/nicht möglich“ mit einfacher Statusmeldung erweitert. (2026-02-10)
-NEXT: Nächste Mini-Iteration: quality_report WARN/INFO-Zeilen in klare Laien-Kurzempfehlung (1 Satz) im Startstatus überführen. (2026-02-10)
+DONE: Qualitätslauf merkt sich erfolgreichen Stand und überspringt gleiche Wiederholungen per FAST_MODE-Standard. (2026-02-10)
+NEXT: Nächste Mini-Iteration: Nur betroffene Teiltests statt Voll-Skip ausführen (z. B. nur Smoke oder nur Lint je Dateityp). (2026-02-10)
