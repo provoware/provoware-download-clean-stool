@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Start-Iteration: Auto-Reparatur-Endstatus klar ausgewiesen
+- **Was:** `start.sh` zeigt jetzt zusätzlich einen expliziten Auto-Reparatur-Status (`nicht nötig`, `erfolgreich`, `nicht möglich`) inklusive Symbol und einfacher Statusmeldung.
+- **Warum:** Offener Punkt aus `todo.txt`: Der Reparaturausgang sollte ohne Fachwissen sofort verständlich sein.
+- **Wirkung:** Nutzer:innen sehen direkt, ob die automatische Reparatur geklappt hat und welche nächsten Schritte nötig sind.
+
 ## 2026-02-10 – Doku-Iteration: Entwickler-Actionplan ergänzt
 - **Was:** README um einen klaren Abschnitt „Sinnvolle Actions“ mit vollständigen Befehlen für Start, Qualitätsgates, Auto-Formatierung, Debug-Mode und A11y-Quickcheck erweitert.
 - **Warum:** Die Frage nach konkreten, hilfreichen Entwicklungsaktionen sollte mit sofort nutzbaren, laienfreundlichen Standards beantwortet werden.

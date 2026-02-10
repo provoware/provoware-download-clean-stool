@@ -1,2 +1,2 @@
-DONE: README um konkrete Entwickler-Actions mit vollständigen Befehlen (Autocheck, Qualität, Formatierung, Debug, A11y) ergänzt. (2026-02-10)
-NEXT: Nächste Mini-Iteration: start.sh um expliziten Auto-Reparatur-Endstatus „erfolgreich/nicht möglich“ in einfacher Sprache erweitern. (2026-02-10)
+DONE: start.sh um expliziten Auto-Reparatur-Endstatus „nicht nötig/erfolgreich/nicht möglich“ mit einfacher Statusmeldung erweitert. (2026-02-10)
+NEXT: Nächste Mini-Iteration: quality_report WARN/INFO-Zeilen in klare Laien-Kurzempfehlung (1 Satz) im Startstatus überführen. (2026-02-10)
