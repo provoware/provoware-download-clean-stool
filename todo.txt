@@ -1,2 +1,2 @@
-DONE: tools/run_quality_checks.sh meldet fehlende Formatter/Linter jetzt als Warnung mit klarer Installationshilfe. (2026-02-10)
-NEXT: Automatische Tests für Kernmodule (core/) ergänzen und im Quality-Lauf sichtbar machen. (2026-02-10)
+DONE: Automatische Kernmodul-Prüfung für core.settings in tools/smoke_test.py ergänzt. (2026-02-10)
+NEXT: Logging-Level aus LOG_LEVEL in core/logger.py auslesen und im Startablauf sichtbar ausgeben. (2026-02-10)

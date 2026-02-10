@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Qualitäts-Iteration: Kernmodul-Checks im Smoke-Test ergänzt
+- **Was:** `tools/smoke_test.py` prüft jetzt zusätzlich `core.settings` mit einem temporären Testlauf für Laden/Speichern inkl. Schema- und Revisions-Validierung.
+- **Warum:** Offener Punkt aus `todo.txt`: Kernmodule sollten automatisiert im Qualitätslauf sichtbar geprüft werden.
+- **Wirkung:** Frühere Fehlererkennung bei Konfigurations-Import/Export, klarere Nutzerhilfe bei Defekten und robustere Qualitätsaussage ohne manuellen Aufwand.
+
 ## 2026-02-10 – Qualitäts-Iteration: Fehlende Formatter/Linter mit klarer Hilfe markieren
 - **Was:** `tools/run_quality_checks.sh` behandelt fehlende Tools (`black`, `isort`, `ruff`) jetzt als Warnung mit klarer Installationsanleitung (`python3 -m pip install <tool>`), statt sie still zu überspringen.
 - **Warum:** Für einen verlässlichen Release-Status muss sichtbar sein, wenn ein Pflicht-Check mangels Abhängigkeit nicht ausgeführt wurde.
