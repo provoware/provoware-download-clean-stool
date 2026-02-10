@@ -1,2 +1,2 @@
-DONE: Standards-Manifestdatei für Barrierefreiheit, Qualitäts-Gates und Auto-Start-Vorgaben ergänzt. (2026-02-10)
-NEXT: Zweite Manifestdatei für Prüfprofile je Umgebung (lokal/CI) ergänzen und in start.sh einlesen. (2026-02-10)
+DONE: Light-Theme im UI mit klareren Kontrasten, größeren Klickflächen und stärkerem Fokusrahmen verbessert. (2026-02-10)
+NEXT: Gleiches Kontrast-/Fokus-Feintuning für das dunkle Theme mit kurzem Nutzervergleich (hell/dunkel) ergänzen. (2026-02-10)
