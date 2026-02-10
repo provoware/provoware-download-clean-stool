@@ -1,2 +1,2 @@
-DONE: Startseite hat jetzt barrierearme Einstiegshilfe, Tooltips und Screenreader-Beschreibungen. (2026-02-10)
-NEXT: Optionen-Seite auf gleiche A11y-Standards bringen (Fokusführung, klare Hilfetexte, Buttons mit Next-Step-Hilfe). (2026-02-10)
+DONE: Dark/Contrast-Theme visuell an Referenz angenähert und Fokusrahmen für Tastatursteuerung verbessert. (2026-02-10)
+NEXT: Optionen-Seite inhaltlich wie Referenz strukturieren (Kachel-Layout + klare Abschnittstitel) ohne Funktionsänderung. (2026-02-10)

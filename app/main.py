@@ -55,8 +55,75 @@ class MainWindow(QMainWindow):
     # Theme stylesheets
     STYLES = {
         "light": "",
-        "dark": "QWidget { background-color: #2b2b2b; color: #ffffff; } QPushButton { background-color: #3c3f41; color: #ffffff; padding: 6px; } QPushButton:hover { background-color: #505357; }",
-        "kontrast": "QWidget { background-color: #000000; color: #ffff00; } QPushButton { background-color: #000000; color: #ffff00; border: 2px solid #ffff00; padding: 6px; } QPushButton:hover { background-color: #222222; }",
+        "dark": """
+            QWidget {
+                background-color: #121a2a;
+                color: #f2f5ff;
+                selection-background-color: #2f63d8;
+                selection-color: #ffffff;
+            }
+            QLabel {
+                color: #f2f5ff;
+            }
+            QMainWindow, QStackedWidget {
+                background-color: #101a2b;
+                border: 1px solid #2a3b5a;
+            }
+            QPushButton {
+                background-color: #223757;
+                color: #f8faff;
+                border: 1px solid #4c5f83;
+                border-radius: 8px;
+                padding: 8px 12px;
+                font-weight: 600;
+                min-height: 34px;
+            }
+            QPushButton:hover {
+                background-color: #2b4670;
+            }
+            QPushButton:pressed {
+                background-color: #1b2a44;
+            }
+            QPushButton:focus,
+            QCheckBox:focus,
+            QComboBox:focus,
+            QListWidget:focus {
+                border: 2px solid #7db6ff;
+                outline: none;
+            }
+            QComboBox, QListWidget {
+                background-color: #1a263c;
+                color: #f2f5ff;
+                border: 1px solid #4c5f83;
+                border-radius: 6px;
+                padding: 6px;
+            }
+            QCheckBox {
+                spacing: 8px;
+            }
+        """,
+        "kontrast": """
+            QWidget { background-color: #000000; color: #ffff00; }
+            QPushButton {
+                background-color: #000000;
+                color: #ffff00;
+                border: 2px solid #ffff00;
+                border-radius: 8px;
+                padding: 8px 12px;
+                min-height: 34px;
+            }
+            QPushButton:hover { background-color: #222222; }
+            QPushButton:focus, QCheckBox:focus, QComboBox:focus, QListWidget:focus {
+                border: 3px solid #00ffff;
+                outline: none;
+            }
+            QComboBox, QListWidget {
+                background-color: #000000;
+                color: #ffff00;
+                border: 2px solid #ffff00;
+                padding: 6px;
+            }
+        """,
         "senior": "QWidget { background-color: #ffffff; color: #000000; font-size: 18pt; } QPushButton { background-color: #e0e0e0; color: #000000; padding: 10px; font-size: 16pt; } QPushButton:hover { background-color: #c0c0c0; }",
     }
 
