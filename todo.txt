@@ -1,3 +1,6 @@
+DONE: start.sh zeigt jetzt eine klare Abschluss-Zusammenfassung für Abhängigkeiten (ok/übersprungen/fehler/offline/online). (2026-02-10)
+NEXT: start.sh um abschließende Gesamtstatus-Zeile mit Handlungsempfehlung (OK/WARN/FEHLER) erweitern. (2026-02-10)
+
 DONE: start.sh ergänzt um Linux/Kubuntu-Autoreparatur (apt) bei fehlenden Kernmodulen + Recheck + klare Next Steps. (2026-02-10)
 NEXT: start.sh um automatische Prüfung/Installation fehlender Qt-Systemlibs (z. B. libxkbcommon0) erweitern und abschließende Zusammenfassung ausgeben. (2026-02-10)
 

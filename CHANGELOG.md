@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.9] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` gibt nach der Paketprüfung jetzt immer eine klare Abschluss-Zusammenfassung aus (erfolgreich installiert, übersprungen, Fehler, Offline-/Online-Quelle).
+* Warum: Die Startroutine soll vollautomatisch transparent sein, damit Nutzer sofort verstehen, was passiert ist und was noch zu tun ist.
+* Wirkung: Besseres Nutzerfeedback in einfacher Sprache und schnellere Fehleranalyse ohne manuelles Log-Durchsuchen.
+
 ## [1.0.8] – 2026‑02‑10
 
 ### Changed

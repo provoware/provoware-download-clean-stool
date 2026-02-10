@@ -39,10 +39,15 @@ echo "[SETUP] Aktualisiere pip (wenn möglich)"
 echo "[SETUP] Installiere Abhängigkeiten (vollautomatisch, mit Status)"
 OFFLINE_WHEELS_DIR="$PROJECT_DIR/offline_wheels"
 INSTALL_ERRORS=0
+INSTALL_OK=0
+INSTALL_SKIPPED=0
+INSTALL_SOURCE_OFFLINE=0
+INSTALL_SOURCE_ONLINE=0
 if [ -f requirements.txt ]; then
   while IFS= read -r raw_pkg || [ -n "$raw_pkg" ]; do
     pkg="$(printf '%s' "$raw_pkg" | sed -e 's/#.*//' -e 's/\r$//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
     if [[ -z "$pkg" || "$pkg" == -* ]]; then
+      INSTALL_SKIPPED=$((INSTALL_SKIPPED + 1))
       continue
     fi
 
@@ -50,6 +55,8 @@ if [ -f requirements.txt ]; then
       echo "[SETUP] Offline-Install für $pkg aus offline_wheels/ …"
       if "$VENV_PIP" install --no-index --find-links "$OFFLINE_WHEELS_DIR" "$pkg" >>"$SETUP_LOG" 2>&1; then
         echo "[OK] Installiert: $pkg (offline)"
+        INSTALL_OK=$((INSTALL_OK + 1))
+        INSTALL_SOURCE_OFFLINE=$((INSTALL_SOURCE_OFFLINE + 1))
         continue
       fi
       echo "[WARN] Offline-Install fehlgeschlagen, versuche Online-Install: $pkg"
@@ -59,6 +66,8 @@ if [ -f requirements.txt ]; then
 
     if "$VENV_PIP" install --no-cache-dir "$pkg" >>"$SETUP_LOG" 2>&1; then
       echo "[OK] Installiert: $pkg"
+      INSTALL_OK=$((INSTALL_OK + 1))
+      INSTALL_SOURCE_ONLINE=$((INSTALL_SOURCE_ONLINE + 1))
     else
       echo "[WARN] Installation fehlgeschlagen: $pkg"
       echo "Install-Fehler: $pkg" >> "$ERR_LOG"
@@ -66,6 +75,13 @@ if [ -f requirements.txt ]; then
     fi
   done < requirements.txt
 fi
+
+echo "[SETUP] Zusammenfassung Abhängigkeitsprüfung:"
+echo "[SETUP] - Erfolgreich installiert: $INSTALL_OK"
+echo "[SETUP] - Übersprungen (leer/Kommentar/Option): $INSTALL_SKIPPED"
+echo "[SETUP] - Fehler: $INSTALL_ERRORS"
+echo "[SETUP] - Quelle offline_wheels: $INSTALL_SOURCE_OFFLINE"
+echo "[SETUP] - Quelle online/pip: $INSTALL_SOURCE_ONLINE"
 
 if [ "$INSTALL_ERRORS" -gt 0 ]; then
   echo "[WARN] $INSTALL_ERRORS Paket(e) konnten nicht installiert werden. Details: $ERR_LOG"
