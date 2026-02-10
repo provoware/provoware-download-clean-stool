@@ -182,70 +182,78 @@ if ! bash tools/run_quality_checks.sh > "$QUALITY_LOG" 2>&1; then
 fi
 
 # 5) Linux-Systembibliotheken prüfen (vor Smoke-Test)
-for LIB_SPEC in "libGL.so.1|libgl1|Grafik-Baustein|Die grafische Oberfläche braucht diesen Baustein zum Anzeigen.|Grafik-Baustein fehlt" "libEGL.so.1|libegl1|EGL-Grafik-Baustein|Die grafische Oberfläche braucht diesen Baustein für die GPU-Verbindung (Grafikbeschleunigung).|EGL-Baustein fehlt" "libxkbcommon.so.0|libxkbcommon0|Tastatur-Baustein|Die grafische Oberfläche braucht diesen Baustein für Tastatur und Eingabe.|Tastatur-Baustein fehlt"; do
-  LIB_NAME="$(echo "$LIB_SPEC" | cut -d'|' -f1)"
-  APT_PACKAGE="$(echo "$LIB_SPEC" | cut -d'|' -f2)"
-  LIB_LABEL="$(echo "$LIB_SPEC" | cut -d'|' -f3)"
-  LIB_REASON="$(echo "$LIB_SPEC" | cut -d'|' -f4)"
-  DIALOG_TITLE="$(echo "$LIB_SPEC" | cut -d'|' -f5)"
+check_and_repair_linux_lib() {
+  local lib_name="$1"
+  local apt_package="$2"
+  local lib_label="$3"
+  local lib_reason="$4"
+  local dialog_title="$5"
+  local install_now=0
 
-  echo "[CHECK] Prüfe Linux-Systembibliothek: $LIB_NAME"
-  if ! ldconfig -p 2>/dev/null | grep -q "$LIB_NAME"; then
-    echo "[WARN] $LIB_NAME fehlt. Starte geführte Reparatur."
-    echo "Fehlt: $LIB_NAME" >> "$ERR_LOG"
+  echo "[CHECK] Prüfe Linux-Systembibliothek: $lib_name"
+  if ldconfig -p 2>/dev/null | grep -q "$lib_name"; then
+    return 0
+  fi
 
-    REPAIR_TEXT="Was fehlt?
-$LIB_LABEL: $LIB_NAME
+  echo "[WARN] $lib_name fehlt. Starte geführte Reparatur."
+  echo "Fehlt: $lib_name" >> "$ERR_LOG"
+
+  local repair_text="Was fehlt?
+$lib_label: $lib_name
 
 Warum wichtig?
-$LIB_REASON
+$lib_reason
 
 Was tun?
 Klicken Sie auf 'Jetzt installieren'. Danach das Programm neu starten."
 
-    INSTALL_NOW=0
-    if command -v zenity >/dev/null 2>&1; then
-      if zenity --question \
-        --title="$DIALOG_TITLE" \
-        --width=560 \
-        --ok-label="Jetzt installieren" \
-        --cancel-label="Abbrechen" \
-        --text="$REPAIR_TEXT"; then
-        INSTALL_NOW=1
+  if command -v zenity >/dev/null 2>&1; then
+    if zenity --question \
+      --title="$dialog_title" \
+      --width=560 \
+      --ok-label="Jetzt installieren" \
+      --cancel-label="Abbrechen" \
+      --text="$repair_text"; then
+      install_now=1
+    fi
+  else
+    echo "[HILFE] $repair_text"
+    install_now=1
+  fi
+
+  if [ "$install_now" -eq 1 ]; then
+    if command -v apt-get >/dev/null 2>&1; then
+      echo "[SETUP] Installiere Systempaket ($apt_package)"
+      if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y "$apt_package" >>"$SETUP_LOG" 2>&1; then
+        echo "[OK] $apt_package wurde installiert."
+      else
+        echo "[WARN] Automatische Installation von $apt_package fehlgeschlagen." >>"$SETUP_LOG"
       fi
     else
-      echo "[HILFE] $REPAIR_TEXT"
-      INSTALL_NOW=1
-    fi
-
-    if [ "$INSTALL_NOW" -eq 1 ]; then
-      if command -v apt-get >/dev/null 2>&1; then
-        echo "[SETUP] Installiere Systempaket ($APT_PACKAGE)"
-        if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y "$APT_PACKAGE" >>"$SETUP_LOG" 2>&1; then
-          echo "[OK] $APT_PACKAGE wurde installiert."
-        else
-          echo "[WARN] Automatische Installation von $APT_PACKAGE fehlgeschlagen." >>"$SETUP_LOG"
-        fi
-      else
-        echo "[WARN] apt-get nicht verfügbar. $APT_PACKAGE konnte nicht automatisch installiert werden." >>"$SETUP_LOG"
-      fi
-    fi
-
-    if ! ldconfig -p 2>/dev/null | grep -q "$LIB_NAME"; then
-      python3 tools/boot_error_gui.py "Was fehlt?
-$LIB_LABEL: $LIB_NAME
-
-Warum wichtig?
-$LIB_REASON
-
-Was tun?
-1) Falls möglich: sudo apt update && sudo apt install $APT_PACKAGE
-2) Danach neu starten: bash start.sh
-3) Hilfe/Details: exports/setup_log.txt" "$DIALOG_TITLE"
-      exit 1
+      echo "[WARN] apt-get nicht verfügbar. $apt_package konnte nicht automatisch installiert werden." >>"$SETUP_LOG"
     fi
   fi
-done
+
+  if ldconfig -p 2>/dev/null | grep -q "$lib_name"; then
+    return 0
+  fi
+
+  python3 tools/boot_error_gui.py "Was fehlt?
+$lib_label: $lib_name
+
+Warum wichtig?
+$lib_reason
+
+Was tun?
+1) Falls möglich: sudo apt update && sudo apt install $apt_package
+2) Danach neu starten: bash start.sh
+3) Hilfe/Details: exports/setup_log.txt" "$dialog_title"
+  exit 1
+}
+
+check_and_repair_linux_lib "libGL.so.1" "libgl1" "Grafik-Baustein" "Die grafische Oberfläche braucht diesen Baustein zum Anzeigen." "Grafik-Baustein fehlt"
+check_and_repair_linux_lib "libEGL.so.1" "libegl1" "EGL-Grafik-Baustein" "Die grafische Oberfläche braucht diesen Baustein für die GPU-Verbindung (Grafikbeschleunigung)." "EGL-Baustein fehlt"
+check_and_repair_linux_lib "libxkbcommon.so.0" "libxkbcommon0" "Tastatur-Baustein" "Die grafische Oberfläche braucht diesen Baustein für Tastatur und Eingabe." "Tastatur-Baustein fehlt"
 
 # 6) Smoke-Test mit venv python
 echo "[CHECK] Starte Smoke-Test"

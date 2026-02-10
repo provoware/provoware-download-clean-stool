@@ -1,3 +1,8 @@
+## 2026-02-10 – Iteration: Linux-Bibliotheksprüfung als Helfer gekapselt
+- Was: Den wiederholten Prüf-/Reparaturcode für Linux-GUI-Bibliotheken in `start.sh` in die Funktion `check_and_repair_linux_lib` ausgelagert.
+- Warum: Die vorherige Schleife enthielt mehrfach dieselbe Reparaturlogik; das erschwerte Wartung und saubere Erweiterung.
+- Wirkung: Neue Bibliotheken können jetzt mit einem klaren Funktionsaufruf ergänzt werden, bei unverändertem Nutzer-Flow („Jetzt installieren“, klare Hilfe, Log-Hinweis).
+
 # Change Log
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
