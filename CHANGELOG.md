@@ -1,3 +1,8 @@
+## 2026-02-10 – Iteration: Startstatus nach Paketprüfung ergänzt
+- Was: `start.sh` zeigt direkt nach der Abhängigkeitsprüfung jetzt eine klare Gesamtstatus-Zeile mit Symbol (✅/⚠️), Status (OK/WARN) und kurzer Hilfeaussage.
+- Warum: Nutzer:innen brauchen nach der Autoinstallation sofort verständliches Feedback, ob alles gut ist oder Handlungsbedarf besteht.
+- Wirkung: Bessere Barrierefreiheit durch einfache Sprache, schnellere Orientierung und weniger Fehlinterpretation des Setup-Ergebnisses.
+
 ## 2026-02-10 – Iteration: Linux-Bibliotheksprüfung als Helfer gekapselt
 - Was: Den wiederholten Prüf-/Reparaturcode für Linux-GUI-Bibliotheken in `start.sh` in die Funktion `check_and_repair_linux_lib` ausgelagert.
 - Warum: Die vorherige Schleife enthielt mehrfach dieselbe Reparaturlogik; das erschwerte Wartung und saubere Erweiterung.

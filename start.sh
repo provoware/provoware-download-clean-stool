@@ -107,11 +107,22 @@ echo "[SETUP] - Quelle online/pip: $INSTALL_SOURCE_ONLINE"
 echo "[SETUP] - Offene Versionskonflikte: $INSTALL_CONFLICTS"
 
 if [ "$INSTALL_ERRORS" -gt 0 ] || [ "$INSTALL_CONFLICTS" -gt 0 ]; then
+  OVERALL_STATUS="WARN"
+  OVERALL_ICON="⚠️"
+  OVERALL_MESSAGE="Es gibt noch Probleme bei Paketen. Bitte die 3 Hilfeschritte unten ausführen."
+
   echo "[HILFE] Es gibt noch offene Paketprobleme."
   echo "[HILFE] 1) Internet prüfen"
   echo "[HILFE] 2) Erneut starten: bash start.sh"
   echo "[HILFE] 3) Log öffnen: $SETUP_LOG"
+else
+  OVERALL_STATUS="OK"
+  OVERALL_ICON="✅"
+  OVERALL_MESSAGE="Alle Paketprüfungen sind erfolgreich abgeschlossen."
 fi
+
+echo "[STATUS] $OVERALL_ICON Gesamtstatus Abhängigkeiten: $OVERALL_STATUS"
+echo "[STATUS] $OVERALL_MESSAGE"
 
 # 3) Kritische Imports prüfen (ohne Crash)
 echo "[CHECK] Prüfe kritische Module"
