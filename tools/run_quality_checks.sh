@@ -4,6 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 AUTO_FIX="${AUTO_FIX:-0}"
+AUTO_FIX_ON_WARN="${AUTO_FIX_ON_WARN:-1}"
 FAST_MODE="${FAST_MODE:-1}"
 STATE_FILE="$ROOT_DIR/data/quality_state.json"
 WARNINGS=0
@@ -28,11 +29,28 @@ run_optional() {
   if [ "$AUTO_FIX" = "1" ]; then
     say "[QUALITY][FIX] Starte Auto-Korrektur mit $tool_name …"
     eval "$fix_cmd"
+    if ! eval "$check_cmd"; then
+      say "[QUALITY][WARN] $tool_name konnte nicht alle Abweichungen automatisch korrigieren."
+      say "[QUALITY][HILFE] Nächster Schritt: Log lesen und die verbleibenden Meldungen einzeln beheben."
+      WARNINGS=$((WARNINGS + 1))
+    fi
   else
     say "[QUALITY][CHECK] Prüfe Code mit $tool_name …"
     if ! eval "$check_cmd"; then
-      say "[QUALITY][WARN] $tool_name meldet Abweichungen. Kein Abbruch, bitte bei Bedarf AUTO_FIX=1 nutzen."
-      WARNINGS=$((WARNINGS + 1))
+      if [ "$AUTO_FIX_ON_WARN" = "1" ]; then
+        say "[QUALITY][FIX] $tool_name meldet Abweichungen. Starte automatische Korrektur (AUTO_FIX_ON_WARN=1)."
+        eval "$fix_cmd"
+        if eval "$check_cmd"; then
+          say "[QUALITY][OK] $tool_name hat die Abweichungen automatisch behoben."
+        else
+          say "[QUALITY][WARN] $tool_name meldet weiterhin Abweichungen nach Auto-Korrektur."
+          say "[QUALITY][HILFE] Nächster Schritt: AUTO_FIX=1 wiederholen und verbleibende Meldungen manuell prüfen."
+          WARNINGS=$((WARNINGS + 1))
+        fi
+      else
+        say "[QUALITY][WARN] $tool_name meldet Abweichungen. Kein Abbruch, bitte bei Bedarf AUTO_FIX=1 nutzen."
+        WARNINGS=$((WARNINGS + 1))
+      fi
     fi
   fi
 }
@@ -113,6 +131,7 @@ if [ "$FAST_MODE" = "1" ] && [ "$AUTO_FIX" = "0" ] && [ -n "$CACHED_SIGNATURE" ]
 fi
 
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
+say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] 1/4 Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
