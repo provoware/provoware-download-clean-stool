@@ -1,5 +1,5 @@
-DONE: Smoke-Test-Pfad robust gemacht, damit `core` bei Datei-Start sicher gefunden wird. (2026-02-10)
-NEXT: Abhängigkeitskonflikt in requirements (`ruff==0.2.1` vs `ruff>=0.6.0`) in eigener Iteration bereinigen. (2026-02-10)
+DONE: Startskript kann Abhängigkeiten jetzt bevorzugt offline aus `offline_wheels/` installieren. (2026-02-10)
+NEXT: Portables Paket mit vorkonfiguriertem `offline_wheels/` und kurzer Build-Anleitung ergänzen. (2026-02-10)
 
 Release TODO (offene Punkte vor dem nächsten Release)
 ===================================================
