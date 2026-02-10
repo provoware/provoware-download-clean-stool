@@ -1,3 +1,6 @@
+DONE: Dialog bei fehlender Ordnerwahl bietet jetzt Next-Step-Buttons (Erneut versuchen/Reparatur/Protokoll) und barrierearme Beschreibung. (2026-02-10)
+NEXT: Dieselbe 3-Button-Next-Step-Logik auf weitere Fehlerdialoge im Wizard ausrollen (zuerst Scan-Fehler). (2026-02-10)
+
 DONE: start.sh erweitert Linux-Systembibliothek-Reparatur auf libxkbcommon.so.0 (inkl. Dialog + apt-Autoinstallation) und vereinheitlicht den Prüfblock für libGL/libxkbcommon. (2026-02-10)
 NEXT: Dieselbe geführte Reparaturstruktur in einen wiederverwendbaren Shell-Helfer auslagern, damit weitere GUI-Libs ohne Copy-Paste ergänzt werden können. (2026-02-10)
 
