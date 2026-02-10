@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.2] – 2026‑02‑10
+
+### Fixed
+
+* Was: `tools/smoke_test.py` ergänzt den Projektpfad jetzt vor den Imports in `sys.path`.
+* Warum: Der Smoke-Test wurde als Datei gestartet und fand dadurch `core` im Standard-Pfad nicht zuverlässig.
+* Wirkung: `python tools/smoke_test.py` läuft reproduzierbar aus dem Projektordner ohne `ModuleNotFoundError`.
+
 ## [1.0.1] – 2026‑02‑10
 
 ### Changed
