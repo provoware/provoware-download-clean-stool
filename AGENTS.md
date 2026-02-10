@@ -83,6 +83,11 @@ Wenn erneut rot:
 ────────────────────────────────────────────────────────────
 
 ## 5) Dokumentation (nur wenn Gates grün oder sauber verschoben)
+### 5.0 README-Status (Pflicht in jeder Iteration)
+- Ganz oben in der README muss der aktuelle Entwicklungsfortschritt als **exakte Prozentzahl** stehen (z. B. `81%`, nicht "ca." oder Bereich).
+- Direkt darunter müssen zwei Listen stehen: **Abgeschlossen** (fertige Punkte) und **Offen** (verbleibende Punkte).
+- Diese drei Angaben (**Prozent, Abgeschlossen, Offen**) sind **in jeder Iteration** zu aktualisieren.
+
 ### 5.1 CHANGELOG.md (Mini)
 - 3 Zeilen: Was, Warum, Wirkung
 
@@ -145,4 +150,3 @@ Minimalformat je Iteration:
 - Abgeschlossen: `N`
 - Offen: `M`
 - Nächster Schritt: 1 klarer Arbeitsschritt mit Begründung in einfacher Sprache.
-
