@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Reparatur-Iteration: PySide6-Ausfall ohne Crash abgefangen
+- **Was:** `tools/repair_center_gui.py` prüft jetzt PySide6 vor dem GUI-Start, versucht automatisch eine Abhängigkeitsinstallation und zeigt bei weiterem Fehlschlag eine klare Next-Step-Fehlermeldung (Zenity/Konsole) mit Protokollhinweis.
+- **Warum:** Ohne PySide6 brach das Reparaturtool mit `ModuleNotFoundError` hart ab statt Hilfe anzubieten.
+- **Wirkung:** Robuster Startablauf mit verständlicher Hilfe in einfacher Sprache und zusätzlichem „Protokoll öffnen“-Button für bessere Zugänglichkeit.
+
 ## 2026-02-10 – Start-Iteration: Qualitäts-Hinweis in einfacher Sprache je Warn-/Info-Lage
 - **Was:** `start.sh` erzeugt nach dem Qualitätslauf jetzt einen klaren Next-Step-Hinweis abhängig von `WARN`/`INFO`-Anzahl (`Warnung zuerst beheben`, `Hinweise später umsetzen`, `keine Aktion nötig`).
 - **Warum:** Die bisherige Standardmeldung war bei Warnungen zu allgemein und half nicht klar beim ersten nächsten Schritt.

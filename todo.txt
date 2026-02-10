@@ -1,2 +1,2 @@
-DONE: start.sh ergänzt laienfreundlichen Qualitätshinweis je WARN/INFO-Anzahl direkt im Startstatus. (2026-02-10)
-NEXT: Nächste Mini-Iteration: smoke_test.py bei fehlendem libGL mit verständlicher Next-Step-Hilfe statt technischem Importfehler. (2026-02-10)
+DONE: repair_center_gui.py fängt fehlendes PySide6 robust ab, bietet Auto-Install und Protokoll-Hilfe. (2026-02-10)
+NEXT: Nächste Mini-Iteration: start.sh um automatische Prüfung von Zenity/xdg-open mit klarer Nutzerhilfe erweitern. (2026-02-10)
