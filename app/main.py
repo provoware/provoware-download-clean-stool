@@ -103,7 +103,8 @@ class MainWindow(QMainWindow):
         hl_theme.addWidget(QLabel("Farbschema:"))
         self.combo_theme = QComboBox()
         self.combo_theme.addItems(["hell", "dunkel", "kontrast", "senior"])
-        self.combo_theme.setCurrentText(self.settings.theme)
+        theme_display = {"light": "hell", "dark": "dunkel"}.get(self.settings.theme, self.settings.theme)
+        self.combo_theme.setCurrentText(theme_display)
         hl_theme.addWidget(self.combo_theme)
         self.cb_large = QCheckBox("Großer Text")
         self.cb_large.setChecked(self.settings.large_text)
@@ -122,7 +123,8 @@ class MainWindow(QMainWindow):
 
     def _welcome_next(self) -> None:
         # Save theme settings
-        self.settings.theme = self.combo_theme.currentText()
+        selected_theme = self.combo_theme.currentText()
+        self.settings.theme = {"hell": "light", "dunkel": "dark"}.get(selected_theme, selected_theme)
         self.settings.large_text = self.cb_large.isChecked()
         self.apply_theme(self.settings.theme, self.settings.large_text)
         # Ensure folder selected

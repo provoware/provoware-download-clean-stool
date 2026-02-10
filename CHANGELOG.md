@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.4] – 2026‑02‑10
+
+### Fixed
+
+* Was: Theme-Auswahl mappt jetzt konsistent zwischen UI-Werten ("hell/dunkel") und internen Werten ("light/dark").
+* Warum: Gespeicherte englische Themes wurden in der deutschen Auswahl nicht korrekt vorausgewählt und konnten inkonsistent zurückgeschrieben werden.
+* Wirkung: Theme-Anzeige und Speichern funktionieren stabil in beide Richtungen.
+
 ## [1.0.3] – 2026‑02‑10
 
 ### Changed
