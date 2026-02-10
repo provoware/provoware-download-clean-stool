@@ -1,2 +1,2 @@
-DONE: Automatische Kernmodul-Prüfung für core.settings in tools/smoke_test.py ergänzt. (2026-02-10)
-NEXT: Logging-Level aus LOG_LEVEL in core/logger.py auslesen und im Startablauf sichtbar ausgeben. (2026-02-10)
+DONE: Start prüft Linux-Bibliotheken jetzt robust (ldconfig + Standardpfade + Cache-Refresh). (2026-02-10)
+NEXT: Repair-Center soll nach Systempaket-Installation den selben Prüfmechanismus wiederverwenden. (2026-02-10)

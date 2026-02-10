@@ -59,3 +59,8 @@
 - **Was:** `tools/boot_error_gui.py` zeigt im Zenity-Dialog jetzt klare Next-Step-Aktionen: „Erneut versuchen“, „Reparatur“ und „Protokoll“.
 - **Warum:** Offener Punkt aus `todo.txt`: Fehlerfälle sollten direkt bedienbare Hilfewege statt nur einer Schließen-Aktion bieten.
 - **Wirkung:** Bessere Barrierefreiheit und Nutzerführung durch verständliche Auswahl direkt im Fehlerdialog.
+
+## 2026-02-10 – Start-Iteration: Linux-Bibliotheken nach Installation verlässlich erkennen
+- **Was:** `start.sh` prüft fehlende Linux-Bibliotheken jetzt robuster über `ldconfig` **und** typische Systempfade und aktualisiert den Cache nach apt-Installation mit `ldconfig`.
+- **Warum:** Auf einigen Systemen wird eine gerade installierte Bibliothek im selben Lauf nicht sofort über `ldconfig -p` gefunden, wodurch unnötige Wiederhol-Reparaturen entstehen konnten.
+- **Wirkung:** Die Startroutine bricht seltener ab und führt Nutzer:innen zuverlässiger ohne Endlosschleifen durch den Setup-Prozess.

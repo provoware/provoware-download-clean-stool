@@ -235,8 +235,16 @@ check_and_repair_linux_lib() {
   local dialog_title="$5"
   local install_now=0
 
+  lib_is_available() {
+    ldconfig -p 2>/dev/null | grep -q "$lib_name" && return 0
+    [ -e "/usr/lib/$lib_name" ] && return 0
+    [ -e "/usr/lib/x86_64-linux-gnu/$lib_name" ] && return 0
+    [ -e "/lib/x86_64-linux-gnu/$lib_name" ] && return 0
+    return 1
+  }
+
   echo "[CHECK] Prüfe Linux-Systembibliothek: $lib_name"
-  if ldconfig -p 2>/dev/null | grep -q "$lib_name"; then
+  if lib_is_available; then
     return 0
   fi
 
@@ -271,6 +279,7 @@ Klicken Sie auf 'Jetzt installieren'. Danach das Programm neu starten."
       echo "[SETUP] Installiere Systempaket ($apt_package)"
       if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y "$apt_package" >>"$SETUP_LOG" 2>&1; then
         echo "[OK] $apt_package wurde installiert."
+        sudo ldconfig >>"$SETUP_LOG" 2>&1 || true
       else
         echo "[WARN] Automatische Installation von $apt_package fehlgeschlagen." >>"$SETUP_LOG"
       fi
@@ -279,7 +288,7 @@ Klicken Sie auf 'Jetzt installieren'. Danach das Programm neu starten."
     fi
   fi
 
-  if ldconfig -p 2>/dev/null | grep -q "$lib_name"; then
+  if lib_is_available; then
     return 0
   fi
 
