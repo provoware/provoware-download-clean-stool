@@ -1,3 +1,6 @@
+DONE: start.sh kapselt Linux-Bibliotheksprüfung jetzt in check_and_repair_linux_lib für robuste Erweiterbarkeit ohne Logik-Duplikate. (2026-02-10)
+NEXT: Abschluss-Statuszeile (OK/WARN/FEHLER) in start.sh ergänzen, damit Laien sofort den Gesamtzustand sehen. (2026-02-10)
+
 DONE: start.sh prüft jetzt zusätzlich libEGL.so.1 und nutzt dieselbe geführte Reparatur wie bei den anderen Linux-GUI-Bibliotheken. (2026-02-10)
 NEXT: Linux-Bibliotheksprüfung in start.sh als wiederverwendbare Funktion kapseln, damit neue Bibliotheken ohne Duplikate ergänzt werden. (2026-02-10)
 
