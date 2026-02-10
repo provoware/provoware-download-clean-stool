@@ -1,8 +1,63 @@
-TODO for future releases
-------------------------
+Release TODO (offene Punkte vor dem nächsten Release)
+===================================================
 
-- Add support for permanently deleting files after they have been safely moved to the trash and reviewed.
-- Provide more fine‑grained file type filters (e.g. separate video formats, documents, etc.).
-- Support scanning and cleaning multiple folders at once.
-- Add a progress bar when scanning very large folders.
-- Improve duplicate detection with content hashing in parallel to speed up safe mode.
+Stand: 2026-02-10
+Ziel: Sichere, barrierearme und vollautomatisch startbare Version mit klarer Qualitätssicherung.
+
+1) Kritische Release-Blocker (muss vor Release fertig sein)
+-----------------------------------------------------------
+
+[ ] Einheitliche Theme-Namen korrigieren ("light/dark" vs. "hell/dunkel") und testen,
+    damit Farbschema-Auswahl zuverlässig greift.
+[ ] Farb- und Kontrastprüfung für alle Themes dokumentieren (inkl. High-Contrast und Senior-Modus),
+    damit lesbare Mindestkontraste eingehalten werden.
+[ ] Vollständige Eingabe-Validierung in allen Kernpfaden sicherstellen:
+    - Settings laden/speichern
+    - Preset laden
+    - Scan/Plan/Ausführung
+    - Undo
+    inklusive klarer Erfolg-/Fehler-Rückmeldung in einfacher Sprache.
+[ ] Logging- und Debug-Modus strukturieren:
+    - konsistente Log-Level (INFO/WARN/ERROR/DEBUG)
+    - nutzerfreundliche Fehlermeldungen + konkrete Lösungsvorschläge
+    - optionaler Debug-Schalter für detaillierte Diagnose.
+[ ] Start-Routine auf "vollautomatische Abhängigkeitsprüfung" härten:
+    - saubere Zusammenfassung am Ende (was installiert, was fehlt)
+    - reproduzierbare Fehlerbehandlung ohne stilles Verschlucken kritischer Fehler.
+
+2) Wichtige Verbesserungen (sollte vor Release fertig sein)
+-----------------------------------------------------------
+
+[ ] Vollautomatische Tests erweitern:
+    - Unit-Tests für scanner/planner/executor/settings
+    - Smoke-Test beibehalten und um Kern-Userflows ergänzen
+    - automatisches Formatieren + Linting (z. B. ruff/black/isort) in Qualitätscheck integrieren.
+[ ] Qualitäts-Gate in `tools/run_quality_checks.sh` ausbauen:
+    - Compile-Check + Tests + Formatter-Check in einer klaren Pipeline.
+[ ] Trennung weiter schärfen für Wartbarkeit:
+    - Tool-Logik klar in Module aufteilen
+    - System-/Laufzeitdateien, variable Nutzdaten und Konfiguration klar trennen
+    - Struktur im Entwicklerhandbuch dokumentieren.
+[ ] Release-Checkliste ergänzen (funktional + UX + Recovery + Logging + Undo).
+
+3) Backlog nach Release (nice to have)
+--------------------------------------
+
+[ ] Permanentes Löschen als optionalen zweiten Schritt nach Papierkorb-Review anbieten.
+[ ] Feinere Dateityp-Filter ergänzen (z. B. PDFs, Office-Dateien, Audio separat).
+[ ] Mehrere Ordner in einem Lauf scannen und bereinigen.
+[ ] Fortschrittsanzeige bei sehr großen Ordnern verbessern.
+[ ] Duplikaterkennung im Safe-Mode parallelisieren (Hashing-Leistung erhöhen).
+
+4) Laienfreundliche Vorschläge (für Doku und UI-Texte)
+------------------------------------------------------
+
+[ ] In allen Dialogen kurze "Was bedeutet das?"-Hilfetexte einblenden
+    (z. B. "Duplikat" = "gleiche Datei mehrfach vorhanden").
+[ ] Nach jedem Lauf einen einfachen Ergebnisbericht anzeigen:
+    "X Dateien verschoben, Y MB frei geworden, Undo möglich".
+[ ] In Fehlerdialogen immer 3 einfache Schritte anbieten:
+    1. Erneut versuchen
+    2. Reparatur starten
+    3. Log anzeigen
+[ ] Kurzanleitung für Erstnutzer:innen in 4 Schritten in README ergänzen.
