@@ -37,17 +37,34 @@ echo "[SETUP] Aktualisiere pip (wenn möglich)"
 
 # 2) Abhängigkeiten einzeln installieren + klare Status-Ausgabe
 echo "[SETUP] Installiere Abhängigkeiten (vollautomatisch, mit Status)"
+OFFLINE_WHEELS_DIR="$PROJECT_DIR/offline_wheels"
+INSTALL_ERRORS=0
 if [ -f requirements.txt ]; then
   while read -r pkg; do
     if [[ -z "$pkg" || "$pkg" =~ ^# ]]; then
       continue
     fi
-    echo "[SETUP] Installiere $pkg …"
+
+    if [ -d "$OFFLINE_WHEELS_DIR" ]; then
+      echo "[SETUP] Offline-Install für $pkg aus offline_wheels/ …"
+      if "$VENV_PIP" install --no-index --find-links "$OFFLINE_WHEELS_DIR" "$pkg" >>"$SETUP_LOG" 2>&1; then
+        continue
+      fi
+      echo "[WARN] Offline-Install fehlgeschlagen, versuche Online-Install: $pkg"
+    else
+      echo "[SETUP] Online-Install für $pkg …"
+    fi
+
     if ! "$VENV_PIP" install --no-cache-dir "$pkg" >>"$SETUP_LOG" 2>&1; then
       echo "[WARN] Installation fehlgeschlagen: $pkg"
       echo "Install-Fehler: $pkg" >> "$ERR_LOG"
+      INSTALL_ERRORS=$((INSTALL_ERRORS + 1))
     fi
   done < requirements.txt
+fi
+
+if [ "$INSTALL_ERRORS" -gt 0 ]; then
+  echo "[WARN] $INSTALL_ERRORS Paket(e) konnten nicht installiert werden. Details: $ERR_LOG"
 fi
 
 # 3) Kritische Imports prüfen (ohne Crash)
