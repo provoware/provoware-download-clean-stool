@@ -1,2 +1,2 @@
-DONE: Light-Theme mit sichtbaren Fokusrahmen und konsistenten Kontrasten für interaktive Elemente verbessert. (2026-02-10)
-NEXT: Plan-Seite mit klarer Aktionshilfe unter den Buttons ergänzen (nur Text/UX, keine Logik). (2026-02-10)
+DONE: Standards-Manifestdatei für Barrierefreiheit, Qualitäts-Gates und Auto-Start-Vorgaben ergänzt. (2026-02-10)
+NEXT: Zweite Manifestdatei für Prüfprofile je Umgebung (lokal/CI) ergänzen und in start.sh einlesen. (2026-02-10)

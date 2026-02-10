@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Standards-Iteration: Manifestvorgaben für Qualität und Barrierefreiheit ergänzt
+- **Was:** Neue Datei `data/standards_manifest.json` ergänzt, die verbindliche Standards für einfache Sprache, Accessibility-Defaults, Qualitäts-Gates, Auto-Start-Feedback und Validierungsregeln zentral festlegt.
+- **Warum:** Bisher fehlte eine maschinenlesbare Referenzdatei für einheitliche Vorgaben, wodurch Standards schwerer reproduzierbar und weniger robust überprüfbar waren.
+- **Wirkung:** Team und Startroutine erhalten eine klare, strukturierte Soll-Vorgabe für konsistente Qualität, bessere Zugänglichkeit und nachvollziehbare nächste Automatisierungsschritte.
+
 ## 2026-02-10 – UI-Iteration: Optionen visuell in klare Referenz-Abschnitte gegliedert
 - **Was:** `app/main.py` strukturiert die Optionen-Seite neu mit klar nummerierten Bereichen (Preset, Dateitypen, Grenzen, Duplikate), ergänzenden Hilfetexten und größeren Primär-Buttons.
 - **Warum:** Das Design sollte näher an ein vorgegebenes, klar gegliedertes Referenzbild rücken und gleichzeitig für Laien leichter erfassbar sein.
