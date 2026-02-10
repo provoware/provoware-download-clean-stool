@@ -1,3 +1,8 @@
+## 2026-02-10 – Iteration: Quality-Gate mit Auto-Fix-Hinweis robuster gemacht
+- Was: `tools/run_quality_checks.sh` prüft jetzt Syntax, Formatter, Linter und Smoke-Test in einer klaren 4-Schritt-Pipeline; optional mit `AUTO_FIX=1` für automatische Korrekturen.
+- Warum: Entwicklung soll schneller sein, ohne bei bekannten Altlasten sofort hart abzubrechen; gleichzeitig bleiben klare Hinweise für den nächsten Schritt sichtbar.
+- Wirkung: Bessere Wartbarkeit und Barrierefreiheit durch einfache Statusmeldungen, explizite Hilfetexte und reproduzierbaren Qualitätslauf in einem Befehl.
+
 ## 2026-02-10 – Iteration: Startstatus nach Paketprüfung ergänzt
 - Was: `start.sh` zeigt direkt nach der Abhängigkeitsprüfung jetzt eine klare Gesamtstatus-Zeile mit Symbol (✅/⚠️), Status (OK/WARN) und kurzer Hilfeaussage.
 - Warum: Nutzer:innen brauchen nach der Autoinstallation sofort verständliches Feedback, ob alles gut ist oder Handlungsbedarf besteht.
