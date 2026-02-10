@@ -1,2 +1,2 @@
-DONE: start.sh um klare Qualitäts-Zusammenfassung mit Statussymbol, Hinweisanzahl und einfachem Next-Step-Hinweis erweitert. (2026-02-10)
-NEXT: compileall in tools/run_quality_checks.sh auf Projektordner ohne venv eingrenzen, damit Gate-Meldungen nur eigenen Code betreffen. (2026-02-10)
+DONE: compileall in tools/run_quality_checks.sh auf app/core/tools/start.sh begrenzt, damit Qualitätsmeldungen nur Projektcode betreffen. (2026-02-10)
+NEXT: Startfehler im Headless-Linux bei GUI-Start aus exports/setup_log.txt analysieren und geführte Fallback-Meldung ohne Crash ergänzen. (2026-02-10)
