@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – UI-Iteration: Barrierearme Einstiegshilfe und moderne Bedienhinweise
+- **Was:** `app/main.py` erweitert die Startseite um klare Einstiegshilfe, zusätzlichen Hilfebereich, bessere Tooltips und Accessibility-Namen/-Beschreibungen für zentrale Bedienelemente.
+- **Warum:** Der Einstieg sollte für Laien verständlicher werden und Screenreader/Keyboard-Bedienung bessere Orientierung bieten.
+- **Wirkung:** Moderneres, klareres Layout mit verbessertem Kontrast-/Lesefluss und direkter Hilfe für den nächsten Schritt ohne Fachwissen.
+
 ## 2026-02-10 – Qualitäts-Iteration: Kernmodul-Checks im Smoke-Test ergänzt
 - **Was:** `tools/smoke_test.py` prüft jetzt zusätzlich `core.settings` mit einem temporären Testlauf für Laden/Speichern inkl. Schema- und Revisions-Validierung.
 - **Warum:** Offener Punkt aus `todo.txt`: Kernmodule sollten automatisiert im Qualitätslauf sichtbar geprüft werden.

@@ -1,2 +1,2 @@
-DONE: Start prüft Linux-Bibliotheken jetzt robust (ldconfig + Standardpfade + Cache-Refresh). (2026-02-10)
-NEXT: Repair-Center soll nach Systempaket-Installation den selben Prüfmechanismus wiederverwenden. (2026-02-10)
+DONE: Startseite hat jetzt barrierearme Einstiegshilfe, Tooltips und Screenreader-Beschreibungen. (2026-02-10)
+NEXT: Optionen-Seite auf gleiche A11y-Standards bringen (Fokusführung, klare Hilfetexte, Buttons mit Next-Step-Hilfe). (2026-02-10)
