@@ -1,3 +1,6 @@
+DONE: Zentrale JSON-Textquelle + Versionsfelder (schema_version/file_revision) in Settings robust umgesetzt. (2026-02-10)
+NEXT: UI-Komponenten schrittweise auf `settings.ui_texts` umstellen und dabei Theme-Namen vereinheitlichen. (2026-02-10)
+
 Release TODO (offene Punkte vor dem nächsten Release)
 ===================================================
 
