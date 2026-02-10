@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.13] – 2026‑02‑10
+
+### Changed
+
+* Was: Der Fehlerdialog bei fehlender Ordnerauswahl bietet jetzt drei klare Next-Step-Buttons („Erneut versuchen“, „Reparatur“, „Protokoll“) inklusive einfacher Anleitung und zugänglicher Beschriftung.
+* Warum: Nutzer:innen brauchten im Abbruchfall direkte, laienverständliche Hilfe statt nur einer generischen Warnung.
+* Wirkung: Bessere Bedienbarkeit ohne Sackgasse, schnellere Selbsthilfe bei Startproblemen und verbesserte Barrierefreiheit im kritischen Eingabeschritt.
+
 ## [1.0.12] – 2026‑02‑10
 
 ### Changed

@@ -154,7 +154,41 @@ class MainWindow(QMainWindow):
         self._refresh_dashboard_info()
         # Ensure folder selected
         if not self.root_path:
-            QMessageBox.warning(self, "Fehlende Angabe", "Bitte wählen Sie einen Ordner aus.")
+            message = QMessageBox(self)
+            message.setWindowTitle("Fehlende Angabe")
+            message.setIcon(QMessageBox.Warning)
+            message.setText("Bitte wählen Sie zuerst einen Ordner aus.")
+            message.setInformativeText(
+                "Nächster Schritt in einfacher Sprache:\n"
+                "• Erneut versuchen: Ordnerauswahl noch einmal öffnen.\n"
+                "• Reparatur: Hilfe bei häufigen Startproblemen anzeigen.\n"
+                "• Protokoll: Ort der Log-Datei anzeigen."
+            )
+            message.setAccessibleName("Fehlende Ordnerauswahl")
+            message.setAccessibleDescription("Dialog mit klaren nächsten Schritten für fehlende Ordnerauswahl")
+            retry_btn = message.addButton("Erneut versuchen", QMessageBox.AcceptRole)
+            repair_btn = message.addButton("Reparatur", QMessageBox.ActionRole)
+            log_btn = message.addButton("Protokoll", QMessageBox.HelpRole)
+            message.exec()
+
+            clicked = message.clickedButton()
+            if clicked == retry_btn:
+                self._choose_folder()
+            elif clicked == repair_btn:
+                QMessageBox.information(
+                    self,
+                    "Reparaturhilfe",
+                    "Bitte führen Sie im Projektordner den Befehl 'bash start.sh' aus.\n"
+                    "Das Programm prüft automatisch wichtige Voraussetzungen und zeigt Rückmeldungen an.",
+                )
+            elif clicked == log_btn:
+                log_path = Path(__file__).resolve().parent.parent / "logs" / "app.log"
+                QMessageBox.information(
+                    self,
+                    "Protokollpfad",
+                    f"Log-Datei: {log_path}\n"
+                    "Diese Datei hilft bei der Fehlersuche und kann an den Support weitergegeben werden.",
+                )
             return
         self.settings.download_dir = str(self.root_path)
         self.settings.save()
