@@ -1,5 +1,5 @@
-DONE: Smoke-Test-Pfad robust gemacht, damit `core` bei Datei-Start sicher gefunden wird. (2026-02-10)
-NEXT: Abhängigkeitskonflikt in requirements (`ruff==0.2.1` vs `ruff>=0.6.0`) in eigener Iteration bereinigen. (2026-02-10)
+DONE: Abhängigkeitskonflikt in requirements bereinigt (doppeltes `ruff` entfernt). (2026-02-10)
+NEXT: Theme-Namen-Mapping light/dark vs. hell/dunkel gezielt härten und prüfen. (2026-02-10)
 
 Release TODO (offene Punkte vor dem nächsten Release)
 ===================================================

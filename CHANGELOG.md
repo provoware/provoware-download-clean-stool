@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.3] – 2026‑02‑10
+
+### Fixed
+
+* Was: `requirements.txt` enthält jetzt nur noch eine einheitliche `ruff`-Version (`ruff>=0.6.0`).
+* Warum: Zwei widersprüchliche `ruff`-Einträge führten in der Start-Routine zu unnötigen Install-Fehlern.
+* Wirkung: Die automatische Abhängigkeitsprüfung läuft stabiler und meldet weniger Fehlalarme.
+
 ## [1.0.2] – 2026‑02‑10
 
 ### Fixed
