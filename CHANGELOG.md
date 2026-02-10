@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Start-Iteration: Qualitäts-Hinweis in einfacher Sprache je Warn-/Info-Lage
+- **Was:** `start.sh` erzeugt nach dem Qualitätslauf jetzt einen klaren Next-Step-Hinweis abhängig von `WARN`/`INFO`-Anzahl (`Warnung zuerst beheben`, `Hinweise später umsetzen`, `keine Aktion nötig`).
+- **Warum:** Die bisherige Standardmeldung war bei Warnungen zu allgemein und half nicht klar beim ersten nächsten Schritt.
+- **Wirkung:** Bessere Nutzerführung in einfacher Sprache und höhere Barrierefreiheit durch kontextabhängige, verständliche Handlungsempfehlung.
+
 ## 2026-02-10 – Start-Iteration: Auto-Reparatur-Endstatus klar ausgewiesen
 - **Was:** `start.sh` zeigt jetzt zusätzlich einen expliziten Auto-Reparatur-Status (`nicht nötig`, `erfolgreich`, `nicht möglich`) inklusive Symbol und einfacher Statusmeldung.
 - **Warum:** Offener Punkt aus `todo.txt`: Der Reparaturausgang sollte ohne Fachwissen sofort verständlich sein.
