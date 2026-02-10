@@ -3,15 +3,30 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 
 DEFAULTS_PATH = Path(__file__).resolve().parent.parent / "data" / "settings.json"
+SCHEMA_VERSION = 2
+
+
+def _default_ui_texts() -> Dict[str, str]:
+    """Central fallback catalog for user-facing texts (German)."""
+    return {
+        "app_title": "Downloads Organizer",
+        "error_title": "Fehler",
+        "warn_missing_folder_title": "Fehlende Angabe",
+        "warn_missing_folder_body": "Bitte wählen Sie einen Ordner aus.",
+        "action_retry": "Erneut versuchen",
+        "action_repair": "Reparatur",
+        "action_log": "Protokoll",
+    }
 
 
 @dataclass
 class Filters:
     """Represents filter options for the scanner."""
+
     types: List[str]
     size: str
     age: str
@@ -43,6 +58,9 @@ class Settings:
     filters: Filters
     duplicates_mode: str
     confirm_threshold: int
+    schema_version: int
+    file_revision: int
+    ui_texts: Dict[str, str]
 
     @staticmethod
     def load(path: Path | None = None) -> "Settings":
@@ -54,6 +72,7 @@ class Settings:
             The path to the settings JSON file. If not provided, the default
             settings file in the `data` directory will be used.
         """
+
         settings_path = path or DEFAULTS_PATH
         if settings_path.exists():
             try:
@@ -62,7 +81,7 @@ class Settings:
                 data = {}
         else:
             data = {}
-        # load defaults
+
         if DEFAULTS_PATH != settings_path and DEFAULTS_PATH.exists():
             try:
                 defaults = json.loads(DEFAULTS_PATH.read_text(encoding="utf-8"))
@@ -70,9 +89,14 @@ class Settings:
                 defaults = {}
         else:
             defaults = data
-        # merge
+
         merged = {**defaults, **data}
         filters = Filters.from_dict(merged.get("filters", {}))
+        ui_texts = _default_ui_texts()
+        raw_ui_texts = merged.get("ui_texts", {})
+        if isinstance(raw_ui_texts, dict):
+            ui_texts.update({str(k): str(v) for k, v in raw_ui_texts.items()})
+
         return Settings(
             theme=str(merged.get("theme", "light")),
             large_text=bool(merged.get("large_text", False)),
@@ -81,15 +105,26 @@ class Settings:
             filters=filters,
             duplicates_mode=str(merged.get("duplicates_mode", "none")),
             confirm_threshold=int(merged.get("confirm_threshold", 10)),
+            schema_version=max(int(merged.get("schema_version", 1)), SCHEMA_VERSION),
+            file_revision=max(int(merged.get("file_revision", 0)), 0),
+            ui_texts=ui_texts,
         )
 
     def save(self, path: Path | None = None) -> None:
-        """Save settings to disk."""
+        """Save settings to disk with deterministic version metadata."""
+
         settings_path = path or DEFAULTS_PATH
+        self.schema_version = SCHEMA_VERSION
+        self.file_revision = max(self.file_revision, 0) + 1
+
         data = asdict(self)
-        # nested dataclass manually convert
         data["filters"] = self.filters.to_dict()
+        data["ui_texts"] = {str(k): str(v) for k, v in self.ui_texts.items()}
+
         try:
-            settings_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
+            settings_path.write_text(
+                json.dumps(data, indent=2, ensure_ascii=False, sort_keys=True),
+                encoding="utf-8",
+            )
         except Exception:
             pass
