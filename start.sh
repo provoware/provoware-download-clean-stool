@@ -187,10 +187,23 @@ fi
 
 # 4) Qualitätsprüfung (ohne den Nutzer zu verwirren)
 echo "[CHECK] Führe Qualitätsprüfung aus"
+QUALITY_STATUS="OK"
+QUALITY_ICON="✅"
+QUALITY_HINT="Keine Aktion nötig."
 if ! bash tools/run_quality_checks.sh > "$QUALITY_LOG" 2>&1; then
+  QUALITY_STATUS="WARN"
+  QUALITY_ICON="⚠️"
+  QUALITY_HINT="Bitte zuerst die Qualitäts-Hilfe öffnen und dann erneut starten."
   echo "[WARN] Qualitätsprüfung meldet etwas. Tool versucht trotzdem zu starten."
   python3 tools/quality_gate_gui.py || true
 fi
+
+QUALITY_WARN_COUNT="$(rg -c "\[QUALITY\]\[WARN\]" "$QUALITY_LOG" 2>/dev/null || echo "0")"
+QUALITY_INFO_COUNT="$(rg -c "\[QUALITY\]\[INFO\]" "$QUALITY_LOG" 2>/dev/null || echo "0")"
+echo "[STATUS] $QUALITY_ICON Qualitäts-Gate: $QUALITY_STATUS"
+echo "[STATUS] Hinweise: WARN=$QUALITY_WARN_COUNT, INFO=$QUALITY_INFO_COUNT"
+echo "[HILFE] Nächster Schritt: $QUALITY_HINT"
+echo "[HILFE] Log-Datei: $QUALITY_LOG"
 
 # 5) Linux-Systembibliotheken prüfen (vor Smoke-Test)
 check_and_repair_linux_lib() {
