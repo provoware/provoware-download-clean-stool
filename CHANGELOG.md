@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Doku-Iteration: Release-Lücken im README klar sichtbar
+- **Was:** README-Statusblock ergänzt um explizite Listen „Abgeschlossen“ und „Offen (für perfekte Release-Version)“.
+- **Warum:** Die offene Frage „was fehlt noch“ sollte sofort oben im Projekt in einfacher Sprache beantwortet werden.
+- **Wirkung:** Release-Reifegrad ist transparent; nächste Arbeitsschritte sind ohne Suche direkt sichtbar.
+
 ## 2026-02-10 – Prozess-Iteration: README-Fortschrittspflicht in AGENTS verbindlich gemacht
 - **Was:** `AGENTS.md` um eine Pflichtsektion ergänzt: README muss pro Iteration oben exakte Prozentzahl plus Listen für „Abgeschlossen“ und „Offen“ enthalten und aktualisiert werden.
 - **Warum:** Die neue Teamvorgabe verlangt transparenten Fortschritt mit klarer Sicht auf erledigte und offene Punkte in jeder Iteration.
