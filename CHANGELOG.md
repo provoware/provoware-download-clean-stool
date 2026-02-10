@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.8] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` versucht bei fehlenden Kernmodulen (`PySide6`, `PIL`) jetzt zusätzlich eine automatische Reparatur über `apt` (Ubuntu/Kubuntu), führt danach einen Recheck aus und bricht nur noch mit klarer Hilfe ab, wenn Module weiterhin fehlen.
+* Warum: Das Tool ist Linux-first für Kubuntu gedacht; fehlende Python-GUI-Abhängigkeiten sollen ohne manuelle Analyse direkt durch die Startroutine behoben werden.
+* Wirkung: Mehr Autonomie beim Start, verständlichere Fehlermeldungen in einfacher Sprache und klarere Next-Steps für den Nutzer bei verbleibenden Problemen.
+
+## [1.0.7] – 2026‑02‑10
+
 ### Changed
 
 * Was: `start.sh` bereinigt Requirement-Zeilen jetzt Linux-robust (Whitespace, Inline-Kommentare, CRLF-Reste) und überspringt nicht installierbare Optionseinträge (`-...`) statt sie fälschlich als Paket zu behandeln.

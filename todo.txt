@@ -1,3 +1,6 @@
+DONE: start.sh ergänzt um Linux/Kubuntu-Autoreparatur (apt) bei fehlenden Kernmodulen + Recheck + klare Next Steps. (2026-02-10)
+NEXT: start.sh um automatische Prüfung/Installation fehlender Qt-Systemlibs (z. B. libxkbcommon0) erweitern und abschließende Zusammenfassung ausgeben. (2026-02-10)
+
 DONE: start.sh Requirement-Parsing Linux-robust bereinigt (CRLF/Kommentare/Optionen) + klare [OK]-Statusmeldungen ergänzt. (2026-02-10)
 NEXT: start.sh Abschluss-Zusammenfassung ergänzen (installiert/übersprungen/fehlgeschlagen) in einfacher Sprache. (2026-02-10)
 
