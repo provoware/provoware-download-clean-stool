@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – UI-Iteration: Dunkles Referenz-Layout mit besserer Fokusführung
+- **Was:** `app/main.py` aktualisiert den Theme-Stylesheet-Block für `dark` und `kontrast` mit panelähnlicher Farbwelt, klaren Button-Hierarchien, größeren Klickflächen und sichtbaren Fokusrahmen für Tastatur-Navigation.
+- **Warum:** Das GUI sollte visuell näher an das vorgegebene Originalbild heranrücken und gleichzeitig barriereärmer bedienbar werden.
+- **Wirkung:** Einheitlicheres, kontraststarkes Erscheinungsbild im Dark-Design und deutlich bessere Orientierung für Nutzer:innen mit Tastatur oder Seh-Einschränkungen.
+
 ## 2026-02-10 – UI-Iteration: Barrierearme Einstiegshilfe und moderne Bedienhinweise
 - **Was:** `app/main.py` erweitert die Startseite um klare Einstiegshilfe, zusätzlichen Hilfebereich, bessere Tooltips und Accessibility-Namen/-Beschreibungen für zentrale Bedienelemente.
 - **Warum:** Der Einstieg sollte für Laien verständlicher werden und Screenreader/Keyboard-Bedienung bessere Orientierung bieten.
