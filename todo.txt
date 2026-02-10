@@ -1,2 +1,2 @@
-DONE: compileall in tools/run_quality_checks.sh auf app/core/tools/start.sh begrenzt, damit Qualitätsmeldungen nur Projektcode betreffen. (2026-02-10)
-NEXT: Startfehler im Headless-Linux bei GUI-Start aus exports/setup_log.txt analysieren und geführte Fallback-Meldung ohne Crash ergänzen. (2026-02-10)
+DONE: Headless-Start in start.sh abgefangen (DISPLAY/WAYLAND_DISPLAY), damit ohne GUI-Session ein klarer Hinweis statt Crash erscheint. (2026-02-10)
+NEXT: Fehlerdialog im GUI-Start um direkte Schaltflächen für „Erneut versuchen“, „Reparatur“ und „Protokoll“ erweitern. (2026-02-10)
