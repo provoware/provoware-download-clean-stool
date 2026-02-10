@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.7] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` bereinigt Requirement-Zeilen jetzt Linux-robust (Whitespace, Inline-Kommentare, CRLF-Reste) und überspringt nicht installierbare Optionseinträge (`-...`) statt sie fälschlich als Paket zu behandeln.
+* Warum: In gemischten Umgebungen (z. B. kopierte `requirements.txt` mit Windows-Zeilenenden) führte die bisherige Logik leichter zu unnötigen Install-Fehlern.
+* Wirkung: Stabilere automatische Abhängigkeitsauflösung beim Start, weniger Fehlalarme und klareres Nutzerfeedback durch explizite `[OK]`-Statusmeldungen je Paket.
+
 ## [1.0.6] – 2026‑02‑10
 
 ### Changed

@@ -1,3 +1,6 @@
+DONE: start.sh Requirement-Parsing Linux-robust bereinigt (CRLF/Kommentare/Optionen) + klare [OK]-Statusmeldungen ergänzt. (2026-02-10)
+NEXT: start.sh Abschluss-Zusammenfassung ergänzen (installiert/übersprungen/fehlgeschlagen) in einfacher Sprache. (2026-02-10)
+
 DONE: Haupt-Dashboard um laienfreundliche Schnellübersicht + Hilfetext + bessere Lesbarkeit (WordWrap) erweitert. (2026-02-10)
 NEXT: Dashboard-Kennzahlen um Scan-Trends (z. B. letzte 3 Läufe) ergänzen und verständlich erklären. (2026-02-10)
 
