@@ -79,3 +79,8 @@
 - **Was:** `start.sh` prüft fehlende Linux-Bibliotheken jetzt robuster über `ldconfig` **und** typische Systempfade und aktualisiert den Cache nach apt-Installation mit `ldconfig`.
 - **Warum:** Auf einigen Systemen wird eine gerade installierte Bibliothek im selben Lauf nicht sofort über `ldconfig -p` gefunden, wodurch unnötige Wiederhol-Reparaturen entstehen konnten.
 - **Wirkung:** Die Startroutine bricht seltener ab und führt Nutzer:innen zuverlässiger ohne Endlosschleifen durch den Setup-Prozess.
+
+## 2026-02-10 – UI-Iteration: Helles Theme mit klaren Fokusrahmen und besserem Kontrast
+- **Was:** Das `light`-Theme in `app/main.py` wurde von leer auf vollständige, einheitliche Styles (Buttons, Fokus, Listen, Auswahlfarben) umgestellt.
+- **Warum:** Interaktive Elemente waren im hellen Modus visuell zu zurückhaltend; Fokuszustände und Lesbarkeit sollten klarer und barriereärmer werden.
+- **Wirkung:** Bessere Nutzerführung über sichtbare Hover-/Fokuszustände, konsistente Kontraste und verständlichere Bedienung mit Tastatur.

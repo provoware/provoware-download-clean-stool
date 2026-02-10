@@ -54,7 +54,50 @@ class MainWindow(QMainWindow):
 
     # Theme stylesheets
     STYLES = {
-        "light": "",
+        "light": """
+            QWidget {
+                background-color: #f7f9fc;
+                color: #111827;
+                selection-background-color: #1d4ed8;
+                selection-color: #ffffff;
+            }
+            QLabel {
+                color: #111827;
+            }
+            QPushButton {
+                background-color: #ffffff;
+                color: #111827;
+                border: 1px solid #9ca3af;
+                border-radius: 8px;
+                padding: 8px 12px;
+                font-weight: 600;
+                min-height: 34px;
+            }
+            QPushButton:hover {
+                background-color: #e5eefc;
+                border-color: #2563eb;
+            }
+            QPushButton:pressed {
+                background-color: #dbeafe;
+            }
+            QPushButton:focus,
+            QCheckBox:focus,
+            QComboBox:focus,
+            QListWidget:focus {
+                border: 2px solid #1d4ed8;
+                outline: none;
+            }
+            QComboBox, QListWidget {
+                background-color: #ffffff;
+                color: #111827;
+                border: 1px solid #9ca3af;
+                border-radius: 6px;
+                padding: 6px;
+            }
+            QCheckBox {
+                spacing: 8px;
+            }
+        """,
         "dark": """
             QWidget {
                 background-color: #121a2a;

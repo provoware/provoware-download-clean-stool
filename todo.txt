@@ -1,2 +1,2 @@
-DONE: Optionen-Seite mit klaren visuellen Abschnitten und besserer Leseführung ergänzt. (2026-02-10)
-NEXT: Scan-Seite optisch wie Referenz als Status-Karten strukturieren (nur Layout, keine Logik). (2026-02-10)
+DONE: Light-Theme mit sichtbaren Fokusrahmen und konsistenten Kontrasten für interaktive Elemente verbessert. (2026-02-10)
+NEXT: Plan-Seite mit klarer Aktionshilfe unter den Buttons ergänzen (nur Text/UX, keine Logik). (2026-02-10)
