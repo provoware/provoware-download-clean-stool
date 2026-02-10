@@ -1,2 +1,2 @@
-DONE: Qualitätslauf merkt sich erfolgreichen Stand und überspringt gleiche Wiederholungen per FAST_MODE-Standard. (2026-02-10)
-NEXT: Nächste Mini-Iteration: Nur betroffene Teiltests statt Voll-Skip ausführen (z. B. nur Smoke oder nur Lint je Dateityp). (2026-02-10)
+DONE: start.sh ergänzt laienfreundlichen Qualitätshinweis je WARN/INFO-Anzahl direkt im Startstatus. (2026-02-10)
+NEXT: Nächste Mini-Iteration: smoke_test.py bei fehlendem libGL mit verständlicher Next-Step-Hilfe statt technischem Importfehler. (2026-02-10)

@@ -214,6 +214,13 @@ fi
 
 QUALITY_WARN_COUNT="$(rg -c "\[QUALITY\]\[WARN\]" "$QUALITY_LOG" 2>/dev/null || echo "0")"
 QUALITY_INFO_COUNT="$(rg -c "\[QUALITY\]\[INFO\]" "$QUALITY_LOG" 2>/dev/null || echo "0")"
+if [ "$QUALITY_WARN_COUNT" -gt 0 ]; then
+  QUALITY_HINT="Warnungen gefunden: Öffnen Sie den Qualitätsbericht und beheben Sie zuerst die erste Warnung. Danach erneut starten."
+elif [ "$QUALITY_INFO_COUNT" -gt 0 ]; then
+  QUALITY_HINT="Nur Hinweise gefunden: Sie können starten. Für bessere Stabilität Hinweise später nacheinander umsetzen."
+else
+  QUALITY_HINT="Keine Aktion nötig."
+fi
 echo "[STATUS] $QUALITY_ICON Qualitäts-Gate: $QUALITY_STATUS"
 echo "[STATUS] Hinweise: WARN=$QUALITY_WARN_COUNT, INFO=$QUALITY_INFO_COUNT"
 echo "[HILFE] Nächster Schritt: $QUALITY_HINT"

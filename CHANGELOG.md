@@ -1,9 +1,9 @@
 # CHANGELOG
 
-## 2026-02-10 – Qualitäts-Iteration: Fast-Mode mit Prüflauf-Merkzettel
-- **Was:** `tools/run_quality_checks.sh` speichert nach einem grünen Lauf eine kleine Signatur in `data/quality_state.json` und überspringt identische Wiederholungs-Checks automatisch.
-- **Warum:** So werden nicht immer dieselben Prüfungen erneut ausgeführt, wenn am relevanten Code nichts geändert wurde.
-- **Wirkung:** Schnellere Iterationen mit klarer Hilfe: Vollprüfung bleibt jederzeit mit `FAST_MODE=0` erzwingbar.
+## 2026-02-10 – Start-Iteration: Qualitäts-Hinweis in einfacher Sprache je Warn-/Info-Lage
+- **Was:** `start.sh` erzeugt nach dem Qualitätslauf jetzt einen klaren Next-Step-Hinweis abhängig von `WARN`/`INFO`-Anzahl (`Warnung zuerst beheben`, `Hinweise später umsetzen`, `keine Aktion nötig`).
+- **Warum:** Die bisherige Standardmeldung war bei Warnungen zu allgemein und half nicht klar beim ersten nächsten Schritt.
+- **Wirkung:** Bessere Nutzerführung in einfacher Sprache und höhere Barrierefreiheit durch kontextabhängige, verständliche Handlungsempfehlung.
 
 ## 2026-02-10 – Start-Iteration: Auto-Reparatur-Endstatus klar ausgewiesen
 - **Was:** `start.sh` zeigt jetzt zusätzlich einen expliziten Auto-Reparatur-Status (`nicht nötig`, `erfolgreich`, `nicht möglich`) inklusive Symbol und einfacher Statusmeldung.
