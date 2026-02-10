@@ -39,6 +39,7 @@ Der Fokus liegt auf:
 - Qualitätsprüfungen starten
 - Smoke-Test starten
 - danach die App starten
+- bei Auto-Reparatur immer klaren Endstatus zeigen: **erfolgreich**, **nicht möglich** oder **nicht nötig**
 
 Wenn etwas fehlt, soll der Nutzer direkt eine verständliche Rückmeldung und einen Reparaturweg bekommen.
 

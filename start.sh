@@ -46,6 +46,9 @@ INSTALL_SKIPPED=0
 INSTALL_SOURCE_OFFLINE=0
 INSTALL_SOURCE_ONLINE=0
 INSTALL_CONFLICTS=0
+AUTOREPAIR_STATUS="nicht nötig"
+AUTOREPAIR_ICON="ℹ️"
+AUTOREPAIR_MESSAGE="Es war keine automatische Reparatur nötig."
 
 if [ -f requirements.txt ]; then
   while IFS= read -r raw_pkg || [ -n "$raw_pkg" ]; do
@@ -83,6 +86,9 @@ fi
 
 if ! "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
   INSTALL_CONFLICTS=1
+  AUTOREPAIR_STATUS="läuft"
+  AUTOREPAIR_ICON="🔧"
+  AUTOREPAIR_MESSAGE="Automatische Reparatur wurde gestartet."
   echo "[WARN] Versionskonflikt erkannt. Starte automatische Reparatur (Upgrade nach requirements)."
   if [ -s "$REQ_SANITIZED" ]; then
     if [ -d "$OFFLINE_WHEELS_DIR" ]; then
@@ -92,8 +98,14 @@ if ! "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
   fi
   if "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
     INSTALL_CONFLICTS=0
+    AUTOREPAIR_STATUS="erfolgreich"
+    AUTOREPAIR_ICON="✅"
+    AUTOREPAIR_MESSAGE="Automatische Reparatur erfolgreich abgeschlossen."
     echo "[OK] Konflikte wurden automatisch behoben."
   else
+    AUTOREPAIR_STATUS="nicht möglich"
+    AUTOREPAIR_ICON="⚠️"
+    AUTOREPAIR_MESSAGE="Automatische Reparatur war nicht möglich. Bitte die Hilfe-Schritte unten ausführen."
     echo "[WARN] Konflikte bestehen weiter. Bitte Log prüfen: $SETUP_LOG"
   fi
 fi
@@ -105,6 +117,8 @@ echo "[SETUP] - Fehler: $INSTALL_ERRORS"
 echo "[SETUP] - Quelle offline_wheels: $INSTALL_SOURCE_OFFLINE"
 echo "[SETUP] - Quelle online/pip: $INSTALL_SOURCE_ONLINE"
 echo "[SETUP] - Offene Versionskonflikte: $INSTALL_CONFLICTS"
+echo "[SETUP] - Auto-Reparatur-Status: $AUTOREPAIR_STATUS"
+echo "[STATUS] $AUTOREPAIR_ICON $AUTOREPAIR_MESSAGE"
 
 if [ "$INSTALL_ERRORS" -gt 0 ] || [ "$INSTALL_CONFLICTS" -gt 0 ]; then
   OVERALL_STATUS="WARN"
