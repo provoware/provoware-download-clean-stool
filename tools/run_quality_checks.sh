@@ -32,7 +32,11 @@ run_optional() {
 
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] 1/4 Syntaxprüfung (compileall)"
-python3 -m compileall -q "$ROOT_DIR"
+python3 -m compileall -q \
+  "$ROOT_DIR/app" \
+  "$ROOT_DIR/core" \
+  "$ROOT_DIR/tools" \
+  "$ROOT_DIR/start.sh"
 
 say "[QUALITY] 2/4 Formatprüfung"
 run_optional "black" "black --check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "black \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
