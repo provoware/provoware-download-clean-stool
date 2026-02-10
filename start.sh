@@ -181,7 +181,65 @@ if ! bash tools/run_quality_checks.sh > "$QUALITY_LOG" 2>&1; then
   python3 tools/quality_gate_gui.py || true
 fi
 
-# 5) Smoke-Test mit venv python
+# 5) Linux-Systembibliothek prüfen (vor Smoke-Test)
+echo "[CHECK] Prüfe Linux-Systembibliothek: libGL.so.1"
+if ! ldconfig -p 2>/dev/null | grep -q 'libGL.so.1'; then
+  echo "[WARN] libGL.so.1 fehlt. Starte geführte Reparatur."
+  echo "Fehlt: libGL.so.1" >> "$ERR_LOG"
+
+  REPAIR_TEXT="Was fehlt?
+Grafik-Baustein: libGL.so.1
+
+Warum wichtig?
+Die grafische Oberfläche braucht diesen Baustein zum Anzeigen.
+
+Was tun?
+Klicken Sie auf 'Jetzt installieren'. Danach das Programm neu starten."
+
+  INSTALL_NOW=0
+  if command -v zenity >/dev/null 2>&1; then
+    if zenity --question \
+      --title="Grafik-Baustein fehlt" \
+      --width=560 \
+      --ok-label="Jetzt installieren" \
+      --cancel-label="Abbrechen" \
+      --text="$REPAIR_TEXT"; then
+      INSTALL_NOW=1
+    fi
+  else
+    echo "[HILFE] $REPAIR_TEXT"
+    INSTALL_NOW=1
+  fi
+
+  if [ "$INSTALL_NOW" -eq 1 ]; then
+    if command -v apt-get >/dev/null 2>&1; then
+      echo "[SETUP] Installiere libGL-Systempaket (libgl1)"
+      if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y libgl1 >>"$SETUP_LOG" 2>&1; then
+        echo "[OK] libgl1 wurde installiert."
+      else
+        echo "[WARN] Automatische Installation von libgl1 fehlgeschlagen." >>"$SETUP_LOG"
+      fi
+    else
+      echo "[WARN] apt-get nicht verfügbar. libgl1 konnte nicht automatisch installiert werden." >>"$SETUP_LOG"
+    fi
+  fi
+
+  if ! ldconfig -p 2>/dev/null | grep -q 'libGL.so.1'; then
+    python3 tools/boot_error_gui.py "Was fehlt?
+Grafik-Baustein: libGL.so.1
+
+Warum wichtig?
+Die GUI braucht diesen Baustein zum Anzeigen.
+
+Was tun?
+1) Falls möglich: sudo apt update && sudo apt install libgl1
+2) Danach neu starten: bash start.sh
+3) Hilfe/Details: exports/setup_log.txt" "Grafik-Baustein fehlt"
+    exit 1
+  fi
+fi
+
+# 6) Smoke-Test mit venv python
 echo "[CHECK] Starte Smoke-Test"
 if ! "$VENV_PY" tools/smoke_test.py >>"$SETUP_LOG" 2>&1; then
   echo "[ERROR] Smoke-Test fehlgeschlagen"
@@ -195,7 +253,7 @@ Details: exports/setup_log.txt" "Smoke-Test"
   exit 1
 fi
 
-# 6) GUI starten
+# 7) GUI starten
 echo "[RUN] Starte GUI"
 if ! "$VENV_PY" -m app.main >>"$SETUP_LOG" 2>&1; then
   echo "[ERROR] GUI konnte nicht gestartet werden"
