@@ -1,2 +1,2 @@
-DONE: Dark/Contrast-Theme visuell an Referenz angenähert und Fokusrahmen für Tastatursteuerung verbessert. (2026-02-10)
-NEXT: Optionen-Seite inhaltlich wie Referenz strukturieren (Kachel-Layout + klare Abschnittstitel) ohne Funktionsänderung. (2026-02-10)
+DONE: Optionen-Seite mit klaren visuellen Abschnitten und besserer Leseführung ergänzt. (2026-02-10)
+NEXT: Scan-Seite optisch wie Referenz als Status-Karten strukturieren (nur Layout, keine Logik). (2026-02-10)
