@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.6] – 2026‑02‑10
+
+### Changed
+
+* Was: Haupt-Dashboard (Schritt 1) zeigt jetzt eine laienfreundliche Schnellübersicht mit Systemstatus, Zielordner, aktivem Preset, Filter- und Duplikatmodus sowie klaren Nächste-Schritte-Hinweisen.
+* Warum: Nutzer:innen sollen direkt beim Start verständliche Orientierung bekommen und wichtige Einstellungen auf einen Blick prüfen können.
+* Wirkung: Bessere Auffindbarkeit zentraler Infos, lesbarere Darstellung (WordWrap) und mehr Barrierefreiheit durch einfache Sprache im Einstieg.
+
 ## [1.0.5] – 2026‑02‑10
 
 ### Changed

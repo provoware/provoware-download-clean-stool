@@ -1,5 +1,5 @@
-DONE: README-Kopf enthält jetzt 3 kommagetrennte Stichpunkt-Zeilen zu Fertig/Offen/Fortschritt+Nächste Schritte. (2026-02-10)
-NEXT: Hilfeelement + Barrierefreiheits-Verbesserung als Pflicht pro Iteration in Umsetzung prüfen und im nächsten Patch in UI belegen. (2026-02-10)
+DONE: Haupt-Dashboard um laienfreundliche Schnellübersicht + Hilfetext + bessere Lesbarkeit (WordWrap) erweitert. (2026-02-10)
+NEXT: Dashboard-Kennzahlen um Scan-Trends (z. B. letzte 3 Läufe) ergänzen und verständlich erklären. (2026-02-10)
 
 Release TODO (offene Punkte vor dem nächsten Release)
 ===================================================
