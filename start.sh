@@ -295,6 +295,21 @@ fi
 
 # 7) GUI starten
 echo "[RUN] Starte GUI"
+if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
+  echo "[WARN] Keine grafische Sitzung erkannt (headless). GUI-Start wird übersprungen."
+  python3 tools/boot_error_gui.py "Keine grafische Sitzung erkannt.
+
+Was bedeutet das?
+- Diese Umgebung hat aktuell kein Bildschirm-Backend (Display/Wayland).
+- Darum kann die Oberfläche nicht geöffnet werden.
+
+Nächste Schritte:
+1) Im Desktop-Terminal neu ausführen: bash start.sh
+2) Oder Display setzen (Beispiel): export DISPLAY=:0
+3) Details im Protokoll lesen: exports/setup_log.txt" "GUI-Start im Headless-Modus"
+  exit 0
+fi
+
 if ! "$VENV_PY" -m app.main >>"$SETUP_LOG" 2>&1; then
   echo "[ERROR] GUI konnte nicht gestartet werden"
   python3 tools/boot_error_gui.py "Die GUI konnte nicht gestartet werden.
