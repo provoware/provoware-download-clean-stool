@@ -156,6 +156,16 @@ export LOG_LEVEL=DEBUG
      - Eine Zeile `DONE: ... (Datum)`
      - Eine Zeile `NEXT: ... (Datum)`
 
+
+7. **Abbruchfreien Start gezielt prüfen (robuster Linux-Lib-Check)**
+   - Zweck: Sicherstellen, dass frisch installierte Systembibliotheken direkt erkannt werden.
+   - Befehle:
+
+```bash
+bash start.sh
+ldconfig -p | rg "libGL.so.1|libEGL.so.1|libxkbcommon.so.0"
+```
+
 ---
 
 Stand dieser Informationsdatei: 2026-02-10
