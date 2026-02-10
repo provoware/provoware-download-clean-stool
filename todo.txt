@@ -4,6 +4,21 @@ Release TODO (offene Punkte vor dem nächsten Release)
 Stand: 2026-02-10
 Ziel: Sichere, barrierearme und vollautomatisch startbare Version mit klarer Qualitätssicherung.
 
+Entwicklungsfortschritt (Iterationen)
+-------------------------------------
+
+1) Iteration 1 – stabile Grundlage: 35%
+   - Startskript, Grundmodule, erster Smoke-Test vorhanden.
+2) Iteration 2 – Fehlertoleranz/UX: 55%
+   - Wizard-Flow, Undo und Fehlerdialoge nutzbar.
+3) Iteration 3 – Release-Analyse & Doku: 70%
+   - README + Entwicklerdoku auf Release-Gaps und Standards ausgerichtet.
+4) Nächste Iteration (Ziel): 85%
+   - Vollständige automatische Tests
+   - Quality-Gate mit Formatter/Linter
+   - Vollständige Input-/Output-Validierung
+   - Vereinheitlichte deutsche Klartextmeldungen
+
 1) Kritische Release-Blocker (muss vor Release fertig sein)
 -----------------------------------------------------------
 
@@ -17,6 +32,8 @@ Ziel: Sichere, barrierearme und vollautomatisch startbare Version mit klarer Qua
     - Scan/Plan/Ausführung
     - Undo
     inklusive klarer Erfolg-/Fehler-Rückmeldung in einfacher Sprache.
+[ ] Exit-Knoten-Härtung: Jeder Fehlerfall bietet immer Lösung an,
+    kein stiller Abbruch ohne Handlungsoption.
 [ ] Logging- und Debug-Modus strukturieren:
     - konsistente Log-Level (INFO/WARN/ERROR/DEBUG)
     - nutzerfreundliche Fehlermeldungen + konkrete Lösungsvorschläge

@@ -1,48 +1,140 @@
-# Developer Manual
+# Entwicklerdokumentation (Release-orientiert)
 
-This document provides a high‑level overview of the internals of the Downloads Organizer application. Developers looking to extend or maintain the tool should read this document first.
+Diese Dokumentation beschreibt die technische Zielarchitektur für ein robustes, laienfreundliches Tool mit maximaler Fehlertoleranz.
 
-## Application Flow
+## 1) Architekturprinzipien
 
-The entry point for the application is `app/main.py`. When run as a script via `python -m app.main`, it performs a simple self‑check (see `core/selfcheck.py`) and then instantiates a `MainWindow`. The GUI is built using PySide6 and uses a wizard‑style workflow implemented with a `QStackedWidget`.
+1. **GUI-first, kein CLI-Zwang für Nutzer**
+   - Alle Kernfunktionen müssen per Buttons/Dropdowns nutzbar sein.
+2. **Trennung von Zuständigkeiten (Separation of Concerns)**
+   - `app/`: UI und Interaktion
+   - `core/`: Geschäftslogik (Business-Logik)
+   - `data/`: Presets + Konfiguration
+   - `logs/`, `exports/`: Laufzeitartefakte (nicht als feste Logikdateien)
+3. **Sicher statt schnell**
+   - Niemals direkt löschen; nur verschieben + Undo ermöglichen.
+4. **Beobachtbarkeit (Observability)**
+   - Jeder kritische Schritt wird geloggt.
 
-### Wizard Pages
+## 2) Start-Routine und Abhängigkeitsauflösung
 
-1. **Welcome & Folder Selection** – The user chooses the folder to scan (defaulting to the Downloads folder) and selects a theme. Pressing “Weiter” moves to the next page.
-2. **Options** – Users choose a preset (Senior, Standard or Power) or customise filters. Filters control which file types are considered and set size and age thresholds. The duplicate detection mode (none, quick or safe) is also configured here. “Zurück” returns to the previous page and “Weiter” starts the scan.
-3. **Scan & Plan** – The application scans the chosen folder using `core.scanner.scan_directory`. Duplicate detection is performed by `core.scanner.detect_duplicates`. A summary is displayed. The user can click “Plan anzeigen” to see details. “Weiter” builds an `ActionPlan` using `core.planner.build_plan`.
-4. **Execute & Undo** – The final page shows the number of files that will be moved and the total size freed. Clicking “Ausführen” calls `core.executor.execute_move_plan` to move files to the trash directory. “Undo” calls `core.executor.undo_last` to restore files from the last action. “Fertig” closes the application.
+Die Startlogik in `start.sh` soll als „Autopilot“ funktionieren:
 
-## Core Modules
+1. Virtuelle Umgebung erzeugen.
+2. Abhängigkeiten automatisch installieren.
+3. Kritische Imports prüfen.
+4. Qualitätsskripte starten.
+5. Smoke-Test ausführen.
+6. GUI starten.
 
-- **`core/settings.py`** – Defines a `Settings` dataclass and helper functions to load and save settings from JSON.
-- **`core/scanner.py`** – Contains the logic for scanning directories, applying filters and detecting duplicates. The `scan_directory()` function yields dictionaries describing candidate files. The `detect_duplicates()` function groups files by (name, size) for quick mode or by checksum for safe mode.
-- **`core/planner.py`** – Defines the `ActionPlan` and `PlanItem` classes. The `build_plan()` function uses scan results and duplicate groups to decide which files should be moved.
-- **`core/executor.py`** – Implements `execute_move_plan()` to move files to the trash and `undo_last()` to restore files from the trash. A trash directory is created in the user’s Downloads folder under `.downloads_organizer_trash`.
-- **`core/logger.py`** – Provides a simple logging setup that writes to `logs/app.log` and to the console.
-- **`core/selfcheck.py`** – Performs a basic self‑check at startup, ensuring that required directories can be created and that the Python version is sufficient.
+### Anforderungen an die Robustheit
 
-## Tools
+- Jeder Schritt hat:
+  - **Prüfung** (Was wurde erwartet?)
+  - **Ergebnis** (Was ist passiert?)
+  - **Lösungspfad** (Was jetzt tun?)
+- Keine stillen Fehler („silent failures“).
+- Fehlertexte in einfacher deutscher Sprache.
 
-The `tools/` folder contains helper scripts used by the start script and for diagnostics:
+## 3) Exit-Knoten-Design (kein harter Abbruch ohne Hilfe)
 
-- **`run_quality_checks.sh`** – Runs a basic code compilation check on the `app` and `core` modules. It ensures that Python files compile without syntax errors. This script is invoked automatically by `start.sh` before the GUI is launched. If it fails, the application will not start.
-- **`smoke_test.py`** – Performs a minimal smoke test by importing the GUI and core modules. It can be run during development to verify that the application starts without errors.
-- **`boot_error_gui.py`**, **`quality_gate_gui.py`**, **`repair_center_gui.py`** – These simple PySide6 dialogs present user‑friendly information when errors occur during startup or quality checks. They allow the user to attempt repairs or view logs without needing to use the terminal.
+Für jeden Exit-Knoten gilt Pflicht:
 
-## Running Locally
+1. **Kurze Problemzusammenfassung**
+2. **Wahrscheinliche Ursache**
+3. **Sofortmaßnahmen als nummerierte Schritte**
+4. **Optionen im Dialog**:
+   - Erneut versuchen
+   - Reparatur starten
+   - Log anzeigen
 
-The `start.sh` script is the recommended way to run the application. It sets up a virtual environment in the project directory, installs dependencies from `requirements.txt`, runs a quality check and then starts the GUI. If something goes wrong, a friendly error dialog will appear with options to repair or view logs.
+### Exit-Knoten-Matrix (Soll)
 
-For development, you can bypass `start.sh` and simply run:
+1. **Venv-Erstellung fehlgeschlagen** → Hinweis auf `python3-venv`, Wiederholoption.
+2. **Paketinstallation unvollständig** → Netzwerk-/Paketquellen-Hinweise.
+3. **Import kritischer Module fehlgeschlagen** → klarer Modulname, Installationspfad.
+4. **Quality Gate schlägt fehl** → Start optional, aber mit klarer Warnung.
+5. **Smoke-Test fehlgeschlagen** → GUI blockieren, Reparaturpfad anbieten.
+6. **GUI-Startfehler** → Log-Öffnung + diagnostische Anleitung.
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python -m app.main
-```
+## 4) Validierungsstrategie (Input + Output)
 
-## Contributing
+Jede Kernfunktion erhält zwei Ebenen:
 
-Contributions are welcome! Please open issues or pull requests to suggest improvements or report bugs. When adding new features, remember to include them in the README and CHANGELOG and consider how they fit into the overall user experience for non‑technical users.
+1. **Input-Validierung**
+   - Typ, Format, Wertebereich, Existenzprüfung.
+2. **Output-Validierung**
+   - Ergebnisobjekt vollständig?
+   - Dateioperation wirklich durchgeführt?
+   - Undo reproduzierbar?
+
+### Mindestanforderung pro Modul
+
+- `settings`: Schema-Validierung, Fallback auf Defaults.
+- `scanner`: Nur zugängliche Dateien, Fehler je Datei protokollieren.
+- `planner`: Kein leerer/inkonsistenter Plan ohne Warnung.
+- `executor`: Jede Move-Operation bestätigen, Fehler einzeln erfassen.
+- `undo`: Vollständigkeitscheck + Teilfehler verständlich melden.
+
+## 5) Deutsche Toolsprache (einfach + präzise)
+
+Leitfaden für UI-Texte:
+
+1. **Kurze Sätze (max. 15 Wörter)**
+2. **Aktive Sprache** („Klicken Sie auf …“)
+3. **Fachwort + Erklärung in Klammern**
+   - Beispiel: „Duplikat (gleiche Datei mehrfach vorhanden)“
+4. **Immer Handlungsoption nennen**
+5. **Keine technischen Stacktraces im Hauptdialog**
+   - Details nur im Debug-/Log-Bereich.
+
+## 6) Logging- und Debug-Modus
+
+1. Standardmodus: nutzerfreundliche Meldungen.
+2. Debug-Modus: technische Details, Zeitstempel, Modulpfad, Ursache.
+3. Log-Level konsistent nutzen:
+   - `INFO`: normaler Ablauf
+   - `WARN`: recoverable Problem
+   - `ERROR`: kritischer Fehler
+   - `DEBUG`: tiefe Diagnose
+
+## 7) Qualitätssicherung (automatisiert)
+
+Release-Pipeline (Sollzustand):
+
+1. Compile-Check
+2. Unit-Tests
+3. Smoke-Test
+4. Formatter-Check (`black --check`, `isort --check-only`)
+5. Linter (`ruff check`)
+
+Alle Checks sollen in einem Qualitätsbericht zusammenlaufen.
+
+## 8) Barrierefreiheit und Theme-Standards
+
+Pflichtkriterien:
+
+1. Kontrast nach WCAG-orientierten Mindestwerten.
+2. Tastaturbedienbarkeit für Hauptaktionen.
+3. Fokusrahmen sichtbar.
+4. Theme-Namen technisch und im UI identisch.
+5. Senior-Modus mit größeren Schriften und Abständen.
+
+## 9) Iterationsmodell mit Fortschritt
+
+1. **Iteration 1 (35%)**: Grundfunktionen + Startlogik stabil.
+2. **Iteration 2 (55%)**: Fehlerdialoge/Recovery integriert.
+3. **Iteration 3 (70%)**: Dokumentation + Release-Kriterien geschärft.
+4. **Nächste Iteration (Ziel 85%)**:
+   - Automatisierte Tests vervollständigen
+   - Quality Gate erweitern
+   - UI-Sprachprüfung systematisieren
+   - Validierungs-Checkliste pro Modul technisch erzwingen
+
+## 10) Konkrete nächste Schritte (priorisiert)
+
+1. Testabdeckung Kernmodule aufbauen.
+2. Formatter/Linter in Qualitätsskript integrieren.
+3. Validierungs-Helper zentralisieren (`core/validation.py`, optional).
+4. Fehlermeldungen per Styleguide vereinheitlichen.
+5. Release-Checkliste vor Freeze einmal komplett durchlaufen.
