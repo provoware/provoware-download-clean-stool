@@ -1,0 +1,8 @@
+TODO for future releases
+------------------------
+
+- Add support for permanently deleting files after they have been safely moved to the trash and reviewed.
+- Provide more fine‑grained file type filters (e.g. separate video formats, documents, etc.).
+- Support scanning and cleaning multiple folders at once.
+- Add a progress bar when scanning very large folders.
+- Improve duplicate detection with content hashing in parallel to speed up safe mode.

@@ -1,0 +1,12 @@
+{
+  "theme": "light",
+  "large_text": false,
+  "download_dir": "",
+  "presets": "standard",
+  "filters": {
+    "types": ["images", "videos", "archives", "other"],
+    "size": "any",
+    "age": "any"
+  },
+  "duplicates_mode": "none"
+}
