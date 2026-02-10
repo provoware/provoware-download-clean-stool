@@ -4,11 +4,11 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.3] – 2026‑02‑10
 
-### Fixed
+### Changed
 
-* Was: `requirements.txt` enthält jetzt nur noch eine einheitliche `ruff`-Version (`ruff>=0.6.0`).
-* Warum: Zwei widersprüchliche `ruff`-Einträge führten in der Start-Routine zu unnötigen Install-Fehlern.
-* Wirkung: Die automatische Abhängigkeitsprüfung läuft stabiler und meldet weniger Fehlalarme.
+* Was: `start.sh` nutzt jetzt optional den Ordner `offline_wheels/` und installiert Pakete zuerst offline, danach erst online als Fallback.
+* Warum: Das Tool soll portabel/offline startfähig bleiben, wenn Abhängigkeiten bereits mitgeliefert werden.
+* Wirkung: Ohne Internet kann der Start weiterlaufen, sobald passende Wheels lokal im Projekt liegen.
 
 ## [1.0.2] – 2026‑02‑10
 
