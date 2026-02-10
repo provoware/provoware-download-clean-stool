@@ -1,3 +1,6 @@
+DONE: start.sh prüft vor Smoke-Test jetzt libGL.so.1 inkl. Reparaturdialog „Jetzt installieren" + apt-Autoreparatur (libgl1). (2026-02-10)
+NEXT: Reparaturdialog für fehlende Linux-GUI-Bibliotheken auf weitere Kernpakete (z. B. libxkbcommon0) erweitern. (2026-02-10)
+
 DONE: start.sh zeigt jetzt eine klare Abschluss-Zusammenfassung für Abhängigkeiten (ok/übersprungen/fehler/offline/online). (2026-02-10)
 NEXT: start.sh um abschließende Gesamtstatus-Zeile mit Handlungsempfehlung (OK/WARN/FEHLER) erweitern. (2026-02-10)
 

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.11] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` prüft vor dem Smoke-Test jetzt explizit auf die Linux-Systembibliothek `libGL.so.1`, zeigt bei Bedarf eine klare Reparaturhilfe in einfacher Sprache und bietet direkt „Jetzt installieren“ (per `zenity`) mit automatischer `apt`-Reparatur (`libgl1`) an.
+* Warum: Auf frischen Linux-Systemen kann die GUI trotz korrekter Python-Pakete nicht starten, wenn der Grafik-Baustein fehlt.
+* Wirkung: Nutzer sehen die Ursache sofort, bekommen eine laienfreundliche Lösung und können den Fehler ohne Logsuche automatisiert beheben.
+
 ## [1.0.10] – 2026‑02‑10
 
 ### Changed
