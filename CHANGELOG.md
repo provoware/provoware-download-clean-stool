@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.14] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` erweitert die Linux-Systembibliotheksprüfung um `libEGL.so.1` und führt die gleiche Reparaturführung wie bei `libGL.so.1`/`libxkbcommon.so.0` aus (Dialog, apt-Autoinstallation, klare Next Steps).
+* Warum: Auf manchen Linux-Systemen startet die GUI trotz Python-Abhängigkeiten nicht, wenn der EGL-Baustein fehlt.
+* Wirkung: Weniger Startabbrüche bei Grafikinitialisierung, konsistentes Nutzerfeedback in einfacher Sprache und schnellere Selbstreparatur.
+
 ## [1.0.13] – 2026‑02‑10
 
 ### Changed

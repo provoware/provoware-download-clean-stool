@@ -74,6 +74,7 @@ Diese Standards sollten als verbindliche Leitplanken im Projekt gelten:
 
 Bereits vorhanden:
 - Automatische Startlogik mit venv, Paketinstallation, Modulprüfung, Qualitätsprüfung und Smoke-Test.
+- Linux-GUI-Bibliotheken `libGL.so.1`, `libEGL.so.1` und `libxkbcommon.so.0` werden vor dem Smoke-Test automatisch geprüft und bei Bedarf geführt repariert.
 - GUI-Fehlerdialoge mit Reparatur-/Info-Fokus.
 - Wizard-basierter, button-gesteuerter Ablauf.
 

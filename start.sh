@@ -182,7 +182,7 @@ if ! bash tools/run_quality_checks.sh > "$QUALITY_LOG" 2>&1; then
 fi
 
 # 5) Linux-Systembibliotheken prüfen (vor Smoke-Test)
-for LIB_SPEC in "libGL.so.1|libgl1|Grafik-Baustein|Die grafische Oberfläche braucht diesen Baustein zum Anzeigen.|Grafik-Baustein fehlt" "libxkbcommon.so.0|libxkbcommon0|Tastatur-Baustein|Die grafische Oberfläche braucht diesen Baustein für Tastatur und Eingabe.|Tastatur-Baustein fehlt"; do
+for LIB_SPEC in "libGL.so.1|libgl1|Grafik-Baustein|Die grafische Oberfläche braucht diesen Baustein zum Anzeigen.|Grafik-Baustein fehlt" "libEGL.so.1|libegl1|EGL-Grafik-Baustein|Die grafische Oberfläche braucht diesen Baustein für die GPU-Verbindung (Grafikbeschleunigung).|EGL-Baustein fehlt" "libxkbcommon.so.0|libxkbcommon0|Tastatur-Baustein|Die grafische Oberfläche braucht diesen Baustein für Tastatur und Eingabe.|Tastatur-Baustein fehlt"; do
   LIB_NAME="$(echo "$LIB_SPEC" | cut -d'|' -f1)"
   APT_PACKAGE="$(echo "$LIB_SPEC" | cut -d'|' -f2)"
   LIB_LABEL="$(echo "$LIB_SPEC" | cut -d'|' -f3)"
