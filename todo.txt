@@ -1,3 +1,6 @@
+DONE: start.sh zeigt jetzt direkt nach der Paketprüfung eine klare Gesamtstatus-Zeile mit Symbol (✅/⚠️), Status (OK/WARN) und kurzer Handlungsempfehlung in einfacher Sprache. (2026-02-10)
+NEXT: Gesamtstatus auch für spätere Startphasen (Systembibliotheken, Smoke-Test, GUI-Start) zu einer finalen Ampel-Zusammenfassung zusammenführen. (2026-02-10)
+
 DONE: start.sh kapselt Linux-Bibliotheksprüfung jetzt in check_and_repair_linux_lib für robuste Erweiterbarkeit ohne Logik-Duplikate. (2026-02-10)
 NEXT: Abschluss-Statuszeile (OK/WARN/FEHLER) in start.sh ergänzen, damit Laien sofort den Gesamtzustand sehen. (2026-02-10)
 
