@@ -90,9 +90,14 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(self.page_welcome)
         title = QLabel("<h2>Schritt 1/4 – Ordner und Anzeige</h2>")
         layout.addWidget(title)
+        self.lbl_dashboard_info = QLabel()
+        self.lbl_dashboard_info.setWordWrap(True)
+        self.lbl_dashboard_info.setTextFormat(Qt.RichText)
+        layout.addWidget(self.lbl_dashboard_info)
         # Folder selection
         hl_folder = QHBoxLayout()
         self.lbl_folder = QLabel("Kein Ordner ausgewählt")
+        self.lbl_folder.setWordWrap(True)
         btn_choose = QPushButton("Ordner wählen…")
         hl_folder.addWidget(self.lbl_folder)
         hl_folder.addWidget(btn_choose)
@@ -114,12 +119,31 @@ class MainWindow(QMainWindow):
         btn_next = QPushButton("Weiter →")
         btn_next.clicked.connect(self._welcome_next)
         layout.addWidget(btn_next)
+        self._refresh_dashboard_info()
+
+    def _refresh_dashboard_info(self) -> None:
+        selected_folder = self.root_path or Path(self.settings.download_dir)
+        folder_text = str(selected_folder) if selected_folder else "Noch kein Ordner festgelegt"
+        active_types = ", ".join(self.settings.filters.types) if self.settings.filters.types else "keine"
+        self.lbl_dashboard_info.setText(
+            "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
+            f"• System: {platform.system()} {platform.release()}<br/>"
+            f"• Aktueller Zielordner: {folder_text}<br/>"
+            f"• Aktives Preset: {self.settings.presets}<br/>"
+            f"• Dateitypen-Filter: {active_types}<br/>"
+            f"• Duplikat-Prüfung: {self.settings.duplicates_mode}<br/><br/>"
+            "<b>Hilfe in einfacher Sprache:</b><br/>"
+            "1) Wählen Sie einen Ordner.<br/>"
+            "2) Wählen Sie ein gut lesbares Farbschema.<br/>"
+            "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten."
+        )
 
     def _choose_folder(self) -> None:
         path = QFileDialog.getExistingDirectory(self, "Ordner auswählen", str(Path.home() / "Downloads"))
         if path:
             self.lbl_folder.setText(path)
             self.root_path = Path(path)
+            self._refresh_dashboard_info()
 
     def _welcome_next(self) -> None:
         # Save theme settings
@@ -127,6 +151,7 @@ class MainWindow(QMainWindow):
         self.settings.theme = {"hell": "light", "dunkel": "dark"}.get(selected_theme, selected_theme)
         self.settings.large_text = self.cb_large.isChecked()
         self.apply_theme(self.settings.theme, self.settings.large_text)
+        self._refresh_dashboard_info()
         # Ensure folder selected
         if not self.root_path:
             QMessageBox.warning(self, "Fehlende Angabe", "Bitte wählen Sie einen Ordner aus.")
