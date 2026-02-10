@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.12] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` prüft den Linux-Bibliotheksblock jetzt einheitlich für `libGL.so.1` **und** `libxkbcommon.so.0`, inklusive gleicher Reparaturführung per Dialog, apt-Autoinstallation und klaren Next Steps.
+* Warum: Auch bei fehlendem Tastatur-Baustein (`libxkbcommon.so.0`) kann die GUI trotz installierter Python-Pakete nicht starten.
+* Wirkung: Weniger Startabbrüche auf frischen Linux-Systemen, konsistente Hilfe in einfacher Sprache und schnellere Selbstreparatur ohne manuelle Fehlersuche.
+
 ## [1.0.11] – 2026‑02‑10
 
 ### Changed
