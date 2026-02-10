@@ -35,14 +35,18 @@ VENV_PIP="$PROJECT_DIR/venv/bin/pip"
 echo "[SETUP] Aktualisiere pip (wenn möglich)"
 "$VENV_PIP" install --upgrade pip >>"$SETUP_LOG" 2>&1 || true
 
-# 2) Abhängigkeiten einzeln installieren + klare Status-Ausgabe
-echo "[SETUP] Installiere Abhängigkeiten (vollautomatisch, mit Status)"
+# 2) Abhängigkeiten robust installieren + Konflikte automatisch prüfen
+echo "[SETUP] Installiere Abhängigkeiten (vollautomatisch, mit Status und Konfliktprüfung)"
 OFFLINE_WHEELS_DIR="$PROJECT_DIR/offline_wheels"
+REQ_SANITIZED="$PROJECT_DIR/exports/requirements.sanitized.txt"
+> "$REQ_SANITIZED"
 INSTALL_ERRORS=0
 INSTALL_OK=0
 INSTALL_SKIPPED=0
 INSTALL_SOURCE_OFFLINE=0
 INSTALL_SOURCE_ONLINE=0
+INSTALL_CONFLICTS=0
+
 if [ -f requirements.txt ]; then
   while IFS= read -r raw_pkg || [ -n "$raw_pkg" ]; do
     pkg="$(printf '%s' "$raw_pkg" | sed -e 's/#.*//' -e 's/\r$//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
@@ -50,6 +54,7 @@ if [ -f requirements.txt ]; then
       INSTALL_SKIPPED=$((INSTALL_SKIPPED + 1))
       continue
     fi
+    printf '%s\n' "$pkg" >> "$REQ_SANITIZED"
 
     if [ -d "$OFFLINE_WHEELS_DIR" ]; then
       echo "[SETUP] Offline-Install für $pkg aus offline_wheels/ …"
@@ -76,15 +81,36 @@ if [ -f requirements.txt ]; then
   done < requirements.txt
 fi
 
+if ! "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
+  INSTALL_CONFLICTS=1
+  echo "[WARN] Versionskonflikt erkannt. Starte automatische Reparatur (Upgrade nach requirements)."
+  if [ -s "$REQ_SANITIZED" ]; then
+    if [ -d "$OFFLINE_WHEELS_DIR" ]; then
+      "$VENV_PIP" install --upgrade --no-index --find-links "$OFFLINE_WHEELS_DIR" -r "$REQ_SANITIZED" >>"$SETUP_LOG" 2>&1 || true
+    fi
+    "$VENV_PIP" install --upgrade --upgrade-strategy eager --no-cache-dir -r "$REQ_SANITIZED" >>"$SETUP_LOG" 2>&1 || true
+  fi
+  if "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
+    INSTALL_CONFLICTS=0
+    echo "[OK] Konflikte wurden automatisch behoben."
+  else
+    echo "[WARN] Konflikte bestehen weiter. Bitte Log prüfen: $SETUP_LOG"
+  fi
+fi
+
 echo "[SETUP] Zusammenfassung Abhängigkeitsprüfung:"
 echo "[SETUP] - Erfolgreich installiert: $INSTALL_OK"
 echo "[SETUP] - Übersprungen (leer/Kommentar/Option): $INSTALL_SKIPPED"
 echo "[SETUP] - Fehler: $INSTALL_ERRORS"
 echo "[SETUP] - Quelle offline_wheels: $INSTALL_SOURCE_OFFLINE"
 echo "[SETUP] - Quelle online/pip: $INSTALL_SOURCE_ONLINE"
+echo "[SETUP] - Offene Versionskonflikte: $INSTALL_CONFLICTS"
 
-if [ "$INSTALL_ERRORS" -gt 0 ]; then
-  echo "[WARN] $INSTALL_ERRORS Paket(e) konnten nicht installiert werden. Details: $ERR_LOG"
+if [ "$INSTALL_ERRORS" -gt 0 ] || [ "$INSTALL_CONFLICTS" -gt 0 ]; then
+  echo "[HILFE] Es gibt noch offene Paketprobleme."
+  echo "[HILFE] 1) Internet prüfen"
+  echo "[HILFE] 2) Erneut starten: bash start.sh"
+  echo "[HILFE] 3) Log öffnen: $SETUP_LOG"
 fi
 
 # 3) Kritische Imports prüfen (ohne Crash)

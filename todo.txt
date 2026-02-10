@@ -4,6 +4,9 @@ NEXT: start.sh um abschließende Gesamtstatus-Zeile mit Handlungsempfehlung (OK/
 DONE: start.sh ergänzt um Linux/Kubuntu-Autoreparatur (apt) bei fehlenden Kernmodulen + Recheck + klare Next Steps. (2026-02-10)
 NEXT: start.sh um automatische Prüfung/Installation fehlender Qt-Systemlibs (z. B. libxkbcommon0) erweitern und abschließende Zusammenfassung ausgeben. (2026-02-10)
 
+DONE: start.sh prüft jetzt automatisch Paket-Versionskonflikte (pip check) und versucht eine automatische Reparatur (offline zuerst, danach online mit eager-upgrade). (2026-02-10)
+NEXT: start.sh um gezielte libGL.so.1-Systemprüfung + geführte Autoreparatur erweitern, damit GUI-Smoke-Test auch auf frischen/offline-nahen Linux-Systemen stabil läuft. (2026-02-10)
+
 DONE: start.sh Requirement-Parsing Linux-robust bereinigt (CRLF/Kommentare/Optionen) + klare [OK]-Statusmeldungen ergänzt. (2026-02-10)
 NEXT: start.sh Abschluss-Zusammenfassung ergänzen (installiert/übersprungen/fehlgeschlagen) in einfacher Sprache. (2026-02-10)
 
