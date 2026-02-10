@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Doku-Iteration: Entwickler-Actionplan ergänzt
+- **Was:** README um einen klaren Abschnitt „Sinnvolle Actions“ mit vollständigen Befehlen für Start, Qualitätsgates, Auto-Formatierung, Debug-Mode und A11y-Quickcheck erweitert.
+- **Warum:** Die Frage nach konkreten, hilfreichen Entwicklungsaktionen sollte mit sofort nutzbaren, laienfreundlichen Standards beantwortet werden.
+- **Wirkung:** Entwickler:innen erhalten eine einheitliche, barrierearme Schrittfolge für bessere Codequalität und reproduzierbare Abläufe.
+
 ## 2026-02-10 – Start-Iteration: Headless-Start ohne Crash
 - **Was:** `start.sh` erkennt jetzt fehlende grafische Sitzung (`DISPLAY`/`WAYLAND_DISPLAY`) vor dem GUI-Start und zeigt eine klare Hilfe mit nächsten Schritten.
 - **Warum:** In Headless-Umgebungen kam es bisher zu einem harten GUI-Startfehler statt zu einer verständlichen Rückmeldung.
