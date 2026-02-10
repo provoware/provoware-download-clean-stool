@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Prozess-Iteration: README-Fortschrittspflicht in AGENTS verbindlich gemacht
+- **Was:** `AGENTS.md` um eine Pflichtsektion ergänzt: README muss pro Iteration oben exakte Prozentzahl plus Listen für „Abgeschlossen“ und „Offen“ enthalten und aktualisiert werden.
+- **Warum:** Die neue Teamvorgabe verlangt transparenten Fortschritt mit klarer Sicht auf erledigte und offene Punkte in jeder Iteration.
+- **Wirkung:** Künftige Iterationen dokumentieren den Entwicklungsstand konsistent, nachvollziehbar und ohne Interpretationsspielraum.
+
 ## 2026-02-10 – UI-Iteration: Light-Theme mit klarerer Hierarchie und besserer Lesbarkeit
 - **Was:** Den `light`-Stylesheet-Block in `app/main.py` gezielt überarbeitet (ruhigerer Seitenhintergrund, stärkere Rahmen, größere Klickflächen, deutlicher Fokusrahmen).
 - **Warum:** Auf die Frage nach Design-/Layout-Verbesserung sollte das helle Design sichtbarer strukturiert und für Tastatur-/Sehhilfe besser erkennbar werden.

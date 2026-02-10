@@ -1,2 +1,2 @@
-DONE: Light-Theme im UI mit klareren Kontrasten, größeren Klickflächen und stärkerem Fokusrahmen verbessert. (2026-02-10)
-NEXT: Gleiches Kontrast-/Fokus-Feintuning für das dunkle Theme mit kurzem Nutzervergleich (hell/dunkel) ergänzen. (2026-02-10)
+DONE: AGENTS.md verpflichtet README-Topstatus mit exakter Prozentzahl sowie Listen für Abgeschlossen/Offen je Iteration. (2026-02-10)
+NEXT: README-Abschnitt 0 auf explizite Bullet-Listen für Abgeschlossen/Offen umstellen und je Iteration synchron halten. (2026-02-10)
