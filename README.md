@@ -11,19 +11,19 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **78%**
-- **Abgeschlossene Punkte:** **14**
-- **Offene Punkte:** **4**
-- **Nächster Schritt:** Quality-Gate um Formatter/Linter erweitern, danach Testabdeckung je Kernmodul erhöhen.
+- **Entwicklungsfortschritt:** **79%**
+- **Abgeschlossene Punkte:** **15**
+- **Offene Punkte:** **3**
+- **Nächster Schritt:** Ruff-E402-Regel im Smoke-Test sauber erfüllen und danach Testabdeckung je Kernmodul erhöhen.
 
 **Abgeschlossen:**
+- Quality-Gate führt bei Format-/Lint-Warnungen jetzt automatisch Reparaturläufe aus und prüft danach erneut.
 - Startroutine mit Auto-Prüfung, Auto-Reparatur und klaren Endstatusmeldungen.
 - Qualitäts- und Smoke-Gates sind vorhanden und ausführbar.
 - Fehlerführung mit klaren Next Steps (erneut versuchen, reparieren, protokoll).
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
-- Automatische Code-Formatierung fest im Quality-Gate verankern.
 - Pro Kernmodul mindestens einen zusätzlichen automatischen Test ergänzen.
 - Input-/Output-Validierung als technische Pflicht in zentralen Funktionen absichern.
 - A11y-Checks (Kontrast, Fokus, Tastaturbedienung) automatisiert prüfbar machen.

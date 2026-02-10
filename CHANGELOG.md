@@ -1,3 +1,8 @@
+## 2026-02-10 – Qualitäts-Iteration: Auto-Fix bei Warnungen direkt im Quality-Gate
+- **Was:** `tools/run_quality_checks.sh` startet bei Warnungen jetzt automatisch Black/Isort/Ruff-Fixläufe (steuerbar über `AUTO_FIX_ON_WARN`) und validiert danach erneut.
+- **Warum:** Nutzer:innen sollten nicht erst manuell `AUTO_FIX=1` nachstarten müssen, wenn die Korrektur sofort möglich ist.
+- **Wirkung:** Schnellere, barrierearme Qualitätssicherung mit klaren Next-Step-Meldungen, wenn nach Auto-Fix noch Restprobleme bleiben.
+
 # CHANGELOG
 
 ## 2026-02-10 – Doku-Iteration: Release-Lücken im README klar sichtbar

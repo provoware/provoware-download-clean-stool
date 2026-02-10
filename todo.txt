@@ -1,2 +1,2 @@
-DONE: README-Topstatus enthält jetzt explizite Listen für Abgeschlossen/Offen inkl. klarer Release-Lücken. (2026-02-10)
-NEXT: Quality-Gate als nächsten kleinen Schritt verbindlich auf Auto-Format/Lint-Fixes erweitern und erneut alle Gates laufen lassen. (2026-02-10)
+DONE: Quality-Gate führt Auto-Fix bei Warnungen jetzt direkt aus (AUTO_FIX_ON_WARN=1) und prüft danach erneut. (2026-02-10)
+NEXT: Smoke-Test so umstellen, dass Ruff-E402 ohne Sonderregel erfüllt ist (Imports ohne Regelbruch), danach alle Gates erneut laufen lassen. (2026-02-10)
