@@ -1,3 +1,9 @@
+
+## 2026-02-10 – Quality-Iteration: Smoke-Test ohne Ruff-E402-Sonderregel
+- **Was:** `tools/smoke_test.py` entfernt die Datei-Sonderregel `# ruff: noqa: E402` und nutzt stattdessen einen `main()`-Ablauf mit verzögerten Imports via `importlib`.
+- **Warum:** Der offene Qualitätspunkt verlangte regelkonformen Importfluss ohne globale Sonderausnahmen.
+- **Wirkung:** Lint-Regeln bleiben strikt aktiv, der Smoke-Test bleibt robust und liefert weiter verständliche Fehlermeldungen in einfacher Sprache.
+
 ## 2026-02-10 – Qualitäts-Iteration: Auto-Fix bei Warnungen direkt im Quality-Gate
 - **Was:** `tools/run_quality_checks.sh` startet bei Warnungen jetzt automatisch Black/Isort/Ruff-Fixläufe (steuerbar über `AUTO_FIX_ON_WARN`) und validiert danach erneut.
 - **Warum:** Nutzer:innen sollten nicht erst manuell `AUTO_FIX=1` nachstarten müssen, wenn die Korrektur sofort möglich ist.

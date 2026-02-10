@@ -1,2 +1,2 @@
-DONE: Quality-Gate führt Auto-Fix bei Warnungen jetzt direkt aus (AUTO_FIX_ON_WARN=1) und prüft danach erneut. (2026-02-10)
-NEXT: Smoke-Test so umstellen, dass Ruff-E402 ohne Sonderregel erfüllt ist (Imports ohne Regelbruch), danach alle Gates erneut laufen lassen. (2026-02-10)
+DONE: Smoke-Test erfüllt Ruff-E402 jetzt ohne Sonderregel durch saubere, verzögerte Importe. (2026-02-10)
+NEXT: Pro Kernmodul jeweils einen zusätzlichen automatischen Test ergänzen und danach A11y-Checks automatisierbar machen. (2026-02-10)

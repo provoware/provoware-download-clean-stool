@@ -11,13 +11,14 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **79%**
-- **Abgeschlossene Punkte:** **15**
-- **Offene Punkte:** **3**
-- **Nächster Schritt:** Ruff-E402-Regel im Smoke-Test sauber erfüllen und danach Testabdeckung je Kernmodul erhöhen.
+- **Entwicklungsfortschritt:** **80%**
+- **Abgeschlossene Punkte:** **16**
+- **Offene Punkte:** **2**
+- **Nächster Schritt:** Pro Kernmodul einen zusätzlichen automatischen Test ergänzen und danach A11y-Checks automatisieren.
 
 **Abgeschlossen:**
 - Quality-Gate führt bei Format-/Lint-Warnungen jetzt automatisch Reparaturläufe aus und prüft danach erneut.
+- Smoke-Test erfüllt Ruff-E402 jetzt ohne Sonderregel (`# ruff: noqa: E402`) durch saubere, verzögerte Importe.
 - Startroutine mit Auto-Prüfung, Auto-Reparatur und klaren Endstatusmeldungen.
 - Qualitäts- und Smoke-Gates sind vorhanden und ausführbar.
 - Fehlerführung mit klaren Next Steps (erneut versuchen, reparieren, protokoll).
@@ -25,7 +26,6 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 **Offen (für „perfekte“ Release-Version):**
 - Pro Kernmodul mindestens einen zusätzlichen automatischen Test ergänzen.
-- Input-/Output-Validierung als technische Pflicht in zentralen Funktionen absichern.
 - A11y-Checks (Kontrast, Fokus, Tastaturbedienung) automatisiert prüfbar machen.
 
 Kurz erklärt: Erst automatische Format-/Lint-Prüfung fest integrieren, dann pro Kernmodul mindestens einen stabilen Test ergänzen.
