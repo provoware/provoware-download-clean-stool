@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Release-Iteration: Offene Punkte quantifiziert und finales Tracking vereinheitlicht
+- **Was:** `RELEASE_CHECKLIST.md` neu eingeführt und mit Prozentfortschritt, Anzahl offener/abgeschlossener Punkte sowie nächstem Schritt befüllt; README, AGENTS.md und Entwicklerdoku auf diesen Iterationsstatus synchronisiert.
+- **Warum:** Für die Release-Finalisierung fehlte eine zentrale, pro Iteration aktualisierbare Statusquelle mit klaren Kennzahlen.
+- **Wirkung:** Transparenter Entwicklungsstand (78%, 14 abgeschlossen, 4 offen), klare Priorität für die nächste Mini-Iteration und einheitlicher Release-Ablauf für Team und Support.
+
 ## 2026-02-10 – Reparatur-Iteration: PySide6-Ausfall ohne Crash abgefangen
 - **Was:** `tools/repair_center_gui.py` prüft jetzt PySide6 vor dem GUI-Start, versucht automatisch eine Abhängigkeitsinstallation und zeigt bei weiterem Fehlschlag eine klare Next-Step-Fehlermeldung (Zenity/Konsole) mit Protokollhinweis.
 - **Warum:** Ohne PySide6 brach das Reparaturtool mit `ModuleNotFoundError` hart ab statt Hilfe anzubieten.

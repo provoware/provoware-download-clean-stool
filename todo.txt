@@ -1,2 +1,2 @@
-DONE: repair_center_gui.py fängt fehlendes PySide6 robust ab, bietet Auto-Install und Protokoll-Hilfe. (2026-02-10)
-NEXT: Nächste Mini-Iteration: start.sh um automatische Prüfung von Zenity/xdg-open mit klarer Nutzerhilfe erweitern. (2026-02-10)
+DONE: Release-Offenpunkte analysiert und zentrale Iterations-Statusdatei RELEASE_CHECKLIST.md mit Prozent/Kennzahlen eingeführt. (2026-02-10)
+NEXT: tools/run_quality_checks.sh in einer Mini-Iteration um feste Formatter/Linter-Gates erweitern und danach Kernmodul-Tests erhöhen. (2026-02-10)

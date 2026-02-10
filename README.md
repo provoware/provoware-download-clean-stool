@@ -6,6 +6,18 @@ Der Fokus liegt auf:
 - **stabiler Startroutine** (automatische Prüfungen und Reparaturversuche)
 - **einheitlichen Qualitätsstandards** (Syntax, Tests, Qualitätschecks)
 
+
+## 0) Release-Status (jede Iteration aktualisieren)
+
+Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
+
+- **Entwicklungsfortschritt:** **78%**
+- **Abgeschlossene Punkte:** **14**
+- **Offene Punkte:** **4**
+- **Nächster Schritt:** Quality-Gate um Formatter/Linter erweitern, danach Testabdeckung je Kernmodul erhöhen.
+
+Kurz erklärt: Erst automatische Format-/Lint-Prüfung fest integrieren, dann pro Kernmodul mindestens einen stabilen Test ergänzen.
+
 ## 1) Was jetzt als Standard gilt
 
 1. **Einfache Sprache**
