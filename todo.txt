@@ -1,3 +1,6 @@
+DONE: start.sh erweitert Linux-Systembibliothek-Reparatur auf libxkbcommon.so.0 (inkl. Dialog + apt-Autoinstallation) und vereinheitlicht den Prüfblock für libGL/libxkbcommon. (2026-02-10)
+NEXT: Dieselbe geführte Reparaturstruktur in einen wiederverwendbaren Shell-Helfer auslagern, damit weitere GUI-Libs ohne Copy-Paste ergänzt werden können. (2026-02-10)
+
 DONE: start.sh prüft vor Smoke-Test jetzt libGL.so.1 inkl. Reparaturdialog „Jetzt installieren" + apt-Autoreparatur (libgl1). (2026-02-10)
 NEXT: Reparaturdialog für fehlende Linux-GUI-Bibliotheken auf weitere Kernpakete (z. B. libxkbcommon0) erweitern. (2026-02-10)
 
