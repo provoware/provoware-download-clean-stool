@@ -1,2 +1,2 @@
-DONE: Informationsdateien vereinheitlicht (README + CHANGELOG + todo) mit Fokus auf Barrierefreiheit, einfache Sprache und klare Qualitäts-/Startbefehle. (2026-02-10)
-NEXT: Quality-Gate technisch ausbauen (Formatter/Linting/Unit-Tests) und die Ergebnisse als kurze Nutzerzusammenfassung direkt im Startablauf anzeigen. (2026-02-10)
+DONE: start.sh um klare Qualitäts-Zusammenfassung mit Statussymbol, Hinweisanzahl und einfachem Next-Step-Hinweis erweitert. (2026-02-10)
+NEXT: compileall in tools/run_quality_checks.sh auf Projektordner ohne venv eingrenzen, damit Gate-Meldungen nur eigenen Code betreffen. (2026-02-10)
