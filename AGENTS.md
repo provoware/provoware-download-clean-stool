@@ -1,117 +1,154 @@
 # AGENTS.md
-# AGENTS.md – Minimal-Patch-Iteration (Fehlerfreiheit zuerst)
-Version: 1.1
-Ziel: In jeder Iteration nur den notwendigsten Code anfassen, sauber validieren, dokumentieren, nächsten Schritt planen.
-Leitmotiv: Kleine Schritte, harte Gates, kein Scope-Drift.
+# AGENTS.md – Single-Task-Completion Iteration (Merge-Ready by Default)
+Version: 2.0
+Ziel: Jede Iteration schließt **genau die kleinste sinnvolle Aufgabe vollständig** ab, ist merge-ready und erhöht den Release-Reifegrad.
+Leitmotiv: Kleinstes vollständiges Inkrement, harte Qualitäts-Gates, sofort integrierbar.
 
 ────────────────────────────────────────────────────────────
 
-## 0) Grundregel (Mikro-Iteration)
-Jede Iteration darf maximal:
-- 1 Problemklasse lösen (z.B. Theme-Mapping ODER Deutsch-Strings ODER Repair-Center-Exit)
-- maximal 1–3 Dateien anfassen
-- maximal 1 zusammenhängenden Codebereich pro Datei patchen (ein “Patch-Block”)
+## 0) Grundregel (Atomare Iteration)
+Jede Iteration muss:
+- genau **1 klar abgegrenzte Aufgabe** vollständig abschließen (nicht nur „anarbeiten“)
+- so klein wie möglich sein (smallest shippable change)
+- merge-ready sein (Code + Doku + Checks erledigt)
+- den Release-Fortschritt messbar erhöhen
 
-Wenn mehr nötig wäre: STOP → neue Iteration planen.
+Maximal:
+- 1 Problemklasse
+- 1–3 Dateien
+- 1 zusammenhängender Patch-Block pro Datei
+
+Wenn mehr nötig ist: STOP → neue Iteration planen.
 
 ────────────────────────────────────────────────────────────
 
-## 1) Scope-Kontrolle (Nur nötigster Code)
-### 1.1 Change-Scope ist bindend
-Vor dem Patch muss feststehen:
+## 1) Scope-Kontrolle (bindend vor jedem Patch)
+Vor dem Patch festhalten:
 - Problem (1 Satz)
 - Ziel (1 Satz)
 - Exakte Dateien (Liste)
-- Exakter Patch-Block je Datei (Funktion/Abschnitt)
+- Exakter Patch-Block je Datei
+- Abnahmekriterium „fertig“ (1 Satz, testbar)
 
-### 1.2 Verboten in Iterationen
-- “Nebenbei” Refactor/Formatierung außerhalb des Patch-Blocks
+Verboten:
+- Nebenbei-Refactorings außerhalb des Patch-Blocks
 - Umbenennen/Umstrukturieren ohne zwingenden Grund
-- Neue Features, wenn Bugfix/Robustheit das Ziel ist
-- “Auf Verdacht” mehrere Stellen ändern
+- Mehrere Aufgaben in einer Iteration
+- Teilergebnisse ohne klare Fertigstellung
 
 ────────────────────────────────────────────────────────────
 
-## 2) Patch-Methodik (Kleinstmöglicher Fix)
-### 2.1 Minimaler Patch
-- Nur das ändern, was direkt den Fehler behebt oder die Robustheit konkret erhöht.
-- Keine kosmetischen Änderungen, außer sie sind Teil der Fehlerursache.
-- Keine neuen Abhängigkeiten ohne separate Iteration.
-
-### 2.2 Patch-Block-Disziplin
-Pro Datei:
-- ändere genau einen klar abgegrenzten Block (z.B. eine Funktion, ein Mapping, ein Dialogtext-Set).
-- Wenn du einen zweiten Block anfassen musst: STOP → neue Iteration.
+## 2) Patch-Methodik (vollständig, klein, robust)
+- Nur notwendige Änderungen für die konkrete Aufgabe.
+- Keine neuen Abhängigkeiten ohne zwingenden Bedarf.
+- Jede betroffene Funktion validiert Eingaben (input) und bestätigt Ergebnis (output).
+- Fehlerpfade enthalten klare Next Steps in einfacher Sprache.
+- Mindestens ein Hilfeelement pro betroffener Stelle verbessern/ergänzen.
 
 ────────────────────────────────────────────────────────────
 
-## 3) Hard Stops (Abbruchregeln)
-Iteration wird abgebrochen und als nächste Iteration geplant, wenn:
-- zusätzliche Dateien nötig werden, die nicht im Plan stehen
-- die Ursache unklar ist (erst Analyse-Iteration planen)
-- ein Gate nach 1 Korrekturversuch weiter fehlschlägt
-- Datenverlust-Risiko entsteht (Undo/Papierkorb fehlt)
+## 3) Architektur- und Qualitätsstandards (verpflichtend)
+- Einheitliche Standards und Best Practices in jedem Patch.
+- Barrierefreiheit (Accessibility) immer mitdenken: verständliche Sprache, klare Kontraste, fokusfreundliches Verhalten.
+- Farb-/Kontrastverhalten robust halten; mehrere Themes als unterstütztes Zielbild nicht brechen.
+- Tool-Logik sauber trennen, Struktur wartbar halten.
+- System-Dateien getrennt von variablen Dateien und Konfiguration organisieren.
+- Debug- und Logging-Modus mit detaillierten, laienverständlichen Hinweisen pflegen.
 
 ────────────────────────────────────────────────────────────
 
-## 4) Validierung (Gates, immer gleich, immer kurz)
-Reihenfolge ist fix. Erwartung: Exitcode 0.
+## 4) Vollautomatische Prüfung & Start-Routine
+Pflichtziel: Start-Routine prüft automatisch Voraussetzungen und löst Abhängigkeiten soweit möglich automatisiert auf.
 
+Anforderungen:
+- Bei Start klare Nutzer-Rückmeldung: was geprüft wurde, was fehlt, wie es gelöst wurde.
+- Automatische sinnvolle Tests für Codequalität.
+- Automatisches Code-Formatting als standardisierter Schritt.
+- Fehlerausgaben enthalten einfache Lösungsvorschläge.
+
+────────────────────────────────────────────────────────────
+
+## 5) Gates (Reihenfolge fix, Exitcode 0 erwartet)
 GATE 1 – Syntax:
-- python -m compileall -q .
+- `python -m compileall -q .`
 
 GATE 2 – Repo-Quality:
-- bash tools/run_quality_checks.sh
+- `bash tools/run_quality_checks.sh`
 
 GATE 3 – Smoke (wenn vorhanden):
-- python tools/smoke_test.py
+- `python tools/smoke_test.py`
 
 GATE 4 – End-to-End Start:
-- bash start.sh
+- `bash start.sh`
 
-GATE 5 – Mini-UX-Check (manuell, 2 Minuten):
-- Sprache Deutsch in Dialogen des betroffenen Bereichs
-- Fehlerdialog bietet Next-Step-Buttons (“Erneut versuchen”, “Reparatur”, “Protokoll”)
+GATE 5 – Mini-UX-Check (2 Minuten):
+- deutsche, verständliche Dialoge im betroffenen Bereich
+- Fehlerdialog mit Next Steps (z. B. „Erneut versuchen“, „Reparatur“, „Protokoll“)
 - betroffene Funktion läuft ohne Crash
+- Barrierefreiheit/Kontrast im betroffenen Bereich geprüft
 
 Wenn ein Gate rot:
-- 1 gezielter Fix innerhalb derselben Iteration
+- 1 gezielter Fix in derselben Iteration
 - Gates erneut
 Wenn erneut rot:
-- STOP → “NEXT ITERATION” planen (kein weiteres Herumprobieren)
+- STOP → NEXT ITERATION planen
 
 ────────────────────────────────────────────────────────────
 
-## 5) Dokumentation (nur wenn Gates grün oder sauber verschoben)
-### 5.0 README-Status (Pflicht in jeder Iteration)
-- Ganz oben in der README muss der aktuelle Entwicklungsfortschritt als **exakte Prozentzahl** stehen (z. B. `81%`, nicht "ca." oder Bereich).
-- Direkt darunter müssen zwei Listen stehen: **Abgeschlossen** (fertige Punkte) und **Offen** (verbleibende Punkte).
-- Diese drei Angaben (**Prozent, Abgeschlossen, Offen**) sind **in jeder Iteration** zu aktualisieren.
+## 6) Dokumentation (pro Iteration Pflicht)
+### 6.0 README-Status
+Ganz oben in README immer aktualisieren:
+- exakte Prozentzahl Fortschritt (z. B. `81%`)
+- Liste **Abgeschlossen**
+- Liste **Offen**
 
-### 5.1 CHANGELOG.md (Mini)
+### 6.1 CHANGELOG.md (Mini)
 - 3 Zeilen: Was, Warum, Wirkung
 
-### 5.2 todo.txt (Mini)
-- 1 Zeile “DONE: … (Datum)”
-- 1 Zeile “NEXT: … (Datum)”
+### 6.2 todo.txt (Pflicht)
+- `DONE: … (Datum)`
+- `NEXT: … (Datum)`
 
-### 5.3 Patch-Notiz (Optional, aber empfohlen)
-- In der Iterationsausgabe: “Geänderte Dateien: …” + “Patch-Block: …”
-
-────────────────────────────────────────────────────────────
-
-## 6) Definition of Done (Iteration zählt nur, wenn)
-- Change-Scope eingehalten (Dateien + Patch-Blocks)
-- Gates: grün ODER sauber als NEXT ITERATION dokumentiert
-- Changelog + todo aktualisiert
-- Kein Scope-Drift
-- Mindestens 1 Hilfeelement (z. B. Hilfetext, Next-Step-Hinweis, Reparaturhilfe) im betroffenen Bereich optimiert ODER erweitert
-- Mindestens 1 Aspekt der Barrierefreiheit verbessert ODER erweitert (z. B. Kontrast, Fokusführung, verständliche Sprache)
+### 6.3 Ergebnis-Hinweise
+- Immer 2 kurze Laienvorschläge (leicht verständlich)
+- Immer 1 detaillierter nächster Schritt in einfacher Sprache
 
 ────────────────────────────────────────────────────────────
 
-## 7) Iterations-Template (zwingend)
-### A) Fundstelle (nur beobachten)
+## 7) Definition of Done (nur dann DONE)
+Eine Iteration ist nur DONE, wenn:
+- kleinste Aufgabe vollständig abgeschlossen
+- merge-ready (kein offener Pflichtpunkt)
+- Change-Scope eingehalten
+- Gates grün ODER sauber als NEXT ITERATION dokumentiert
+- README + CHANGELOG + todo aktualisiert
+- mindestens 1 Hilfeelement verbessert/ergänzt
+- mindestens 1 Accessibility-Aspekt verbessert/geprüft
+- Release-Reifegrad erhöht und klar dokumentiert
+
+────────────────────────────────────────────────────────────
+
+## 8) Merge- und Release-Flow (Standard)
+Nach jeder DONE-Iteration:
+- zeitnah mergen (kein unnötiges Warten)
+- direkt nächste kleinste vollständige Aufgabe planen
+- immer auf vollständig release-fertig hinarbeiten
+
+Release-Doku bei Release-bezogenen Iterationen zusätzlich:
+- `RELEASE_CHECKLIST.md` aktualisieren (Fortschritt %, Abgeschlossen, Offen, nächster Schritt)
+- README-Release-Status synchron halten
+- `docs/developer_manual.md` um nächsten technischen Release-Schritt ergänzen
+
+Minimalformat:
+- Fortschritt: `X%`
+- Abgeschlossen: `N`
+- Offen: `M`
+- Nächster Schritt: 1 klarer Arbeitsschritt mit einfacher Begründung
+
+────────────────────────────────────────────────────────────
+
+## 9) Iterations-Template (zwingend)
+### A) Fundstelle (beobachten)
 - Problem:
 - Risiko:
 - Erwartung:
@@ -120,6 +157,7 @@ Wenn erneut rot:
 - Ziel:
 - Dateien:
 - Patch-Block je Datei:
+- Abnahmekriterium:
 
 ### C) Patch (kurz)
 - Änderung 1:
@@ -135,18 +173,5 @@ Wenn erneut rot:
 ### E) Ergebnis
 - Status: DONE / NEXT ITERATION
 - Doku: README + CHANGELOG + todo aktualisiert
-- Nächster Schritt: 2empfehlungen und einen detaillierten vorschlag mit einfacher sprache begründet
-
-────────────────────────────────────────────────────────────
-
-## 8) Release-Finalisierung (zusätzliche Pflicht in Doku-Iterationen)
-Wenn die Iteration Release-Status betrifft, dann immer zusätzlich:
-- `RELEASE_CHECKLIST.md` aktualisieren (Fortschritt %, offen/geschlossen, nächster Schritt).
-- README-Release-Status synchron halten (gleiche Zahlen).
-- Entwicklerdoku (`docs/developer_manual.md`) um den nächsten technischen Release-Schritt ergänzen.
-
-Minimalformat je Iteration:
-- Fortschritt: `X%`
-- Abgeschlossen: `N`
-- Offen: `M`
-- Nächster Schritt: 1 klarer Arbeitsschritt mit Begründung in einfacher Sprache.
+- Laienvorschläge: 2 kurze Empfehlungen
+- Nächster Schritt: 1 detaillierter Vorschlag in einfacher Sprache
