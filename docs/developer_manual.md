@@ -138,3 +138,19 @@ Pflichtkriterien:
 3. Validierungs-Helper zentralisieren (`core/validation.py`, optional).
 4. Fehlermeldungen per Styleguide vereinheitlichen.
 5. Release-Checkliste vor Freeze einmal komplett durchlaufen.
+
+## 11) Release-Finalisierung (Iterationstracking)
+
+Verbindlicher Verweis: `RELEASE_CHECKLIST.md` ist die zentrale Statusdatei für den Release-Zustand.
+
+Aktueller Stand (Iteration):
+- **Fortschritt:** 78%
+- **Abgeschlossen:** 14 Punkte
+- **Offen:** 4 Punkte
+
+Nächste Release-Iteration (technisch sinnvoll):
+1. Quality-Gate um Format-/Lint-Checks erweitern (automatische Standardprüfung).
+2. Testabdeckung der Kernmodule (`core/`) erhöhen und im Smoke-/Quality-Lauf sichtbar machen.
+
+Einfache Begründung: Erst saubere Regeln automatisch erzwingen, dann Funktionssicherheit mit zusätzlichen Tests absichern.
+

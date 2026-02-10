@@ -131,3 +131,18 @@ Wenn erneut rot:
 - Status: DONE / NEXT ITERATION
 - Doku: README + CHANGELOG + todo aktualisiert
 - Nächster Schritt: 2empfehlungen und einen detaillierten vorschlag mit einfacher sprache begründet
+
+────────────────────────────────────────────────────────────
+
+## 8) Release-Finalisierung (zusätzliche Pflicht in Doku-Iterationen)
+Wenn die Iteration Release-Status betrifft, dann immer zusätzlich:
+- `RELEASE_CHECKLIST.md` aktualisieren (Fortschritt %, offen/geschlossen, nächster Schritt).
+- README-Release-Status synchron halten (gleiche Zahlen).
+- Entwicklerdoku (`docs/developer_manual.md`) um den nächsten technischen Release-Schritt ergänzen.
+
+Minimalformat je Iteration:
+- Fortschritt: `X%`
+- Abgeschlossen: `N`
+- Offen: `M`
+- Nächster Schritt: 1 klarer Arbeitsschritt mit Begründung in einfacher Sprache.
+
