@@ -100,6 +100,8 @@ Wenn erneut rot:
 - Gates: grün ODER sauber als NEXT ITERATION dokumentiert
 - Changelog + todo aktualisiert
 - Kein Scope-Drift
+- Mindestens 1 Hilfeelement (z. B. Hilfetext, Next-Step-Hinweis, Reparaturhilfe) im betroffenen Bereich optimiert ODER erweitert
+- Mindestens 1 Aspekt der Barrierefreiheit verbessert ODER erweitert (z. B. Kontrast, Fokusführung, verständliche Sprache)
 
 ────────────────────────────────────────────────────────────
 

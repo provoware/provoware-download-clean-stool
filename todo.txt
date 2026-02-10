@@ -1,5 +1,5 @@
-DONE: Startskript kann Abhängigkeiten jetzt bevorzugt offline aus `offline_wheels/` installieren. (2026-02-10)
-NEXT: Portables Paket mit vorkonfiguriertem `offline_wheels/` und kurzer Build-Anleitung ergänzen. (2026-02-10)
+DONE: README-Kopf enthält jetzt 3 kommagetrennte Stichpunkt-Zeilen zu Fertig/Offen/Fortschritt+Nächste Schritte. (2026-02-10)
+NEXT: Hilfeelement + Barrierefreiheits-Verbesserung als Pflicht pro Iteration in Umsetzung prüfen und im nächsten Patch in UI belegen. (2026-02-10)
 
 Release TODO (offene Punkte vor dem nächsten Release)
 ===================================================

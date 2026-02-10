@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.5] – 2026‑02‑10
+
+### Changed
+
+* Was: README startet jetzt mit drei kompakten Stichpunkt-Zeilen zu Fertig/Offen/Fortschritt inkl. nächster Schritte, und AGENTS.md fordert pro Iteration ein Hilfeelement plus einen Barrierefreiheitsaspekt.
+* Warum: Fortschritt und Handlungsplan sollen sofort sichtbar sein und Iterationen sollen durchgehend nutzerfreundlicher sowie barriereärmer werden.
+* Wirkung: Klarerer Status für Laien direkt beim Öffnen und verbindliche Qualitätsrichtung für kommende Patches.
+
 ## [1.0.4] – 2026‑02‑10
 
 ### Fixed

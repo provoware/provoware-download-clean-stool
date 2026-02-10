@@ -1,5 +1,9 @@
 # Downloads Organizer (Laienfreundlich, barrierearm, robust)
 
+- **Fertig:** Startlogik mit Selbstprüfung aktiv, Wizard mit Buttons verfügbar, Theme-Mapping stabil dokumentiert.
+- **Offen:** Vollständige Input-/Output-Validierung, ausgebautes Quality-Gate mit Formatter/Linter, vollständiges deutsches Textaudit.
+- **Status/Nächste Schritte:** Fortschritt ca. 70%, als Nächstes Unit-Tests für Kernmodule, danach Formatter+Linting in der Prüfpipeline, dann Kontrast-/Hilfetext-Audit für Barrierefreiheit.
+
 Dieses Tool hilft dabei, den Ordner `Downloads` sicher aufzuräumen, **ohne Kommandozeile im normalen Betrieb**. Die Bedienung erfolgt über **Buttons, Dropdowns und Auswahlfelder**. Ziel ist ein stabiler, fehlertoleranter Assistent mit klaren Rückmeldungen in einfacher Sprache.
 
 ## 1) Zielbild für den Release (professionelle Gesamtanalyse)
