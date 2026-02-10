@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file. The format 
 
 ## [1.0.7] – 2026‑02‑10
 
+## [1.0.10] – 2026‑02‑10
+
+### Changed
+
+* Was: `start.sh` bereitet Requirements jetzt in `exports/requirements.sanitized.txt` auf, prüft nach der Installation automatisch auf Versionskonflikte (`pip check`) und startet eine automatische Reparatur (offline zuerst, dann online mit `--upgrade-strategy eager`).
+* Warum: Abhängigkeitskonflikte wurden bisher nicht aktiv erkannt/behoben und konnten den Start trotz installierter Pakete blockieren.
+* Wirkung: Stabilere Abhängigkeitsauflösung, bessere Offline-Resilienz und klare Hilfe-Ausgaben für Nutzer:innen bei verbleibenden Paketproblemen.
+
 ## [1.0.9] – 2026‑02‑10
 
 ### Changed
