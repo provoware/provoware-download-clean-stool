@@ -299,24 +299,37 @@ class MainWindow(QMainWindow):
     # Page 2: Options
     def _setup_options_page(self) -> None:
         layout = QVBoxLayout(self.page_options)
+        layout.setSpacing(14)
         title = QLabel("<h2>Schritt 2/4 – Optionen</h2>")
         layout.addWidget(title)
-        # Presets buttons
+        intro = QLabel(
+            "Wählen Sie hier ein Preset (Voreinstellung) oder setzen Sie einzelne Filter. "
+            "Die Bereiche sind bewusst klar getrennt für bessere Orientierung."
+        )
+        intro.setWordWrap(True)
+        layout.addWidget(intro)
+
+        preset_box = QLabel("<b>1) Preset auswählen</b><br/>Schneller Start mit sinnvollen Standardwerten")
+        preset_box.setWordWrap(True)
+        layout.addWidget(preset_box)
         hl_presets = QHBoxLayout()
+        hl_presets.setSpacing(10)
         btn_senior = QPushButton("Preset: Senior")
         btn_std = QPushButton("Preset: Standard")
         btn_power = QPushButton("Preset: Power")
-        hl_presets.addWidget(btn_senior)
-        hl_presets.addWidget(btn_std)
-        hl_presets.addWidget(btn_power)
+        for btn in (btn_senior, btn_std, btn_power):
+            btn.setMinimumHeight(40)
+            hl_presets.addWidget(btn)
         layout.addLayout(hl_presets)
         btn_senior.clicked.connect(lambda: self._load_preset("senior"))
         btn_std.clicked.connect(lambda: self._load_preset("standard"))
         btn_power.clicked.connect(lambda: self._load_preset("power"))
         self.current_preset_label = QLabel("Aktuelles Preset: " + self.settings.presets)
         layout.addWidget(self.current_preset_label)
-        # File type filters
-        layout.addWidget(QLabel("Dateitypen einbeziehen:"))
+
+        filters_box = QLabel("<b>2) Dateitypen auswählen</b><br/>Mindestens ein Typ muss aktiv sein")
+        filters_box.setWordWrap(True)
+        layout.addWidget(filters_box)
         self.cb_images = QCheckBox("Bilder")
         self.cb_videos = QCheckBox("Videos")
         self.cb_archives = QCheckBox("Archive")
@@ -325,32 +338,42 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.cb_videos)
         layout.addWidget(self.cb_archives)
         layout.addWidget(self.cb_other)
-        # Size threshold
+
+        limits_box = QLabel("<b>3) Grenzen setzen</b><br/>Optional: Größe und Alter eingrenzen")
+        limits_box.setWordWrap(True)
+        layout.addWidget(limits_box)
         hl_size = QHBoxLayout()
         hl_size.addWidget(QLabel("Min. Größe:"))
         self.combo_size = QComboBox()
         self.combo_size.addItems(["any", "10MB", "50MB", "100MB"])
         hl_size.addWidget(self.combo_size)
         layout.addLayout(hl_size)
-        # Age threshold
         hl_age = QHBoxLayout()
         hl_age.addWidget(QLabel("Min. Alter:"))
         self.combo_age = QComboBox()
         self.combo_age.addItems(["any", "30d", "180d", "365d"])
         hl_age.addWidget(self.combo_age)
         layout.addLayout(hl_age)
-        # Duplicates mode
+
+        duplicates_box = QLabel("<b>4) Duplikat-Prüfung</b><br/>Wählen Sie die Sicherheitstiefe")
+        duplicates_box.setWordWrap(True)
+        layout.addWidget(duplicates_box)
         hl_dup = QHBoxLayout()
         hl_dup.addWidget(QLabel("Duplikate:"))
         self.combo_dups = QComboBox()
         self.combo_dups.addItems(["none", "quick", "safe"])
         hl_dup.addWidget(self.combo_dups)
         layout.addLayout(hl_dup)
-        # Navigation buttons
+
+        footer_hint = QLabel("Tipp: Starten Sie mit Preset Standard. Danach können Sie bei Bedarf verfeinern.")
+        footer_hint.setWordWrap(True)
+        layout.addWidget(footer_hint)
+
         nav = QHBoxLayout()
         btn_prev = QPushButton("← Zurück")
         btn_prev.clicked.connect(lambda: self.stack.setCurrentWidget(self.page_welcome))
         btn_next = QPushButton("Weiter →")
+        btn_next.setMinimumHeight(40)
         btn_next.clicked.connect(self._options_next)
         nav.addWidget(btn_prev)
         nav.addWidget(btn_next)

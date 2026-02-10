@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – UI-Iteration: Optionen visuell in klare Referenz-Abschnitte gegliedert
+- **Was:** `app/main.py` strukturiert die Optionen-Seite neu mit klar nummerierten Bereichen (Preset, Dateitypen, Grenzen, Duplikate), ergänzenden Hilfetexten und größeren Primär-Buttons.
+- **Warum:** Das Design sollte näher an ein vorgegebenes, klar gegliedertes Referenzbild rücken und gleichzeitig für Laien leichter erfassbar sein.
+- **Wirkung:** Bessere visuelle Orientierung, klarere Schrittfolge und verbesserte Bedienbarkeit durch größere Klickflächen und einfache Sprache.
+
 ## 2026-02-10 – UI-Iteration: Dunkles Referenz-Layout mit besserer Fokusführung
 - **Was:** `app/main.py` aktualisiert den Theme-Stylesheet-Block für `dark` und `kontrast` mit panelähnlicher Farbwelt, klaren Button-Hierarchien, größeren Klickflächen und sichtbaren Fokusrahmen für Tastatur-Navigation.
 - **Warum:** Das GUI sollte visuell näher an das vorgegebene Originalbild heranrücken und gleichzeitig barriereärmer bedienbar werden.
