@@ -85,26 +85,51 @@ print(",".join(missing))
 PY
 )"
 if [ -n "$MISSING" ]; then
-  MSG="Ein wichtiges Modul fehlt: $MISSING
+  echo "[CHECK] Fehlende Module erkannt: $MISSING"
+  echo "[SETUP] Versuche automatische Reparatur über apt (Ubuntu/Kubuntu)"
+  APT_PACKAGES=()
+  [[ ",$MISSING," == *",PySide6,"* ]] && APT_PACKAGES+=("python3-pyside6")
+  [[ ",$MISSING," == *",PIL,"* ]] && APT_PACKAGES+=("python3-pil")
 
-Das Tool kann ohne diese Module nicht starten.
+  if command -v apt-get >/dev/null 2>&1 && [ "${#APT_PACKAGES[@]}" -gt 0 ]; then
+    echo "[SETUP] Installiere Systempakete: ${APT_PACKAGES[*]}"
+    if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y "${APT_PACKAGES[@]}" >>"$SETUP_LOG" 2>&1; then
+      MISSING="$("$VENV_PY" - <<'PY'
+import importlib
+missing=[]
+for mod in ("PySide6","PIL"):
+    try:
+        importlib.import_module(mod)
+    except Exception:
+        missing.append(mod)
+print(",".join(missing))
+PY
+)"
+    else
+      echo "[WARN] apt-Autoreparatur fehlgeschlagen" >>"$SETUP_LOG"
+    fi
+  fi
 
-Automatische Schritte:
-- Pip-Installation wurde versucht.
+  if [ -n "$MISSING" ]; then
+    MSG="Wichtige Bausteine fehlen noch: $MISSING
 
-Wahrscheinliche Ursache:
-- Keine Internetverbindung (pip kann nichts laden)
-- Paketquelle blockiert
+Das Programm braucht diese Bausteine zum Start.
 
-Schnelle Lösungen (Ubuntu/Kubuntu):
-1) Internet aktivieren und start.sh erneut ausführen
-2) Alternativ Systempakete installieren:
+Was schon automatisch versucht wurde:
+- Installation mit pip
+- Installation mit apt (Ubuntu/Kubuntu), wenn möglich
+
+Bitte jetzt so vorgehen:
+1) Internet prüfen
+2) Dann erneut starten: bash start.sh
+3) Wenn es weiter fehlschlägt, diese Befehle ausführen:
    sudo apt update
    sudo apt install python3-pyside6 python3-pil
 
-Details: exports/setup_log.txt"
-  python3 tools/boot_error_gui.py "$MSG" "Abhängigkeiten fehlen"
-  exit 1
+Hilfe-Datei: exports/setup_log.txt"
+    python3 tools/boot_error_gui.py "$MSG" "Abhängigkeiten fehlen"
+    exit 1
+  fi
 fi
 
 # 4) Qualitätsprüfung (ohne den Nutzer zu verwirren)
