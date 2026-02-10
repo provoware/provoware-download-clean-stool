@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – UI-Iteration: Light-Theme mit klarerer Hierarchie und besserer Lesbarkeit
+- **Was:** Den `light`-Stylesheet-Block in `app/main.py` gezielt überarbeitet (ruhigerer Seitenhintergrund, stärkere Rahmen, größere Klickflächen, deutlicher Fokusrahmen).
+- **Warum:** Auf die Frage nach Design-/Layout-Verbesserung sollte das helle Design sichtbarer strukturiert und für Tastatur-/Sehhilfe besser erkennbar werden.
+- **Wirkung:** Einheitlicheres Layout im hellen Modus mit besserem Kontrastverhalten und klarerer Orientierung bei Navigation und Auswahl.
+
 ## 2026-02-10 – Standards-Iteration: Manifestvorgaben für Qualität und Barrierefreiheit ergänzt
 - **Was:** Neue Datei `data/standards_manifest.json` ergänzt, die verbindliche Standards für einfache Sprache, Accessibility-Defaults, Qualitäts-Gates, Auto-Start-Feedback und Validierungsregeln zentral festlegt.
 - **Warum:** Bisher fehlte eine maschinenlesbare Referenzdatei für einheitliche Vorgaben, wodurch Standards schwerer reproduzierbar und weniger robust überprüfbar waren.

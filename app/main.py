@@ -56,46 +56,51 @@ class MainWindow(QMainWindow):
     STYLES = {
         "light": """
             QWidget {
-                background-color: #f7f9fc;
-                color: #111827;
+                background-color: #f3f6fb;
+                color: #0f172a;
                 selection-background-color: #1d4ed8;
                 selection-color: #ffffff;
             }
+            QMainWindow, QStackedWidget {
+                background-color: #e8eef7;
+            }
             QLabel {
-                color: #111827;
+                color: #0f172a;
+                line-height: 1.35;
             }
             QPushButton {
                 background-color: #ffffff;
-                color: #111827;
-                border: 1px solid #9ca3af;
-                border-radius: 8px;
-                padding: 8px 12px;
+                color: #0f172a;
+                border: 1px solid #6b7280;
+                border-radius: 10px;
+                padding: 10px 14px;
                 font-weight: 600;
-                min-height: 34px;
+                min-height: 38px;
             }
             QPushButton:hover {
-                background-color: #e5eefc;
-                border-color: #2563eb;
+                background-color: #e0ebff;
+                border-color: #1d4ed8;
             }
             QPushButton:pressed {
-                background-color: #dbeafe;
+                background-color: #d5e4ff;
             }
             QPushButton:focus,
             QCheckBox:focus,
             QComboBox:focus,
             QListWidget:focus {
-                border: 2px solid #1d4ed8;
+                border: 3px solid #1d4ed8;
                 outline: none;
             }
             QComboBox, QListWidget {
                 background-color: #ffffff;
-                color: #111827;
-                border: 1px solid #9ca3af;
-                border-radius: 6px;
-                padding: 6px;
+                color: #0f172a;
+                border: 1px solid #6b7280;
+                border-radius: 8px;
+                padding: 8px;
+                min-height: 34px;
             }
             QCheckBox {
-                spacing: 8px;
+                spacing: 10px;
             }
         """,
         "dark": """
