@@ -16,9 +16,12 @@ run_optional() {
   local tool_name="$1"
   local check_cmd="$2"
   local fix_cmd="$3"
+  local install_cmd="python3 -m pip install $tool_name"
 
   if ! command -v "$tool_name" >/dev/null 2>&1; then
-    say "[QUALITY][INFO] $tool_name nicht installiert. Schritt wird übersprungen."
+    say "[QUALITY][WARN] $tool_name fehlt. Dieser Qualitäts-Check konnte nicht laufen."
+    say "[QUALITY][HILFE] Nächster Schritt: $install_cmd"
+    WARNINGS=$((WARNINGS + 1))
     return 0
   fi
 

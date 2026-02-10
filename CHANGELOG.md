@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2026-02-10 – Qualitäts-Iteration: Fehlende Formatter/Linter mit klarer Hilfe markieren
+- **Was:** `tools/run_quality_checks.sh` behandelt fehlende Tools (`black`, `isort`, `ruff`) jetzt als Warnung mit klarer Installationsanleitung (`python3 -m pip install <tool>`), statt sie still zu überspringen.
+- **Warum:** Für einen verlässlichen Release-Status muss sichtbar sein, wenn ein Pflicht-Check mangels Abhängigkeit nicht ausgeführt wurde.
+- **Wirkung:** Bessere Nutzerführung in einfacher Sprache, klarer Next-Step für Auto-Nachrüstung und höhere Barrierefreiheit durch verständliche Fehlerrückmeldung.
+
 ## 2026-02-10 – Release-Iteration: Offene Punkte quantifiziert und finales Tracking vereinheitlicht
 - **Was:** `RELEASE_CHECKLIST.md` neu eingeführt und mit Prozentfortschritt, Anzahl offener/abgeschlossener Punkte sowie nächstem Schritt befüllt; README, AGENTS.md und Entwicklerdoku auf diesen Iterationsstatus synchronisiert.
 - **Warum:** Für die Release-Finalisierung fehlte eine zentrale, pro Iteration aktualisierbare Statusquelle mit klaren Kennzahlen.
