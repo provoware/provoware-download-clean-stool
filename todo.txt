@@ -42,3 +42,6 @@ NEXT: Drei Mini-Punkte planen: Weitere Schnellstart-Buttons (7–10) mit speiche
 
 DONE: Vollständige Analyse der nächsten offenen Punkte/Optimierungen erstellt und als priorisierte 3-Punkte-Umsetzung in README dokumentiert. (2026-02-11)
 NEXT: Iteration mit genau 3 Umsetzungen starten: (1) Accessibility-Hilfe in Analyse/Plan, (2) Start-Autorepair-Härtung, (3) vollautomatische Quality-/Formatierungsläufe. (2026-02-11)
+
+DONE: Nächste logische Schritte als klare 3-Punkte-Iteration in README ergänzt (A11y-Hilfe, Start-Autoreparatur, Quality-Automation) inkl. kopierbarer Befehle. (2026-02-11)
+NEXT: Umsetzung starten: (1) feste Hilfezeile in Analyse/Plan, (2) Modul-Autoreparatur mit klarem Endstatus, (3) automatisches Format+Lint im Quality-Check. (2026-02-11)

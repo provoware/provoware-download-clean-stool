@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **89%**
- - **Abgeschlossene Punkte:** **80**
+ - **Entwicklungsfortschritt:** **90%**
+ - **Abgeschlossene Punkte:** **83**
  - **Offene Punkte:** **3**
- - **Nächster Schritt:** Die drei priorisierten Optimierungen aus Abschnitt **0.2** nacheinander umsetzen (Accessibility-Hilfe, Start-Autoreparatur, Quality-Automation).
+ - **Nächster Schritt:** Die drei priorisierten Optimierungen aus Abschnitt **0.3** nacheinander umsetzen (Accessibility-Hilfe, Start-Autoreparatur, Quality-Automation).
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -22,7 +22,33 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - **Was ist jetzt klarer?** Es gibt eine feste Reihenfolge mit messbaren Kriterien und kopierbaren Befehlen.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
-## 0.2) Vollständige Analyse: nächste offene Punkte und Optimierungen
+## 0.2) Nächste logische Schritte (in einfacher Sprache)
+
+1. **Hilfezeile in Analyse + Plan fest ergänzen (A11y = Barrierefreiheit)**  
+   Ziel: In beiden Schritten eine kurze feste Hilfe zeigen: Tastaturweg, Kontrast-Hinweis, klare nächste Aktion.
+
+2. **Start-Autoreparatur robuster machen (Autorepair = automatische Reparatur)**  
+   Ziel: Fehlende Module automatisch erkennen, reparieren und den Ausgang klar als „erfolgreich“ oder „nicht möglich“ melden.
+
+3. **Qualitätslauf vollautomatisch machen (Quality-Gate = Qualitäts-Schranke)**  
+   Ziel: `tools/run_quality_checks.sh` führt Formatierung + Lint automatisch aus und zeigt bei Fehlern einfache Next Steps.
+
+### Vollständige Befehle (kopierbar)
+
+```bash
+python -m compileall -q .
+bash tools/run_quality_checks.sh
+python tools/smoke_test.py
+bash start.sh
+```
+
+### Abnahme (wann ist es fertig?)
+
+- Alle drei Punkte sind abgeschlossen und als DONE dokumentiert.
+- Mindestens ein Hilfe- oder Accessibility-Punkt ist sichtbar verbessert.
+- Alle vier Befehle laufen grün oder sind mit klarem Grund als NEXT ITERATION dokumentiert.
+
+## 0.3) Vollständige Analyse: nächste offene Punkte und Optimierungen
 
 ### Offen
 

@@ -1,3 +1,8 @@
+## 2026-02-11 – Planungs-Iteration: Nächste logische 3-Schritte klar dokumentiert
+- **Was:** README um einen laienfreundlichen Abschnitt „Nächste logische Schritte“ mit genau drei priorisierten Punkten, Abnahmekriterien und vollständigen Befehlen ergänzt.
+- **Warum:** Die Frage nach den nächsten sinnvollen Arbeiten sollte als sofort nutzbarer, standardisierter 3-Punkte-Plan beantwortet werden.
+- **Wirkung:** Team und Nutzer:innen können die nächste Iteration direkt, nachvollziehbar und barrierearm starten.
+
 ## 2026-02-11 – Analyse-Iteration: Nächste offene Punkte priorisiert
 - **Was:** README ergänzt um vollständige Analyse der drei nächsten offenen Optimierungspunkte (Accessibility-Hilfe, Start-Autoreparatur, Quality-Automation) inklusive Reihenfolge und Abnahmekriterien.
 - **Warum:** Der Projektstand war inhaltlich breit, aber die nächsten konkreten Schritte nicht kompakt priorisiert und für Laien nicht sofort umsetzbar beschrieben.
