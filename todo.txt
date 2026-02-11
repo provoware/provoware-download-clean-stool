@@ -1,2 +1,2 @@
-DONE: Input-/Output-Validierung zentral eingeführt (`core/validation.py`) und in `core/planner.py` technisch erzwungen. (2026-02-11)
-NEXT: Zentrale Validierungs-Helper als nächsten kleinen Schritt auch in `core/scanner.py` und `core/executor.py` anwenden. (2026-02-11)
+DONE: Zentrale Input-/Output-Validierung in `core/scanner.py` eingeführt (Pfad, Filterliste, Schwellenwerte, Duplikatmodus, Ergebnisbedingungen). (2026-02-11)
+NEXT: Zentrale Validierungs-Helper als letzten Kernschritt in `core/executor.py` anwenden und Undo-Input absichern. (2026-02-11)

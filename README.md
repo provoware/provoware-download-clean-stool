@@ -11,13 +11,14 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **92%**
+- **Entwicklungsfortschritt:** **94%**
 - **Abgeschlossene Punkte:** **20**
 - **Offene Punkte:** **1**
-- **Nächster Schritt:** Zentrale Input-/Output-Validierung aus `core/validation.py` auf `scanner` und `executor` ausweiten, damit alle Kernpfade denselben Standard erzwingen.
+- **Nächster Schritt:** Zentrale Input-/Output-Validierung als letzten Kernschritt in `core/executor.py` technisch erzwingen, damit auch Ausführung und Undo denselben Standard nutzen.
 
 **Abgeschlossen:**
 - Neuer zentraler Validierungs-Helper in `core/validation.py`; `planner.build_plan` prüft jetzt Input- und Output-Standards mit klaren Next-Step-Fehlertexten.
+- `core/scanner.py` nutzt jetzt zentrale Input-/Output-Validierung (Pfad, Filterliste, Schwellenwerte, Duplikatmodus) mit klaren Next-Step-Fehlertexten in einfacher Sprache.
 - Quality-Gate enthält jetzt einen automatischen A11y-Theme-Check (Kontrast + sichtbarer Fokus) mit verständlichen Next-Step-Hinweisen.
 - Quality-Gate führt bei Format-/Lint-Warnungen jetzt automatisch Reparaturläufe aus und prüft danach erneut.
 - Smoke-Test enthält jetzt einen zusätzlichen automatischen Planner-Check (Duplikat-Grund, relativer Zielpfad, Summary-Werte).
@@ -29,9 +30,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
-- Input-/Output-Validierung als zentralen Standard technisch erzwingen.
+- Input-/Output-Validierung im `executor` ergänzen und mit einem Undo-Fehlerszenario absichern.
 
-Kurz erklärt: Erst automatische Format-/Lint-Prüfung fest integrieren, dann pro Kernmodul mindestens einen stabilen Test ergänzen.
+Kurz erklärt: Der Scanner ist jetzt validiert; als letzter Kernschritt folgt der Executor für durchgängige Input-/Output-Sicherheit.
 
 ## 1) Was jetzt als Standard gilt
 
