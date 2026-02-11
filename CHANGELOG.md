@@ -1,3 +1,8 @@
+## 2026-02-12 – Qualitäts-Iteration: JSON-Pflichtfelder + ehrliche Abschlussmeldung
+- **Was:** `tools/run_quality_checks.sh` prüft jetzt zusätzlich zentrale JSON-Dateien auf Pflichtfelder und zeigt bei Warnungen einen klaren Warn-Abschluss statt pauschalem OK.
+- **Warum:** Für Release-Reife fehlte eine automatische Strukturprüfung variabler Konfigurationsdateien und eine eindeutigere Ergebnisanzeige bei verbleibenden Warnungen.
+- **Wirkung:** Defekte Konfigurationen werden früher erkannt und Nutzer:innen erhalten verständliche Next Steps in einfacher Sprache.
+
 ## 2026-02-12 – Settings-Iteration: Laien-Schalter + Einstellungs-Hilfetexte
 - **Was:** `core/settings.py` erweitert um Einsteiger-Modus, Dateitypen-Schalter, Zielordner-Modus/Zielpfad und aktivierbare Hilfehinweise inklusive robuster Normalisierung; `README.md` Release-Status und „Abgeschlossen“-Liste entsprechend aktualisiert.
 - **Warum:** Für Laien fehlten klare, schalterbasierte Einstellungsoptionen mit verständlichen Empfehlungen statt technischer Rohwerte.
