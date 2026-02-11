@@ -1,3 +1,5 @@
+DONE: Entwicklerbereich-Hilfe „Implementiert vs. Geplant“ mit Filtern „Alle/Nur offen“ inkl. Smoke-Mini-Prüfung ergänzt. (2026-02-12)
+NEXT: Zwei Mini-Punkte planen: Mehrfachauswahl-Aktionsbuttons in der Trefferliste + verkürzte Pfadanzeige mit Schnellaktionen. (2026-02-12)
 DONE: Laien-Schalter in den Einstellungen (Einsteiger-Modus, Dateitypen, Zielordner-Modus/Pfad, Hilfehinweise) inkl. robuster Validierung ergänzt. (2026-02-12)
 NEXT: GUI-Hilfebereich „Implementiert vs. Geplant“ mit Filter „Alle/Nur offen“ in zwei Mini-Punkten ergänzen. (2026-02-12)
 DONE: Optional-Startprüfung für Web-Frontend und AppImage mit klaren Next Steps in start.sh umgesetzt. (2026-02-11)

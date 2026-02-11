@@ -93,6 +93,28 @@ class MainWindow(QMainWindow):
         "3) Farben absichern: prüfen Sie Theme-Kontrast immer mit Hell/Dunkel/Kontrast.",
         "4) Status vereinheitlichen: dieselben Symbole (✅ ⚠️) in allen grafischen Bereichen zeigen.",
     ]
+    PROJECT_STATUS_ITEMS = [
+        {
+            "state": "done",
+            "title": "Robuste Start-Routine",
+            "detail": "Start prüft Voraussetzungen automatisch und zeigt klare Rückmeldungen.",
+        },
+        {
+            "state": "done",
+            "title": "Mehrere Lesbarkeits-Themes",
+            "detail": "Farbthemen mit Kontrast-Hinweisen sind direkt auswählbar.",
+        },
+        {
+            "state": "open",
+            "title": "Dateigröße als Sortier-Filter",
+            "detail": "Trefferliste soll optional nach Größe gruppieren und sortieren.",
+        },
+        {
+            "state": "open",
+            "title": "Schnelltasten pro Zielordner",
+            "detail": "Aktionen wie 'In Bilder verschieben' sollen direkt neben Treffern erscheinen.",
+        },
+    ]
 
     def _show_error_with_mini_help(
         self,
@@ -172,6 +194,77 @@ class MainWindow(QMainWindow):
                 "Grafik-Hilfe konnte nicht aufgebaut werden. Nächster Schritt: Tipps prüfen und erneut öffnen."
             )
         return result
+
+    def _get_project_status_entries(self) -> list[dict[str, str]]:
+        """Liefert validierte Status-Einträge für den Hilfebereich 'Implementiert vs. Geplant'."""
+
+        entries: list[dict[str, str]] = []
+        for raw_entry in self.PROJECT_STATUS_ITEMS:
+            state = str(raw_entry.get("state", "")).strip()
+            title = str(raw_entry.get("title", "")).strip()
+            detail = str(raw_entry.get("detail", "")).strip()
+            if state not in {"done", "open"}:
+                raise ValueError(
+                    "Statuswert ist ungültig. Nächster Schritt: Nur 'done' oder 'open' verwenden."
+                )
+            if not title or not detail:
+                raise ValueError(
+                    "Status-Hilfe ist unvollständig. Nächster Schritt: Titel und Erklärung ergänzen."
+                )
+            entries.append({"state": state, "title": title, "detail": detail})
+
+        if not entries:
+            raise RuntimeError(
+                "Status-Hilfe leer. Nächster Schritt: Mindestens einen Punkt als done/open eintragen."
+            )
+        return entries
+
+    @staticmethod
+    def _format_project_status_entry(entry: dict[str, str]) -> str:
+        """Formatiert einen Status-Eintrag für die Anzeige mit klaren Zustands-Symbolen."""
+
+        state = entry["state"]
+        if state == "done":
+            return f"✅ Implementiert: {entry['title']} – {entry['detail']}"
+        if state == "open":
+            return f"🟡 Geplant: {entry['title']} – {entry['detail']}"
+        raise ValueError(
+            "Status konnte nicht formatiert werden. Nächster Schritt: Statuswerte prüfen."
+        )
+
+    def _apply_project_status_filter(self, filter_mode: str) -> bool:
+        """Setzt den Filter für den Hilfebereich und rendert die Ergebnisliste robust neu."""
+
+        clean_mode = filter_mode.strip()
+        if clean_mode not in {"all", "open"}:
+            raise ValueError(
+                "Filter ist ungültig. Nächster Schritt: Bitte 'Alle' oder 'Nur offen' verwenden."
+            )
+
+        entries = self._get_project_status_entries()
+        filtered_entries = entries
+        if clean_mode == "open":
+            filtered_entries = [entry for entry in entries if entry["state"] == "open"]
+
+        self.list_project_status.clear()
+        for entry in filtered_entries:
+            item = QListWidgetItem(self._format_project_status_entry(entry))
+            item.setData(Qt.UserRole, entry["state"])
+            self.list_project_status.addItem(item)
+
+        if clean_mode == "open" and self.list_project_status.count() == 0:
+            raise RuntimeError(
+                "Filter 'Nur offen' zeigt keine Punkte. Nächster Schritt: Mindestens einen offenen Punkt pflegen."
+            )
+
+        total = len(entries)
+        open_count = len([entry for entry in entries if entry["state"] == "open"])
+        mode_label = "Alle" if clean_mode == "all" else "Nur offen"
+        self.lbl_project_status_summary.setText(
+            "<b>Status-Hilfe:</b> "
+            f"Filter: {mode_label} | Sichtbar: {self.list_project_status.count()} von {total} | Offen gesamt: {open_count}"
+        )
+        return self.list_project_status.count() > 0
 
     def __init__(self) -> None:
         super().__init__()
@@ -971,6 +1064,7 @@ class MainWindow(QMainWindow):
                 "🧪 Analyse",
                 "🛡️ Sicherheit",
                 "⚙️ Einstellungen",
+                "🛠️ Entwicklerbereich",
             ]
         )
         self.list_category_nav.setCurrentRow(0)
@@ -1218,6 +1312,53 @@ class MainWindow(QMainWindow):
             "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
         )
         layout.addWidget(help_box)
+
+        dev_area_title = QLabel(
+            "<b>Entwicklerbereich (Hilfebereich): Implementiert vs. Geplant</b><br/>"
+            "Dieser Bereich bündelt Entwicklungsstatus getrennt von der normalen Tool-Konfiguration."
+        )
+        dev_area_title.setWordWrap(True)
+        dev_area_title.setAccessibleName("Entwicklerbereich Titel")
+        dev_area_title.setAccessibleDescription(
+            "Erklärt den getrennten Bereich für Entwicklungs- und Statusinformationen"
+        )
+        layout.addWidget(dev_area_title)
+
+        filter_bar = QHBoxLayout()
+        self.btn_status_filter_all = QPushButton("Alle")
+        self.btn_status_filter_open = QPushButton("Nur offen")
+        self.btn_status_filter_all.setToolTip(
+            "Zeigt implementierte und geplante Punkte gemeinsam an"
+        )
+        self.btn_status_filter_open.setToolTip(
+            "Zeigt nur geplante (offene) Punkte für die nächste Umsetzung"
+        )
+        self.btn_status_filter_all.clicked.connect(
+            lambda: self._apply_project_status_filter("all")
+        )
+        self.btn_status_filter_open.clicked.connect(
+            lambda: self._apply_project_status_filter("open")
+        )
+        filter_bar.addWidget(self.btn_status_filter_all)
+        filter_bar.addWidget(self.btn_status_filter_open)
+        layout.addLayout(filter_bar)
+
+        self.lbl_project_status_summary = QLabel("Status-Hilfe wird geladen...")
+        self.lbl_project_status_summary.setWordWrap(True)
+        self.lbl_project_status_summary.setAccessibleName(
+            "Status-Hilfe Zusammenfassung"
+        )
+        layout.addWidget(self.lbl_project_status_summary)
+
+        self.list_project_status = QListWidget()
+        self.list_project_status.setAccessibleName("Implementiert-vs-Geplant Liste")
+        self.list_project_status.setAccessibleDescription(
+            "Liste mit Projektstatus für implementierte und offene Punkte"
+        )
+        self.list_project_status.setMinimumHeight(130)
+        layout.addWidget(self.list_project_status)
+        self._apply_project_status_filter("all")
+
         # Navigation buttons
         btn_next = QPushButton("Weiter →")
         btn_next.setToolTip("Speichert die Auswahl und geht zum nächsten Schritt")
