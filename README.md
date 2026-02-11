@@ -11,14 +11,15 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **83%**
-- **Abgeschlossene Punkte:** **24**
+- **Entwicklungsfortschritt:** **84%**
+- **Abgeschlossene Punkte:** **25**
 - **Offene Punkte:** **5**
-- **Nächster Schritt:** Interaktive Hauptansicht wie im Zielbild (linke Kategorien + klickbare Aktionen ohne Texteingabe) als erstes sichtbares UI-Inkrement implementieren.
+- **Nächster Schritt:** Theme-Vorschau als echte Live-Vorschaukarte (mit Beispiel-Buttons/Listenelementen) ergänzen, damit Nutzer Farben vor dem Speichern direkt sehen.
 
 **Abgeschlossen:**
 - Startroutine prüft jetzt `sudo` vor System-Reparaturen und gibt bei fehlender Berechtigung klare Next Steps in einfacher Sprache statt still zu scheitern.
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
+- Neues Theme **„blau“** ergänzt und Theme-Auswahl jetzt strikt validiert; bei ungültiger Auswahl erscheint ein klarer Fehlerdialog mit Next Steps.
 - Ausführung und Undo im `core/executor.py` nutzen jetzt zentrale Input-/Output-Validierung inklusive robuster Undo-Datenprüfung mit klaren Next Steps.
 - Neuer zentraler Validierungs-Helper in `core/validation.py`; `planner.build_plan` prüft jetzt Input- und Output-Standards mit klaren Next-Step-Fehlertexten.
 - `core/scanner.py` nutzt jetzt zentrale Input-/Output-Validierung (Pfad, Filterliste, Schwellenwerte, Duplikatmodus) mit klaren Next-Step-Fehlertexten in einfacher Sprache.
