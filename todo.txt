@@ -1,2 +1,2 @@
-DONE: Dashboard-Schnellübersicht HTML-sicher gemacht und Berechtigungsstatus mit klaren Symbolen vereinheitlicht. (2026-02-12)
-NEXT: Interaktive Hauptansicht mit linker Kategorie-Navigation und zentralen Aktionskarten in zwei kleinen, abgeschlossenen Mini-Punkten umsetzen. (2026-02-12)
+DONE: A11y-Schnellmodi (Alt+K/Alt+L) und Live-A11y-Hinweis pro Theme in der Startansicht umgesetzt. (2026-02-11)
+NEXT: Interaktive Hauptansicht mit linker Kategorie-Navigation und zentralen Aktionskarten in zwei kleinen, abgeschlossenen Mini-Punkten umsetzen. (2026-02-11)
