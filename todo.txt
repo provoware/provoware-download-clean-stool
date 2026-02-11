@@ -1,3 +1,5 @@
+DONE: Analyse-Trefferliste mit Auswahlstatus (X von Y) und Aktion 'Auswahlpfade kopieren' inkl. Next-Step-Fehlerhilfe abgeschlossen. (2026-02-12)
+NEXT: Zwei Mini-Punkte planen: Trefferliste nach Größe sortierbar machen + Zielordner-Schnellaktionen pro Treffer ergänzen. (2026-02-12)
 DONE: Entwicklerbereich-Hilfe „Implementiert vs. Geplant“ mit Filtern „Alle/Nur offen“ inkl. Smoke-Mini-Prüfung ergänzt. (2026-02-12)
 NEXT: Zwei Mini-Punkte planen: Mehrfachauswahl-Aktionsbuttons in der Trefferliste + verkürzte Pfadanzeige mit Schnellaktionen. (2026-02-12)
 DONE: Laien-Schalter in den Einstellungen (Einsteiger-Modus, Dateitypen, Zielordner-Modus/Pfad, Hilfehinweise) inkl. robuster Validierung ergänzt. (2026-02-12)
