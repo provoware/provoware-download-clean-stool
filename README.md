@@ -11,12 +11,13 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **86%**
-- **Abgeschlossene Punkte:** **18**
+- **Entwicklungsfortschritt:** **90%**
+- **Abgeschlossene Punkte:** **19**
 - **Offene Punkte:** **1**
-- **Nächster Schritt:** A11y-Checks (Kontrast, Fokus, Tastaturbedienung) automatisierbar machen und im Quality-Gate mitlaufen lassen.
+- **Nächster Schritt:** Input-/Output-Validierung als zentralen Standard technisch erzwingen (z. B. über gemeinsame Validierungs-Helper in `core/`).
 
 **Abgeschlossen:**
+- Quality-Gate enthält jetzt einen automatischen A11y-Theme-Check (Kontrast + sichtbarer Fokus) mit verständlichen Next-Step-Hinweisen.
 - Quality-Gate führt bei Format-/Lint-Warnungen jetzt automatisch Reparaturläufe aus und prüft danach erneut.
 - Smoke-Test enthält jetzt einen zusätzlichen automatischen Planner-Check (Duplikat-Grund, relativer Zielpfad, Summary-Werte).
 - Smoke-Test enthält jetzt einen zusätzlichen automatischen Scanner-Check (Parser, Typfilter, Safe-Duplikaterkennung, ungültiger Modus).
@@ -27,7 +28,7 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
-- A11y-Checks (Kontrast, Fokus, Tastaturbedienung) automatisiert prüfbar machen.
+- Input-/Output-Validierung als zentralen Standard technisch erzwingen.
 
 Kurz erklärt: Erst automatische Format-/Lint-Prüfung fest integrieren, dann pro Kernmodul mindestens einen stabilen Test ergänzen.
 

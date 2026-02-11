@@ -146,7 +146,7 @@ run_optional "isort" "isort --check-only \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"
 say "[QUALITY] 3/4 Lintprüfung"
 run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "ruff check --fix \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 4/4 Smoke-Test"
+say "[QUALITY] 4/5 Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
     say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
@@ -155,6 +155,20 @@ if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   fi
 else
   say "[QUALITY][INFO] Kein Smoke-Test gefunden."
+fi
+
+
+say "[QUALITY] 5/5 A11y-Theme-Check"
+if [ -f "$ROOT_DIR/tools/a11y_theme_check.py" ]; then
+  if ! python3 "$ROOT_DIR/tools/a11y_theme_check.py"; then
+    say "[QUALITY][WARN] A11y-Theme-Check meldet Probleme bei Kontrast oder Fokusregeln."
+    say "[QUALITY][HILFE] Nächster Schritt: app/main.py Theme-Farben und :focus-Regeln prüfen, danach Quality-Check erneut starten."
+    WARNINGS=$((WARNINGS + 1))
+  fi
+else
+  say "[QUALITY][WARN] A11y-Theme-Check fehlt (tools/a11y_theme_check.py)."
+  say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Versionsverwaltung holen."
+  WARNINGS=$((WARNINGS + 1))
 fi
 
 if [ "$WARNINGS" -eq 0 ]; then

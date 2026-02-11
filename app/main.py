@@ -1,35 +1,24 @@
 from __future__ import annotations
 
-import sys
 import json
 import platform
+import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QFileDialog,
-    QListWidget,
-    QListWidgetItem,
-    QStackedWidget,
-    QComboBox,
-    QCheckBox,
-    QMessageBox,
-)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
+                               QHBoxLayout, QLabel, QListWidget,
+                               QListWidgetItem, QMainWindow, QMessageBox,
+                               QPushButton, QStackedWidget, QVBoxLayout,
+                               QWidget)
 
-from core.settings import Settings, Filters
-from core.logger import setup_logger
-from core.selfcheck import run_selfcheck
-from core.scanner import scan_directory, detect_duplicates, _parse_size, _parse_age
-from core.planner import build_plan, ActionPlan
 from core.executor import execute_move_plan, undo_last
-
+from core.logger import setup_logger
+from core.planner import ActionPlan, build_plan
+from core.scanner import (_parse_age, _parse_size, detect_duplicates,
+                          scan_directory)
+from core.selfcheck import run_selfcheck
+from core.settings import Filters, Settings
 
 LOGGER = setup_logger()
 
@@ -172,7 +161,31 @@ class MainWindow(QMainWindow):
                 padding: 6px;
             }
         """,
-        "senior": "QWidget { background-color: #ffffff; color: #000000; font-size: 18pt; } QPushButton { background-color: #e0e0e0; color: #000000; padding: 10px; font-size: 16pt; } QPushButton:hover { background-color: #c0c0c0; }",
+        "senior": """
+            QWidget {
+                background-color: #ffffff;
+                color: #000000;
+                font-size: 18pt;
+            }
+            QPushButton {
+                background-color: #e0e0e0;
+                color: #000000;
+                padding: 10px;
+                font-size: 16pt;
+                border: 2px solid #4b5563;
+                min-height: 40px;
+            }
+            QPushButton:hover {
+                background-color: #c0c0c0;
+            }
+            QPushButton:focus,
+            QCheckBox:focus,
+            QComboBox:focus,
+            QListWidget:focus {
+                border: 3px solid #1d4ed8;
+                outline: none;
+            }
+        """,
     }
 
     def apply_theme(self, theme: str, large_text: bool) -> None:
@@ -205,7 +218,9 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout(self.page_welcome)
         title = QLabel("<h2>Schritt 1/4 – Ordner und Anzeige</h2>")
         title.setAccessibleName("Schrittanzeige")
-        title.setAccessibleDescription("Überschrift für den ersten Schritt des Assistenten")
+        title.setAccessibleDescription(
+            "Überschrift für den ersten Schritt des Assistenten"
+        )
         layout.addWidget(title)
         intro = QLabel(
             "<b>Einfach starten:</b> Wählen Sie zuerst Ihren Download-Ordner. "
@@ -219,7 +234,9 @@ class MainWindow(QMainWindow):
         self.lbl_dashboard_info.setWordWrap(True)
         self.lbl_dashboard_info.setTextFormat(Qt.RichText)
         self.lbl_dashboard_info.setAccessibleName("Schnellübersicht")
-        self.lbl_dashboard_info.setAccessibleDescription("Zeigt aktuelle Einstellungen und Hilfehinweise")
+        self.lbl_dashboard_info.setAccessibleDescription(
+            "Zeigt aktuelle Einstellungen und Hilfehinweise"
+        )
         layout.addWidget(self.lbl_dashboard_info)
         # Folder selection
         hl_folder = QHBoxLayout()
@@ -229,7 +246,9 @@ class MainWindow(QMainWindow):
         btn_choose = QPushButton("Ordner wählen…")
         btn_choose.setToolTip("Öffnet den Dialog zur Ordnerauswahl")
         btn_choose.setAccessibleName("Ordner auswählen")
-        btn_choose.setAccessibleDescription("Öffnet die Auswahl für den Download-Ordner")
+        btn_choose.setAccessibleDescription(
+            "Öffnet die Auswahl für den Download-Ordner"
+        )
         hl_folder.addWidget(self.lbl_folder)
         hl_folder.addWidget(btn_choose)
         layout.addLayout(hl_folder)
@@ -242,7 +261,9 @@ class MainWindow(QMainWindow):
         self.combo_theme.addItems(["hell", "dunkel", "kontrast", "senior"])
         self.combo_theme.setToolTip("Wählen Sie ein Farbschema mit guter Lesbarkeit")
         self.combo_theme.setAccessibleName("Farbschema")
-        theme_display = {"light": "hell", "dark": "dunkel"}.get(self.settings.theme, self.settings.theme)
+        theme_display = {"light": "hell", "dark": "dunkel"}.get(
+            self.settings.theme, self.settings.theme
+        )
         self.combo_theme.setCurrentText(theme_display)
         lbl_theme.setBuddy(self.combo_theme)
         hl_theme.addWidget(self.combo_theme)
@@ -272,8 +293,14 @@ class MainWindow(QMainWindow):
 
     def _refresh_dashboard_info(self) -> None:
         selected_folder = self.root_path or Path(self.settings.download_dir)
-        folder_text = str(selected_folder) if selected_folder else "Noch kein Ordner festgelegt"
-        active_types = ", ".join(self.settings.filters.types) if self.settings.filters.types else "keine"
+        folder_text = (
+            str(selected_folder) if selected_folder else "Noch kein Ordner festgelegt"
+        )
+        active_types = (
+            ", ".join(self.settings.filters.types)
+            if self.settings.filters.types
+            else "keine"
+        )
         self.lbl_dashboard_info.setText(
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
             f"• System: {platform.system()} {platform.release()}<br/>"
@@ -288,7 +315,9 @@ class MainWindow(QMainWindow):
         )
 
     def _choose_folder(self) -> None:
-        path = QFileDialog.getExistingDirectory(self, "Ordner auswählen", str(Path.home() / "Downloads"))
+        path = QFileDialog.getExistingDirectory(
+            self, "Ordner auswählen", str(Path.home() / "Downloads")
+        )
         if path:
             self.lbl_folder.setText(path)
             self.root_path = Path(path)
@@ -297,7 +326,9 @@ class MainWindow(QMainWindow):
     def _welcome_next(self) -> None:
         # Save theme settings
         selected_theme = self.combo_theme.currentText()
-        self.settings.theme = {"hell": "light", "dunkel": "dark"}.get(selected_theme, selected_theme)
+        self.settings.theme = {"hell": "light", "dunkel": "dark"}.get(
+            selected_theme, selected_theme
+        )
         self.settings.large_text = self.cb_large.isChecked()
         self.apply_theme(self.settings.theme, self.settings.large_text)
         self._refresh_dashboard_info()
@@ -314,7 +345,9 @@ class MainWindow(QMainWindow):
                 "• Protokoll: Ort der Log-Datei anzeigen."
             )
             message.setAccessibleName("Fehlende Ordnerauswahl")
-            message.setAccessibleDescription("Dialog mit klaren nächsten Schritten für fehlende Ordnerauswahl")
+            message.setAccessibleDescription(
+                "Dialog mit klaren nächsten Schritten für fehlende Ordnerauswahl"
+            )
             retry_btn = message.addButton("Erneut versuchen", QMessageBox.AcceptRole)
             repair_btn = message.addButton("Reparatur", QMessageBox.ActionRole)
             log_btn = message.addButton("Protokoll", QMessageBox.HelpRole)
@@ -357,7 +390,9 @@ class MainWindow(QMainWindow):
         intro.setWordWrap(True)
         layout.addWidget(intro)
 
-        preset_box = QLabel("<b>1) Preset auswählen</b><br/>Schneller Start mit sinnvollen Standardwerten")
+        preset_box = QLabel(
+            "<b>1) Preset auswählen</b><br/>Schneller Start mit sinnvollen Standardwerten"
+        )
         preset_box.setWordWrap(True)
         layout.addWidget(preset_box)
         hl_presets = QHBoxLayout()
@@ -375,7 +410,9 @@ class MainWindow(QMainWindow):
         self.current_preset_label = QLabel("Aktuelles Preset: " + self.settings.presets)
         layout.addWidget(self.current_preset_label)
 
-        filters_box = QLabel("<b>2) Dateitypen auswählen</b><br/>Mindestens ein Typ muss aktiv sein")
+        filters_box = QLabel(
+            "<b>2) Dateitypen auswählen</b><br/>Mindestens ein Typ muss aktiv sein"
+        )
         filters_box.setWordWrap(True)
         layout.addWidget(filters_box)
         self.cb_images = QCheckBox("Bilder")
@@ -387,7 +424,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.cb_archives)
         layout.addWidget(self.cb_other)
 
-        limits_box = QLabel("<b>3) Grenzen setzen</b><br/>Optional: Größe und Alter eingrenzen")
+        limits_box = QLabel(
+            "<b>3) Grenzen setzen</b><br/>Optional: Größe und Alter eingrenzen"
+        )
         limits_box.setWordWrap(True)
         layout.addWidget(limits_box)
         hl_size = QHBoxLayout()
@@ -403,7 +442,9 @@ class MainWindow(QMainWindow):
         hl_age.addWidget(self.combo_age)
         layout.addLayout(hl_age)
 
-        duplicates_box = QLabel("<b>4) Duplikat-Prüfung</b><br/>Wählen Sie die Sicherheitstiefe")
+        duplicates_box = QLabel(
+            "<b>4) Duplikat-Prüfung</b><br/>Wählen Sie die Sicherheitstiefe"
+        )
         duplicates_box.setWordWrap(True)
         layout.addWidget(duplicates_box)
         hl_dup = QHBoxLayout()
@@ -413,7 +454,9 @@ class MainWindow(QMainWindow):
         hl_dup.addWidget(self.combo_dups)
         layout.addLayout(hl_dup)
 
-        footer_hint = QLabel("Tipp: Starten Sie mit Preset Standard. Danach können Sie bei Bedarf verfeinern.")
+        footer_hint = QLabel(
+            "Tipp: Starten Sie mit Preset Standard. Danach können Sie bei Bedarf verfeinern."
+        )
         footer_hint.setWordWrap(True)
         layout.addWidget(footer_hint)
 
@@ -442,12 +485,19 @@ class MainWindow(QMainWindow):
 
     def _load_preset(self, preset_name: str) -> None:
         # Load preset JSON
-        p = Path(__file__).resolve().parent.parent / "data" / "presets" / f"{preset_name}.json"
+        p = (
+            Path(__file__).resolve().parent.parent
+            / "data"
+            / "presets"
+            / f"{preset_name}.json"
+        )
         if p.exists():
             try:
                 raw = json.loads(p.read_text(encoding="utf-8"))
             except Exception as e:
-                QMessageBox.warning(self, "Fehler", f"Preset konnte nicht geladen werden: {e}")
+                QMessageBox.warning(
+                    self, "Fehler", f"Preset konnte nicht geladen werden: {e}"
+                )
                 return
             filters = raw.get("filters", {})
             # update UI elements
@@ -479,9 +529,17 @@ class MainWindow(QMainWindow):
         if self.cb_other.isChecked():
             types.append("other")
         if not types:
-            QMessageBox.warning(self, "Keine Dateitypen", "Bitte wählen Sie mindestens einen Dateityp aus.")
+            QMessageBox.warning(
+                self,
+                "Keine Dateitypen",
+                "Bitte wählen Sie mindestens einen Dateityp aus.",
+            )
             return
-        self.settings.filters = Filters(types=types, size=self.combo_size.currentText(), age=self.combo_age.currentText())
+        self.settings.filters = Filters(
+            types=types,
+            size=self.combo_size.currentText(),
+            age=self.combo_age.currentText(),
+        )
         self.settings.duplicates_mode = self.combo_dups.currentText()
         self.settings.save()
         # proceed to scan
@@ -535,7 +593,9 @@ class MainWindow(QMainWindow):
         assert self.root_path, "root_path sollte gesetzt sein"
         trash_dir = self.root_path / ".downloads_organizer_trash"
         trash_dir.mkdir(parents=True, exist_ok=True)
-        self.plan = build_plan(self.scan_results, self.duplicates_map, self.root_path, trash_dir)
+        self.plan = build_plan(
+            self.scan_results, self.duplicates_map, self.root_path, trash_dir
+        )
         self.stack.setCurrentWidget(self.page_plan)
         self._refresh_plan_page()
 
