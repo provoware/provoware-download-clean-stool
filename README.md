@@ -11,12 +11,13 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **90%**
-- **Abgeschlossene Punkte:** **19**
+- **Entwicklungsfortschritt:** **92%**
+- **Abgeschlossene Punkte:** **20**
 - **Offene Punkte:** **1**
-- **Nächster Schritt:** Input-/Output-Validierung als zentralen Standard technisch erzwingen (z. B. über gemeinsame Validierungs-Helper in `core/`).
+- **Nächster Schritt:** Zentrale Input-/Output-Validierung aus `core/validation.py` auf `scanner` und `executor` ausweiten, damit alle Kernpfade denselben Standard erzwingen.
 
 **Abgeschlossen:**
+- Neuer zentraler Validierungs-Helper in `core/validation.py`; `planner.build_plan` prüft jetzt Input- und Output-Standards mit klaren Next-Step-Fehlertexten.
 - Quality-Gate enthält jetzt einen automatischen A11y-Theme-Check (Kontrast + sichtbarer Fokus) mit verständlichen Next-Step-Hinweisen.
 - Quality-Gate führt bei Format-/Lint-Warnungen jetzt automatisch Reparaturläufe aus und prüft danach erneut.
 - Smoke-Test enthält jetzt einen zusätzlichen automatischen Planner-Check (Duplikat-Grund, relativer Zielpfad, Summary-Werte).
