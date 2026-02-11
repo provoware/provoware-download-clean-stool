@@ -26,6 +26,14 @@ LOGGER = setup_logger()
 
 
 class MainWindow(QMainWindow):
+    THEME_A11Y_HINTS = {
+        "light": "Helles Standardschema mit guter Lesbarkeit für normale Raumbeleuchtung.",
+        "dark": "Dunkles Schema für blendfreie Nutzung am Abend oder in dunklen Räumen.",
+        "kontrast": "Maximaler Kontrast mit sehr klaren Fokusrahmen für Sehunterstützung.",
+        "blau": "Ruhiges blaues Schema mit klaren Konturen und guter Erkennbarkeit.",
+        "senior": "Extra große Schrift und starke Umrandungen für ruhiges Lesen.",
+    }
+
     def _show_error_with_mini_help(
         self,
         *,
@@ -470,6 +478,48 @@ class MainWindow(QMainWindow):
             style += " QWidget { font-size: 14pt; }"
         self.setStyleSheet(style)
 
+    def _build_theme_a11y_hint(self, theme_key: str, large_text: bool) -> str:
+        """Liefert eine laienfreundliche A11y-Hilfe mit Input- und Output-Validierung."""
+
+        clean_theme_key = theme_key.strip().lower()
+        if clean_theme_key not in self.THEME_A11Y_HINTS:
+            raise ValueError(
+                "A11y-Hinweis kann nicht erstellt werden. Nächster Schritt: Bitte ein gültiges Farbschema wählen."
+            )
+
+        size_hint = (
+            "Großer Text ist aktiv und verbessert die Lesbarkeit."
+            if large_text
+            else "Großer Text ist aus. Bei Bedarf im gleichen Schritt aktivieren."
+        )
+        output = f"{self.THEME_A11Y_HINTS[clean_theme_key]} {size_hint}"
+        if not output.strip():
+            raise RuntimeError(
+                "A11y-Hinweis fehlt. Nächster Schritt: Theme bitte erneut auswählen."
+            )
+        return output
+
+    def _apply_accessibility_quick_mode(self, mode: str) -> None:
+        """Aktiviert schnelle, barrierearme Presets für sofort bessere Lesbarkeit."""
+
+        clean_mode = mode.strip().lower()
+        presets = {
+            "max_contrast": ("kontrast", True, "130 %", "Untereinander"),
+            "balanced": ("blau", False, "115 %", "Aktion links · Liste rechts"),
+        }
+        preset = presets.get(clean_mode)
+        if preset is None:
+            raise ValueError(
+                "Schnellmodus ist ungültig. Nächster Schritt: Bitte einen sichtbaren Hilfebutton verwenden."
+            )
+
+        theme_display, large_text, scale_text, position_text = preset
+        self.combo_theme.setCurrentText(theme_display)
+        self.cb_large.setChecked(large_text)
+        self.combo_preview_scale.setCurrentText(scale_text)
+        self.combo_preview_position.setCurrentText(position_text)
+        self._sync_theme_preview()
+
     def _sync_theme_preview(self) -> None:
         """Aktualisiert die Live-Vorschau des Themes mit klarer Validierung."""
 
@@ -498,11 +548,13 @@ class MainWindow(QMainWindow):
 
         preview_title = self.THEME_KEY_TO_DISPLAY.get(resolved_theme, "kontrast")
         position_title = selected_position.lower()
+        a11y_hint = self._build_theme_a11y_hint(resolved_theme, large_text_enabled)
         preview_text = (
             "<b>Live-Vorschau aktiv</b><br/>"
             f"Theme: <b>{preview_title}</b> · Großer Text: "
             f"<b>{'an' if large_text_enabled else 'aus'}</b><br/>"
             f"Bereichsskalierung: <b>{selected_scale}</b> · Position: <b>{position_title}</b><br/>"
+            f"A11y-Hinweis (Zugänglichkeit): {a11y_hint}<br/>"
             "Beispiel unten zeigt Button, Liste und Kontrast in Echtzeit."
         )
         if not preview_text.strip():
@@ -733,6 +785,30 @@ class MainWindow(QMainWindow):
         self.preview_row.addWidget(self.preview_list)
         layout.addLayout(self.preview_row)
 
+        hl_accessibility_quick = QHBoxLayout()
+        btn_max_contrast = QPushButton("Lesbarkeit sofort maximieren")
+        btn_max_contrast.setToolTip(
+            "Setzt Kontrast-Theme, großen Text und klare Stapelansicht mit einem Klick"
+        )
+        btn_max_contrast.setAccessibleName("Lesbarkeit sofort maximieren")
+        btn_max_contrast.setShortcut("Alt+K")
+        btn_max_contrast.clicked.connect(
+            lambda: self._apply_accessibility_quick_mode("max_contrast")
+        )
+        hl_accessibility_quick.addWidget(btn_max_contrast)
+
+        btn_balanced = QPushButton("Ausgewogene Ansicht laden")
+        btn_balanced.setToolTip(
+            "Lädt ein ruhiges Standard-Layout mit gutem Kontrast für den Alltag"
+        )
+        btn_balanced.setAccessibleName("Ausgewogene Ansicht laden")
+        btn_balanced.setShortcut("Alt+L")
+        btn_balanced.clicked.connect(
+            lambda: self._apply_accessibility_quick_mode("balanced")
+        )
+        hl_accessibility_quick.addWidget(btn_balanced)
+        layout.addLayout(hl_accessibility_quick)
+
         self.combo_theme.currentTextChanged.connect(
             lambda _: self._sync_theme_preview()
         )
@@ -749,6 +825,7 @@ class MainWindow(QMainWindow):
             "<b>Hilfe:</b><br/>"
             "• Tastatur: Mit <b>Tab</b> wechseln Sie zwischen Feldern.<br/>"
             "• Schnellwahl: Mit <b>Alt+O</b> öffnen Sie direkt die Ordnerauswahl.<br/>"
+            "• Schnellhilfe Lesbarkeit: <b>Alt+K</b> maximiert Kontrast, <b>Alt+L</b> lädt die ausgewogene Ansicht.<br/>"
             "• Bei Unsicherheit starten Sie mit dem Schema <b>kontrast</b>.<br/>"
             "• Für ruhige, helle Farben wählen Sie <b>blau</b>.<br/>"
             "• Bereichsskalierung und Vorschau-Position helfen bei eigener Bildschirmgröße.<br/>"

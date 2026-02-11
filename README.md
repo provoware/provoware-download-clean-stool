@@ -11,12 +11,14 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **95%**
-- **Abgeschlossene Punkte:** **35**
+- **Entwicklungsfortschritt:** **97%**
+- **Abgeschlossene Punkte:** **37**
 - **Offene Punkte:** **2**
 - **Nächster Schritt:** Interaktive Hauptansicht aus dem Zielbild (linke Kategorie-Navigation + zentrale Aktionskarten) als nächste zwei Mini-Punkte umsetzen.
 
 **Abgeschlossen:**
+- Neue Schnellbuttons „Lesbarkeit sofort maximieren“ (`Alt+K`) und „Ausgewogene Ansicht laden“ (`Alt+L`) setzen Theme, Textgröße, Vorschau-Skalierung und Position in einem Klick für barrierearme Starts.
+- Live-Theme-Vorschau zeigt jetzt zusätzlich einen klaren A11y-Hinweis (Zugänglichkeit) je Farbschema inklusive Textgrößenstatus in einfacher Sprache.
 - Dashboard-Schnellübersicht ist jetzt HTML-sicher (maskierte Sonderzeichen) und zeigt Berechtigungsstatus konsistent mit klaren Symbolen für OK/Warnung.
 - Startseite hat jetzt ein robusteres, luftigeres Layout (einheitliche Abstände, Mindestbreiten, Hilfe-/Dashboard-Karten) plus Tastatur-Schnellwahl `Alt+O` für die Ordnerauswahl.
 - `AGENTS.md` verlangt jetzt pro Iteration genau zwei vollständig abgeschlossene Punkte statt einem Einzelpunkt, inklusive angepasster DoD- und Planungsregeln.

@@ -1,3 +1,8 @@
+## 2026-02-11 – UI-Iteration: A11y-Schnellmodi + Live-A11y-Hinweis
+- **Was:** `app/main.py` ergänzt zwei neue Schnellaktionen „Lesbarkeit sofort maximieren“ (`Alt+K`) und „Ausgewogene Ansicht laden“ (`Alt+L`) für Theme, Textgröße, Vorschau-Skalierung und Position; zusätzlich zeigt die Live-Vorschau jetzt einen laienfreundlichen A11y-Hinweis pro Theme.
+- **Warum:** Für den Einstieg fehlte ein sofort nutzbarer Barrierefreiheits-Kurzweg und eine klare Erklärung, welches Theme in welcher Situation hilft.
+- **Wirkung:** Nutzer:innen erreichen mit einem Klick eine gut lesbare Oberfläche und bekommen direkt verständliche Orientierung zu Kontrast, Fokus und Textgröße.
+
 ## 2026-02-12 – UI-Iteration: Dashboard-Sicherheit + barriereärmeres Startlayout
 - **Was:** `app/main.py` maskiert Dashboard-Inhalte jetzt HTML-sicher, zeigt Berechtigungen konsistent mit OK/Warnsymbol und verbessert das Startlayout mit klaren Abständen, Kartenrahmen, Mindestbreiten und Shortcut `Alt+O` für die Ordnerwahl.
 - **Warum:** Die Schnellübersicht sollte robust gegen Sonderzeichen bleiben und die erste Oberfläche visuell ruhiger, besser fokussierbar und schneller per Tastatur bedienbar sein.
