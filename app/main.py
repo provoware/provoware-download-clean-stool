@@ -7,8 +7,8 @@ import sys
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFileDialog,
-                               QHBoxLayout, QLabel, QListWidget,
+from PySide6.QtWidgets import (QApplication, QBoxLayout, QCheckBox, QComboBox,
+                               QFileDialog, QHBoxLayout, QLabel, QListWidget,
                                QListWidgetItem, QMainWindow, QMessageBox,
                                QPushButton, QStackedWidget, QVBoxLayout,
                                QWidget)
@@ -427,6 +427,17 @@ class MainWindow(QMainWindow):
         "blau": "blau",
         "senior": "senior",
     }
+    PREVIEW_SCALE_LABELS = {
+        "100 %": 1.0,
+        "115 %": 1.15,
+        "130 %": 1.3,
+        "150 %": 1.5,
+    }
+    PREVIEW_POSITION_MODES = {
+        "Aktion links · Liste rechts": "action_left",
+        "Liste links · Aktion rechts": "list_left",
+        "Untereinander": "stacked",
+    }
 
     def _resolve_theme_key(self, selected_theme: str) -> str:
         """Validiert die Theme-Auswahl und gibt den internen Theme-Key zurück."""
@@ -476,11 +487,21 @@ class MainWindow(QMainWindow):
         resolved_theme = self._resolve_theme_key(selected_theme)
         self.apply_theme(resolved_theme, large_text_enabled)
 
+        selected_scale = self.combo_preview_scale.currentText().strip()
+        scale_factor = self._resolve_preview_scale_factor(selected_scale)
+        self._apply_preview_scale(scale_factor)
+
+        selected_position = self.combo_preview_position.currentText().strip()
+        position_mode = self._resolve_preview_position_mode(selected_position)
+        self._apply_preview_layout(position_mode)
+
         preview_title = self.THEME_KEY_TO_DISPLAY.get(resolved_theme, "kontrast")
+        position_title = selected_position.lower()
         preview_text = (
             "<b>Live-Vorschau aktiv</b><br/>"
             f"Theme: <b>{preview_title}</b> · Großer Text: "
             f"<b>{'an' if large_text_enabled else 'aus'}</b><br/>"
+            f"Bereichsskalierung: <b>{selected_scale}</b> · Position: <b>{position_title}</b><br/>"
             "Beispiel unten zeigt Button, Liste und Kontrast in Echtzeit."
         )
         if not preview_text.strip():
@@ -488,6 +509,86 @@ class MainWindow(QMainWindow):
                 "Vorschauausgabe fehlt. Nächster Schritt: Bitte Theme-Auswahl erneut öffnen."
             )
         self.lbl_theme_preview_info.setText(preview_text)
+
+    def _resolve_preview_scale_factor(self, selected_scale: str) -> float:
+        """Validiert die Bereichsskalierung der Vorschau."""
+
+        clean_scale = selected_scale.strip()
+        if not clean_scale:
+            raise ValueError(
+                "Bereichsskalierung fehlt. Nächster Schritt: Bitte eine sichtbare Skalierung wählen."
+            )
+
+        factor = self.PREVIEW_SCALE_LABELS.get(clean_scale)
+        if factor is None:
+            raise ValueError(
+                "Bereichsskalierung ist ungültig. Nächster Schritt: Bitte eine Option aus der Liste wählen."
+            )
+        return factor
+
+    def _apply_preview_scale(self, scale_factor: float) -> None:
+        """Skaliert die Vorschau-Elemente robust und prüft das Ergebnis."""
+
+        if scale_factor <= 0:
+            raise ValueError(
+                "Skalierungsfaktor ist ungültig. Nächster Schritt: Bitte eine positive Skalierung wählen."
+            )
+
+        button_height = max(int(38 * scale_factor), 38)
+        list_height = max(int(90 * scale_factor), 90)
+        self.preview_action_button.setMinimumHeight(button_height)
+        self.preview_list.setMaximumHeight(list_height)
+        self.preview_list.setMinimumHeight(min(list_height, 160))
+
+        if self.preview_action_button.minimumHeight() < 38:
+            raise RuntimeError(
+                "Skalierung konnte nicht gesetzt werden. Nächster Schritt: Bitte Auswahl erneut anwenden."
+            )
+
+    def _resolve_preview_position_mode(self, selected_mode: str) -> str:
+        """Validiert die gewählte Vorschau-Position."""
+
+        clean_mode = selected_mode.strip()
+        if not clean_mode:
+            raise ValueError(
+                "Positionsmodus fehlt. Nächster Schritt: Bitte eine sichtbare Position wählen."
+            )
+
+        resolved_mode = self.PREVIEW_POSITION_MODES.get(clean_mode)
+        if resolved_mode is None:
+            raise ValueError(
+                "Positionsmodus ist ungültig. Nächster Schritt: Bitte einen Modus aus der Liste auswählen."
+            )
+        return resolved_mode
+
+    def _apply_preview_layout(self, position_mode: str) -> None:
+        """Ordnet Vorschau-Elemente flexibel neu an und prüft das Ergebnis."""
+
+        if position_mode not in {"action_left", "list_left", "stacked"}:
+            raise ValueError(
+                "Positionsmodus ist ungültig. Nächster Schritt: Bitte eine andere Position wählen."
+            )
+
+        while self.preview_row.count():
+            self.preview_row.takeAt(0)
+
+        if position_mode == "action_left":
+            self.preview_row.setDirection(QBoxLayout.LeftToRight)
+            self.preview_row.addWidget(self.preview_action_button)
+            self.preview_row.addWidget(self.preview_list)
+        elif position_mode == "list_left":
+            self.preview_row.setDirection(QBoxLayout.LeftToRight)
+            self.preview_row.addWidget(self.preview_list)
+            self.preview_row.addWidget(self.preview_action_button)
+        else:
+            self.preview_row.setDirection(QBoxLayout.TopToBottom)
+            self.preview_row.addWidget(self.preview_action_button)
+            self.preview_row.addWidget(self.preview_list)
+
+        if self.preview_row.count() != 2:
+            raise RuntimeError(
+                "Vorschau-Positionierung fehlgeschlagen. Nächster Schritt: Bitte Position erneut auswählen."
+            )
 
     def _create_pages(self) -> None:
         self.page_welcome = QWidget()
@@ -568,6 +669,32 @@ class MainWindow(QMainWindow):
         hl_theme.addWidget(self.cb_large)
         layout.addLayout(hl_theme)
 
+        hl_preview_controls = QHBoxLayout()
+        lbl_preview_scale = QLabel("Bereichsskalierung:")
+        self.combo_preview_scale = QComboBox()
+        self.combo_preview_scale.addItems(list(self.PREVIEW_SCALE_LABELS.keys()))
+        self.combo_preview_scale.setCurrentText("115 %")
+        self.combo_preview_scale.setToolTip(
+            "Steuert die Größe der Vorschau-Fläche für bessere Lesbarkeit"
+        )
+        self.combo_preview_scale.setAccessibleName("Bereichsskalierung Vorschau")
+        lbl_preview_scale.setBuddy(self.combo_preview_scale)
+        hl_preview_controls.addWidget(lbl_preview_scale)
+        hl_preview_controls.addWidget(self.combo_preview_scale)
+
+        lbl_preview_position = QLabel("Vorschau-Position:")
+        self.combo_preview_position = QComboBox()
+        self.combo_preview_position.addItems(list(self.PREVIEW_POSITION_MODES.keys()))
+        self.combo_preview_position.setCurrentText("Aktion links · Liste rechts")
+        self.combo_preview_position.setToolTip(
+            "Legt fest, ob Aktion und Liste links, rechts oder untereinander liegen"
+        )
+        self.combo_preview_position.setAccessibleName("Vorschau-Position wählen")
+        lbl_preview_position.setBuddy(self.combo_preview_position)
+        hl_preview_controls.addWidget(lbl_preview_position)
+        hl_preview_controls.addWidget(self.combo_preview_position)
+        layout.addLayout(hl_preview_controls)
+
         self.lbl_theme_preview_info = QLabel()
         self.lbl_theme_preview_info.setWordWrap(True)
         self.lbl_theme_preview_info.setAccessibleName("Theme Live-Vorschau Hinweis")
@@ -576,13 +703,13 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(self.lbl_theme_preview_info)
 
-        preview_row = QHBoxLayout()
+        self.preview_row = QBoxLayout(QBoxLayout.LeftToRight)
         self.preview_action_button = QPushButton("Beispiel: Primäraktion")
         self.preview_action_button.setEnabled(False)
         self.preview_action_button.setToolTip(
             "Nur Vorschau: So sieht ein Aktionsbutton im gewählten Theme aus"
         )
-        preview_row.addWidget(self.preview_action_button)
+        self.preview_row.addWidget(self.preview_action_button)
         self.preview_list = QListWidget()
         self.preview_list.setAccessibleName("Theme Vorschau-Liste")
         self.preview_list.addItems(
@@ -593,13 +720,19 @@ class MainWindow(QMainWindow):
         )
         self.preview_list.setCurrentRow(0)
         self.preview_list.setMaximumHeight(90)
-        preview_row.addWidget(self.preview_list)
-        layout.addLayout(preview_row)
+        self.preview_row.addWidget(self.preview_list)
+        layout.addLayout(self.preview_row)
 
         self.combo_theme.currentTextChanged.connect(
             lambda _: self._sync_theme_preview()
         )
         self.cb_large.toggled.connect(lambda _: self._sync_theme_preview())
+        self.combo_preview_scale.currentTextChanged.connect(
+            lambda _: self._sync_theme_preview()
+        )
+        self.combo_preview_position.currentTextChanged.connect(
+            lambda _: self._sync_theme_preview()
+        )
         self._sync_theme_preview()
 
         help_box = QLabel(
@@ -607,6 +740,7 @@ class MainWindow(QMainWindow):
             "• Tastatur: Mit <b>Tab</b> wechseln Sie zwischen Feldern.<br/>"
             "• Bei Unsicherheit starten Sie mit dem Schema <b>kontrast</b>.<br/>"
             "• Für ruhige, helle Farben wählen Sie <b>blau</b>.<br/>"
+            "• Bereichsskalierung und Vorschau-Position helfen bei eigener Bildschirmgröße.<br/>"
             "• Sie können Einstellungen später jederzeit ändern."
         )
         help_box.setWordWrap(True)
