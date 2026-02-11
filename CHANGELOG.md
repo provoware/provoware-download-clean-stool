@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Dashboard-Sicherheit + barriereärmeres Startlayout
+- **Was:** `app/main.py` maskiert Dashboard-Inhalte jetzt HTML-sicher, zeigt Berechtigungen konsistent mit OK/Warnsymbol und verbessert das Startlayout mit klaren Abständen, Kartenrahmen, Mindestbreiten und Shortcut `Alt+O` für die Ordnerwahl.
+- **Warum:** Die Schnellübersicht sollte robust gegen Sonderzeichen bleiben und die erste Oberfläche visuell ruhiger, besser fokussierbar und schneller per Tastatur bedienbar sein.
+- **Wirkung:** Stabilere Anzeige ohne fehlerhafte Rich-Text-Effekte, bessere Lesbarkeit/Kontraststruktur und zugänglichere Bedienung im ersten Schritt.
+
 ## 2026-02-12 – UI-Iteration: Flexible Vorschau-Skalierung + variable Positionierung
 - **Was:** `app/main.py` ergänzt zwei neue Vorschau-Regler: „Bereichsskalierung“ (100/115/130/150%) und „Vorschau-Position“ (links/rechts/untereinander), jeweils mit robuster Input-/Output-Validierung und klaren Next-Step-Fehlertexten.
 - **Warum:** Für unterschiedliche Bildschirmgrößen und Sehbedarfe fehlte bisher eine direkte Feinsteuerung der Vorschaufläche und ihrer Anordnung.

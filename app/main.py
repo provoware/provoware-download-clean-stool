@@ -4,6 +4,7 @@ import json
 import os
 import platform
 import sys
+from html import escape
 from pathlib import Path
 
 from PySide6.QtCore import Qt
@@ -611,6 +612,8 @@ class MainWindow(QMainWindow):
     # Page 1: Welcome & Folder/Theme
     def _setup_welcome_page(self) -> None:
         layout = QVBoxLayout(self.page_welcome)
+        layout.setContentsMargins(20, 20, 20, 20)
+        layout.setSpacing(14)
         title = QLabel("<h2>Schritt 1/4 – Ordner und Anzeige</h2>")
         title.setAccessibleName("Schrittanzeige")
         title.setAccessibleDescription(
@@ -632,6 +635,9 @@ class MainWindow(QMainWindow):
         self.lbl_dashboard_info.setAccessibleDescription(
             "Zeigt aktuelle Einstellungen und Hilfehinweise"
         )
+        self.lbl_dashboard_info.setStyleSheet(
+            "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+        )
         layout.addWidget(self.lbl_dashboard_info)
         # Folder selection
         hl_folder = QHBoxLayout()
@@ -644,6 +650,7 @@ class MainWindow(QMainWindow):
         btn_choose.setAccessibleDescription(
             "Öffnet die Auswahl für den Download-Ordner"
         )
+        btn_choose.setShortcut("Alt+O")
         hl_folder.addWidget(self.lbl_folder)
         hl_folder.addWidget(btn_choose)
         layout.addLayout(hl_folder)
@@ -658,6 +665,7 @@ class MainWindow(QMainWindow):
         self.combo_theme.addItems(["hell", "dunkel", "kontrast", "blau", "senior"])
         self.combo_theme.setToolTip("Wählen Sie ein Farbschema mit guter Lesbarkeit")
         self.combo_theme.setAccessibleName("Farbschema")
+        self.combo_theme.setMinimumWidth(160)
         theme_display = self.THEME_KEY_TO_DISPLAY.get(self.settings.theme, "kontrast")
         self.combo_theme.setCurrentText(theme_display)
         lbl_theme.setBuddy(self.combo_theme)
@@ -678,6 +686,7 @@ class MainWindow(QMainWindow):
             "Steuert die Größe der Vorschau-Fläche für bessere Lesbarkeit"
         )
         self.combo_preview_scale.setAccessibleName("Bereichsskalierung Vorschau")
+        self.combo_preview_scale.setMinimumWidth(140)
         lbl_preview_scale.setBuddy(self.combo_preview_scale)
         hl_preview_controls.addWidget(lbl_preview_scale)
         hl_preview_controls.addWidget(self.combo_preview_scale)
@@ -690,6 +699,7 @@ class MainWindow(QMainWindow):
             "Legt fest, ob Aktion und Liste links, rechts oder untereinander liegen"
         )
         self.combo_preview_position.setAccessibleName("Vorschau-Position wählen")
+        self.combo_preview_position.setMinimumWidth(220)
         lbl_preview_position.setBuddy(self.combo_preview_position)
         hl_preview_controls.addWidget(lbl_preview_position)
         hl_preview_controls.addWidget(self.combo_preview_position)
@@ -738,6 +748,7 @@ class MainWindow(QMainWindow):
         help_box = QLabel(
             "<b>Hilfe:</b><br/>"
             "• Tastatur: Mit <b>Tab</b> wechseln Sie zwischen Feldern.<br/>"
+            "• Schnellwahl: Mit <b>Alt+O</b> öffnen Sie direkt die Ordnerauswahl.<br/>"
             "• Bei Unsicherheit starten Sie mit dem Schema <b>kontrast</b>.<br/>"
             "• Für ruhige, helle Farben wählen Sie <b>blau</b>.<br/>"
             "• Bereichsskalierung und Vorschau-Position helfen bei eigener Bildschirmgröße.<br/>"
@@ -746,6 +757,9 @@ class MainWindow(QMainWindow):
         help_box.setWordWrap(True)
         help_box.setAccessibleName("Hilfebereich")
         help_box.setAccessibleDescription("Tipps für Bedienung und Lesbarkeit")
+        help_box.setStyleSheet(
+            "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+        )
         layout.addWidget(help_box)
         # Navigation buttons
         btn_next = QPushButton("Weiter →")
@@ -757,7 +771,7 @@ class MainWindow(QMainWindow):
 
     def _refresh_dashboard_info(self) -> None:
         selected_folder = self.root_path or Path(self.settings.download_dir)
-        folder_text = (
+        folder_text = escape(
             str(selected_folder) if selected_folder else "Noch kein Ordner festgelegt"
         )
         active_types = (
@@ -765,22 +779,30 @@ class MainWindow(QMainWindow):
             if self.settings.filters.types
             else "keine"
         )
+        active_types = escape(active_types)
+        active_preset = escape(self.settings.presets)
+        duplicates_mode = escape(self.settings.duplicates_mode)
+        permission_prefix = "✅"
         permission_status = "noch nicht geprüft"
         if self.root_path:
             perm_ok, perm_message, _ = self._check_folder_permissions(
                 require_write=True
             )
-            permission_status = perm_message if perm_ok else f"⚠️ {perm_message}"
+            permission_prefix = "✅" if perm_ok else "⚠️"
+            permission_status = perm_message
+
+        safe_permission_status = escape(permission_status)
+        system_text = escape(f"{platform.system()} {platform.release()}")
 
         self.lbl_dashboard_info.setText(
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
-            f"• System: {platform.system()} {platform.release()}<br/>"
+            f"• System: {system_text}<br/>"
             "• Offline-Betrieb: aktiv (keine Internetverbindung nötig)<br/>"
             f"• Aktueller Zielordner: {folder_text}<br/>"
-            f"• Linux-Berechtigungen: {permission_status}<br/>"
-            f"• Aktives Preset: {self.settings.presets}<br/>"
+            f"• Linux-Berechtigungen: {permission_prefix} {safe_permission_status}<br/>"
+            f"• Aktives Preset: {active_preset}<br/>"
             f"• Dateitypen-Filter: {active_types}<br/>"
-            f"• Duplikat-Prüfung: {self.settings.duplicates_mode}<br/><br/>"
+            f"• Duplikat-Prüfung: {duplicates_mode}<br/><br/>"
             "<b>Hilfe in einfacher Sprache:</b><br/>"
             "1) Wählen Sie einen Ordner.<br/>"
             "2) Wählen Sie ein gut lesbares Farbschema.<br/>"
