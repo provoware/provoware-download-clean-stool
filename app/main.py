@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import platform
 import sys
 from pathlib import Path
@@ -125,6 +126,110 @@ class MainWindow(QMainWindow):
             return None
 
         return candidate
+
+    def _check_folder_permissions(
+        self, require_write: bool
+    ) -> tuple[bool, str, list[str]]:
+        """Prüft Linux-Berechtigungen für den gewählten Ordner mit klaren Next Steps."""
+
+        if not self.root_path:
+            return (
+                False,
+                "Es wurde noch kein Ordner ausgewählt.",
+                [
+                    "Erneut versuchen: Bitte zuerst im Schritt 1 einen Ordner auswählen.",
+                    "Reparatur: Danach erneut auf 'Weiter' klicken.",
+                ],
+            )
+
+        candidate = self.root_path.expanduser()
+        if not candidate.exists() or not candidate.is_dir():
+            return (
+                False,
+                "Der gewählte Ordner ist nicht erreichbar oder kein Ordner.",
+                [
+                    "Erneut versuchen: Bitte einen vorhandenen Ordner auswählen.",
+                    "Reparatur: Bei externer Festplatte zuerst das Laufwerk einhängen.",
+                ],
+            )
+
+        missing_flags: list[str] = []
+        if not os.access(candidate, os.R_OK):
+            missing_flags.append("Lesen")
+        if not os.access(candidate, os.X_OK):
+            missing_flags.append("Öffnen")
+        if require_write and not os.access(candidate, os.W_OK):
+            missing_flags.append("Schreiben")
+
+        if missing_flags:
+            joined = ", ".join(missing_flags)
+            chmod_hint = f"chmod u+rwx '{candidate}'"
+            return (
+                False,
+                f"Für den Ordner fehlen Linux-Berechtigungen: {joined}.",
+                [
+                    "Erneut versuchen: Anderen Ordner mit eigenen Rechten auswählen.",
+                    f"Reparatur: Im Terminal Berechtigung setzen mit: {chmod_hint}",
+                    "Protokoll: Bei Firmen-Geräten Administrator oder IT ansprechen.",
+                ],
+            )
+
+        if require_write:
+            info = "Berechtigungen OK: Lesen, Öffnen und Schreiben sind erlaubt."
+        else:
+            info = "Berechtigungen OK: Lesen und Öffnen sind erlaubt."
+        return (
+            True,
+            info,
+            ["Weiter: Sie können sicher mit dem nächsten Schritt fortfahren."],
+        )
+
+    def _apply_cleanup_goal(self, goal: str) -> None:
+        """Setzt häufige Aufräumziele als laienfreundliche Schnellkonfiguration."""
+
+        clean_goal = goal.strip().lower()
+        presets = {
+            "ausgewogen (empfohlen)": (
+                "50MB",
+                "30d",
+                "safe",
+                "⚖️ Ausgewogen: Alte und größere Dateien plus sichere Duplikat-Prüfung.",
+            ),
+            "große dateien": (
+                "100MB",
+                "any",
+                "none",
+                "📦 Große Dateien: Fokus auf viel Speichergewinn mit großen Dateien.",
+            ),
+            "alte dateien": (
+                "any",
+                "180d",
+                "none",
+                "🗂️ Alte Dateien: Fokus auf lange nicht genutzte Inhalte.",
+            ),
+            "duplikate zuerst": (
+                "any",
+                "any",
+                "safe",
+                "🧩 Duplikate zuerst: Gleiche Dateien besonders gründlich erkennen.",
+            ),
+        }
+        preset = presets.get(clean_goal)
+        if preset is None:
+            raise ValueError(
+                "Aufräumziel ist ungültig. Nächster Schritt: Bitte ein sichtbares Ziel aus der Liste auswählen."
+            )
+
+        size_value, age_value, dup_mode, help_text = preset
+        self.combo_size.setCurrentText(size_value)
+        self.combo_age.setCurrentText(age_value)
+        self.combo_dups.setCurrentText(dup_mode)
+        output_text = f"<b>Aktives Aufräumziel:</b> {help_text}"
+        if not output_text.strip():
+            raise RuntimeError(
+                "Aufräumhilfe fehlt. Nächster Schritt: Bitte Auswahl erneut setzen."
+            )
+        self.lbl_cleanup_goal_hint.setText(output_text)
 
     # Theme stylesheets
     STYLES = {
@@ -526,11 +631,19 @@ class MainWindow(QMainWindow):
             if self.settings.filters.types
             else "keine"
         )
+        permission_status = "noch nicht geprüft"
+        if self.root_path:
+            perm_ok, perm_message, _ = self._check_folder_permissions(
+                require_write=True
+            )
+            permission_status = perm_message if perm_ok else f"⚠️ {perm_message}"
+
         self.lbl_dashboard_info.setText(
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
             f"• System: {platform.system()} {platform.release()}<br/>"
             "• Offline-Betrieb: aktiv (keine Internetverbindung nötig)<br/>"
             f"• Aktueller Zielordner: {folder_text}<br/>"
+            f"• Linux-Berechtigungen: {permission_status}<br/>"
             f"• Aktives Preset: {self.settings.presets}<br/>"
             f"• Dateitypen-Filter: {active_types}<br/>"
             f"• Duplikat-Prüfung: {self.settings.duplicates_mode}<br/><br/>"
@@ -687,6 +800,35 @@ class MainWindow(QMainWindow):
         hl_dup.addWidget(self.combo_dups)
         layout.addLayout(hl_dup)
 
+        cleanup_goal_box = QLabel(
+            "<b>5) Aufräumziel (Schnellwahl)</b><br/>Farbiges Leitsystem für typische Reinigungen"
+        )
+        cleanup_goal_box.setWordWrap(True)
+        layout.addWidget(cleanup_goal_box)
+        hl_cleanup_goal = QHBoxLayout()
+        hl_cleanup_goal.addWidget(QLabel("Aufräumziel:"))
+        self.combo_cleanup_goal = QComboBox()
+        self.combo_cleanup_goal.addItems(
+            [
+                "Ausgewogen (empfohlen)",
+                "Große Dateien",
+                "Alte Dateien",
+                "Duplikate zuerst",
+            ]
+        )
+        hl_cleanup_goal.addWidget(self.combo_cleanup_goal)
+        layout.addLayout(hl_cleanup_goal)
+
+        self.lbl_cleanup_goal_hint = QLabel()
+        self.lbl_cleanup_goal_hint.setWordWrap(True)
+        self.lbl_cleanup_goal_hint.setAccessibleName("Aufräumziel-Hilfe")
+        self.lbl_cleanup_goal_hint.setAccessibleDescription(
+            "Erklärung in einfacher Sprache zum aktiven Aufräumziel"
+        )
+        layout.addWidget(self.lbl_cleanup_goal_hint)
+        self.combo_cleanup_goal.currentTextChanged.connect(self._apply_cleanup_goal)
+        self._apply_cleanup_goal(self.combo_cleanup_goal.currentText())
+
         footer_hint = QLabel(
             "Tipp: Starten Sie mit Preset Standard. Danach können Sie bei Bedarf verfeinern."
         )
@@ -784,7 +926,8 @@ class MainWindow(QMainWindow):
         self.settings.duplicates_mode = self.combo_dups.currentText()
         self.settings.save()
         # proceed to scan
-        self._start_scan()
+        if not self._start_scan():
+            return
         self.stack.setCurrentWidget(self.page_scan)
 
     # ---------------------------
@@ -806,7 +949,18 @@ class MainWindow(QMainWindow):
         nav.addWidget(self.btn_next_plan)
         layout.addLayout(nav)
 
-    def _start_scan(self) -> None:
+    def _start_scan(self) -> bool:
+        perm_ok, perm_message, perm_steps = self._check_folder_permissions(
+            require_write=False
+        )
+        if not perm_ok:
+            self._show_error_with_mini_help(
+                title="Linux-Berechtigungen prüfen",
+                happened_text=perm_message,
+                next_clicks=perm_steps,
+            )
+            return False
+
         self.lbl_scan_status.setText("Scanne Ordner… Bitte warten.")
         QApplication.processEvents()
         # parse thresholds
@@ -823,12 +977,24 @@ class MainWindow(QMainWindow):
         total_size = sum(r.size for r in results)
         size_mb = total_size / (1024 * 1024)
         self.lbl_scan_status.setText(
-            f"Gefundene Dateien: {total_files}<br/>Duplikat-Gruppen: {dup_groups}<br/>Gesamtgröße: {size_mb:.2f} MB"
+            f"{perm_message}<br/>Gefundene Dateien: {total_files}<br/>Duplikat-Gruppen: {dup_groups}<br/>Gesamtgröße: {size_mb:.2f} MB"
         )
         # disable next if nothing to move
         self.btn_next_plan.setEnabled(total_files > 0)
+        return True
 
     def _scan_next(self) -> None:
+        perm_ok, perm_message, perm_steps = self._check_folder_permissions(
+            require_write=True
+        )
+        if not perm_ok:
+            self._show_error_with_mini_help(
+                title="Linux-Berechtigungen prüfen",
+                happened_text=perm_message,
+                next_clicks=perm_steps,
+            )
+            return
+
         # build plan
         # compute trash directory under download_dir
         assert self.root_path, "root_path sollte gesetzt sein"
@@ -837,6 +1003,10 @@ class MainWindow(QMainWindow):
         self.plan = build_plan(
             self.scan_results, self.duplicates_map, self.root_path, trash_dir
         )
+        if self.plan is None:
+            raise RuntimeError(
+                "Plan-Erstellung fehlgeschlagen. Nächster Schritt: Einstellungen prüfen und erneut analysieren."
+            )
         self.stack.setCurrentWidget(self.page_plan)
         self._refresh_plan_page()
 
@@ -888,6 +1058,18 @@ class MainWindow(QMainWindow):
     def _execute_plan(self) -> None:
         if not self.plan:
             return
+
+        perm_ok, perm_message, perm_steps = self._check_folder_permissions(
+            require_write=True
+        )
+        if not perm_ok:
+            self._show_error_with_mini_help(
+                title="Linux-Berechtigungen prüfen",
+                happened_text=perm_message,
+                next_clicks=perm_steps,
+            )
+            return
+
         count = len(self.plan.items)
         # If exceed confirm threshold, ask
         if count > self.settings.confirm_threshold:

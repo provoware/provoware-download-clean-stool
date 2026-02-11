@@ -1,2 +1,2 @@
-DONE: AGENTS.md auf Zwei-Punkte-Iteration (genau 2 vollständige Punkte pro Iteration) inklusive DoD-/Template-Anpassung umgestellt. (2026-02-11)
-NEXT: Zwei konkrete nächste Iterationspunkte vorab festlegen (Punkt 1 + Punkt 2) und danach beide in einem Merge vollständig abschließen. (2026-02-11)
+DONE: Linux-Berechtigungsprüfung mit klaren Next Steps + Aufräumziel-Schnellwahl in der UI abgeschlossen. (2026-02-11)
+NEXT: Interaktive Hauptansicht mit linker Kategorienavigation und zentralen Aktionskarten aus dem Zielbild als nächste 2 Mini-Punkte aufteilen. (2026-02-11)
