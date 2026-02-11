@@ -8,10 +8,11 @@ from html import escape
 from pathlib import Path
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QAction
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
                                QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
                                QLabel, QListWidget, QListWidgetItem,
-                               QMainWindow, QMessageBox, QPushButton,
+                               QMainWindow, QMenu, QMessageBox, QPushButton,
                                QStackedWidget, QVBoxLayout, QWidget)
 
 from core.executor import execute_move_plan, undo_last
@@ -26,6 +27,26 @@ LOGGER = setup_logger()
 
 
 class MainWindow(QMainWindow):
+    TEXT_JSON_DEFAULTS = {
+        "menue.datei": "Datei",
+        "menue.ansicht": "Ansicht",
+        "menue.hilfe": "Hilfe",
+        "menue.einstellungen": "Einstellungen",
+        "menue.datei.ordner_waehlen": "Ordner wählen",
+        "menue.datei.beenden": "Beenden",
+        "menue.ansicht.theme_hell": "Theme hell",
+        "menue.ansicht.theme_kontrast": "Theme Kontrast",
+        "menue.hilfe.kurz": "Kurzhilfe anzeigen",
+        "menue.einstellungen.speichern": "Einstellungen speichern",
+        "menue.hinweis.datei": "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
+        "menue.hinweis.ansicht": "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
+        "menue.hinweis.hilfe": "Was passiert dann? Eine kurze Hilfe mit klaren Schritten wird gezeigt.",
+        "menue.hinweis.einstellungen": "Was passiert dann? Ihre Auswahl wird sicher gespeichert.",
+        "menue.rechtsklick.oeffnen": "Öffnen",
+        "menue.rechtsklick.ansehen": "Ansehen",
+        "menue.rechtsklick.zurueckholen": "Zurückholen",
+        "menue.rechtsklick.ignorieren": "Ignorieren",
+    }
     THEME_A11Y_HINTS = {
         "light": "Helles Standardschema mit guter Lesbarkeit für normale Raumbeleuchtung.",
         "dark": "Dunkles Schema für blendfreie Nutzung am Abend oder in dunklen Räumen.",
@@ -288,11 +309,141 @@ class MainWindow(QMainWindow):
         self.plan: ActionPlan | None = None
         self.scan_results = []
         self.duplicates_map = {}
-        self.setWindowTitle("Downloads Organizer")
+        self.setWindowTitle(self._text_json("status.app_titel", "Downloads Organizer"))
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
+        self._setup_main_menu()
         self._create_pages()
         self.apply_theme(self.settings.theme, self.settings.large_text)
+
+    def _text_json(self, key: str, fallback: str) -> str:
+        """Liest Oberflächentexte aus JSON-Einstellungen mit robuster Fallback-Prüfung."""
+
+        clean_key = key.strip()
+        if not clean_key:
+            raise ValueError(
+                "Text-Schlüssel fehlt. Nächster Schritt: Bitte einen gültigen Schlüssel setzen."
+            )
+        text_map = (
+            self.settings.ui_texts if isinstance(self.settings.ui_texts, dict) else {}
+        )
+        raw_text = str(
+            text_map.get(clean_key, self.TEXT_JSON_DEFAULTS.get(clean_key, fallback))
+        ).strip()
+        if not raw_text:
+            raise ValueError(
+                f"Text für '{clean_key}' ist leer. Nächster Schritt: Text in data/settings.json ergänzen."
+            )
+        return raw_text
+
+    def _set_action_hint(self, text_key: str, fallback: str) -> None:
+        """Setzt den 1-Zeilen-Hinweis 'Was passiert dann?' aus Text-JSON."""
+
+        hint = self._text_json(text_key, fallback)
+        if hasattr(self, "lbl_action_hint"):
+            self.lbl_action_hint.setText(hint)
+
+    def _setup_main_menu(self) -> None:
+        """Erstellt eine senior-sichere Menüleiste mit genau vier Menüpunkten."""
+
+        menubar = self.menuBar()
+        menubar.clear()
+
+        menu_datei = menubar.addMenu(self._text_json("menue.datei", "Datei"))
+        action_ordner = QAction(
+            self._text_json("menue.datei.ordner_waehlen", "Ordner wählen"), self
+        )
+        action_ordner.triggered.connect(self._pick_folder)
+        action_ordner.triggered.connect(
+            lambda: self._set_action_hint(
+                "menue.hinweis.datei",
+                "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
+            )
+        )
+        menu_datei.addAction(action_ordner)
+        action_beenden = QAction(
+            self._text_json("menue.datei.beenden", "Beenden"), self
+        )
+        action_beenden.triggered.connect(self.close)
+        menu_datei.addAction(action_beenden)
+
+        menu_ansicht = menubar.addMenu(self._text_json("menue.ansicht", "Ansicht"))
+        action_hell = QAction(
+            self._text_json("menue.ansicht.theme_hell", "Theme hell"), self
+        )
+        action_hell.triggered.connect(
+            lambda: self._set_theme_by_key_from_menu(
+                "light",
+                "menue.hinweis.ansicht",
+                "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
+            )
+        )
+        menu_ansicht.addAction(action_hell)
+        action_kontrast = QAction(
+            self._text_json("menue.ansicht.theme_kontrast", "Theme Kontrast"), self
+        )
+        action_kontrast.triggered.connect(
+            lambda: self._set_theme_by_key_from_menu(
+                "kontrast",
+                "menue.hinweis.ansicht",
+                "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
+            )
+        )
+        menu_ansicht.addAction(action_kontrast)
+
+        menu_hilfe = menubar.addMenu(self._text_json("menue.hilfe", "Hilfe"))
+        action_hilfe = QAction(
+            self._text_json("menue.hilfe.kurz", "Kurzhilfe anzeigen"), self
+        )
+        action_hilfe.triggered.connect(
+            lambda: self._show_error_with_mini_help(
+                title=self._text_json("menue.hilfe", "Hilfe"),
+                happened_text="Sie sind im Klartext-Modus. Alle Schritte sind kurz erklärt.",
+                next_clicks=[
+                    "Weiter: Erst Ordner wählen, dann Optionen prüfen.",
+                    "Wenn etwas unklar ist: Hilfe erneut öffnen.",
+                ],
+            )
+        )
+        action_hilfe.triggered.connect(
+            lambda: self._set_action_hint(
+                "menue.hinweis.hilfe",
+                "Was passiert dann? Eine kurze Hilfe mit klaren Schritten wird gezeigt.",
+            )
+        )
+        menu_hilfe.addAction(action_hilfe)
+
+        menu_einstellungen = menubar.addMenu(
+            self._text_json("menue.einstellungen", "Einstellungen")
+        )
+        action_speichern = QAction(
+            self._text_json("menue.einstellungen.speichern", "Einstellungen speichern"),
+            self,
+        )
+        action_speichern.triggered.connect(
+            lambda: self._save_settings_with_feedback("Menü speichern")
+        )
+        action_speichern.triggered.connect(
+            lambda: self._set_action_hint(
+                "menue.hinweis.einstellungen",
+                "Was passiert dann? Ihre Auswahl wird sicher gespeichert.",
+            )
+        )
+        menu_einstellungen.addAction(action_speichern)
+
+    def _set_theme_by_key_from_menu(
+        self, theme_key: str, hint_key: str, hint_fallback: str
+    ) -> None:
+        """Setzt Theme aus der Menüleiste mit direkter Rückmeldung."""
+
+        clean_theme_key = theme_key.strip().lower()
+        if clean_theme_key not in self.THEME_KEY_TO_DISPLAY:
+            raise ValueError(
+                "Theme-Wert ist ungültig. Nächster Schritt: Menüpunkt 'Ansicht' prüfen."
+            )
+        self.settings.theme = clean_theme_key
+        self.apply_theme(self.settings.theme, self.cb_large.isChecked())
+        self._set_action_hint(hint_key, hint_fallback)
 
     def _load_persistent_download_dir(self) -> Path | None:
         """Load persisted download directory if it exists and is accessible."""
@@ -1778,7 +1929,21 @@ class MainWindow(QMainWindow):
         self.list_scan_results.setToolTip(
             "Mit Strg oder Umschalt mehrere Dateien markieren."
         )
+        self.list_scan_results.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list_scan_results.customContextMenuRequested.connect(
+            self._show_scan_context_menu
+        )
         layout.addWidget(self.list_scan_results)
+
+        self.lbl_action_hint = QLabel(
+            self._text_json(
+                "menue.hinweis.datei",
+                "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
+            )
+        )
+        self.lbl_action_hint.setWordWrap(True)
+        self.lbl_action_hint.setAccessibleName("Aktionserklärung")
+        layout.addWidget(self.lbl_action_hint)
 
         self.lbl_scan_selection_status = QLabel(
             "Ausgewählt: 0 von 0 · Aktion: Bitte zuerst Analyse starten."
@@ -1822,6 +1987,42 @@ class MainWindow(QMainWindow):
         nav.addWidget(btn_prev)
         nav.addWidget(self.btn_next_plan)
         layout.addLayout(nav)
+
+    def _show_scan_context_menu(self, position) -> None:
+        """Zeigt ein kurzes deutsches Rechtsklick-Menü für Trefferlisten-Aktionen."""
+
+        menu = QMenu(self)
+        selected_rows = self.list_scan_results.selectedItems()
+        has_selection = len(selected_rows) > 0
+
+        action_oeffnen = menu.addAction(
+            self._text_json("menue.rechtsklick.oeffnen", "Öffnen")
+        )
+        action_ansehen = menu.addAction(
+            self._text_json("menue.rechtsklick.ansehen", "Ansehen")
+        )
+        action_zurueckholen = menu.addAction(
+            self._text_json("menue.rechtsklick.zurueckholen", "Zurückholen")
+        )
+        action_ignorieren = menu.addAction(
+            self._text_json("menue.rechtsklick.ignorieren", "Ignorieren")
+        )
+
+        for action in [
+            action_oeffnen,
+            action_ansehen,
+            action_zurueckholen,
+            action_ignorieren,
+        ]:
+            action.setEnabled(has_selection)
+
+        chosen = menu.exec(self.list_scan_results.mapToGlobal(position))
+        if chosen is None:
+            return
+        self._set_action_hint(
+            "status.rechtsklick.hinweis",
+            "Was passiert dann? Erst wird ein Plan gezeigt. Danach können Sie sicher ausführen.",
+        )
 
     def _start_scan(self) -> bool:
         perm_ok, perm_message, perm_steps = self._check_folder_permissions(

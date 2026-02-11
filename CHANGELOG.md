@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Vierer-Menüleiste + deutsches Rechtsklick-Menü aus Text-JSON
+- **Was:** `app/main.py` ergänzt eine klare Menüleiste mit genau vier Punkten (Datei, Ansicht, Hilfe, Einstellungen), bindet neue Menütexte über JSON-Schlüssel an und ergänzt ein kurzes deutsches Rechtsklick-Menü in der Trefferliste samt 1-Zeilen-Hinweis „Was passiert dann?“.
+- **Warum:** Die Navigation sollte senior-sicher, logisch und in einfacher deutscher Sprache funktionieren, ohne unnötige Fachwörter in der Oberfläche.
+- **Wirkung:** Klare, einheitliche Bedienung mit kurzen Menüs und verständlicher Aktions-Rückmeldung direkt in der Oberfläche.
+
 ## 2026-02-12 – UI/Info-Iteration: Status-Legende + zugänglichere Filter im Entwicklerbereich
 - **Was:** `app/main.py` ergänzt im Entwicklerbereich eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe; die Filter-Buttons „Alle“ und „Nur offen“ wurden mit größeren Klickflächen und Accessibility-Namen ausgestattet. `README.md` und `todo.txt` wurden auf den neuen Iterationsstand synchronisiert.
 - **Warum:** Der Entwickler-Hilfebereich sollte visuell klarer, für Tastatur-/Screenreader-Nutzung verständlicher und in den Info-Dateien konsistent dokumentiert werden.

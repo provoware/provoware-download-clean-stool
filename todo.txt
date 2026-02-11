@@ -1,3 +1,7 @@
+DONE: Menüleiste ist jetzt auf vier klare Punkte begrenzt (Datei, Ansicht, Hilfe, Einstellungen) und zeigt pro Aktion einen einfachen „Was passiert dann?“-Hinweis. (2026-02-12)
+NEXT: Text-JSON weiter ausbauen: alle Schrittüberschriften und Dialog-Texte aus zentralen Schlüsseln laden, damit Oberfläche komplett ohne festen Text im Code läuft. (2026-02-12)
+DONE: Trefferliste hat jetzt ein kurzes deutsches Rechtsklick-Menü (Öffnen, Ansehen, Zurückholen, Ignorieren) für senior-sichere Bedienung. (2026-02-12)
+NEXT: Schnell-Buttons 1–10 als große Kacheln mit sicherem Ablauf (Plan anzeigen → dann ausführen) in zwei Mini-Punkten ergänzen. (2026-02-12)
 DONE: Entwicklerbereich hat jetzt eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe in einfacher Sprache. (2026-02-11)
 NEXT: Zwei Mini-Punkte planen: Trefferliste nach Größe sortierbar machen + Zielordner-Schnellaktionen pro Treffer ergänzen. (2026-02-11)
 DONE: Filter-Buttons im Entwicklerbereich sind jetzt größer und haben Accessibility-Namen für bessere Tastatur-/Screenreader-Bedienung. (2026-02-11)
