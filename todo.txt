@@ -39,3 +39,6 @@ DONE: Analyse-Trefferliste farblich kodiert (blau=Bilder, lila=Videos, orange=Ar
 
 # Geplante nächste Iteration
 NEXT: Drei Mini-Punkte planen: Weitere Schnellstart-Buttons (7–10) mit speicherbaren Nutzer-Presets, das Web-API-Skelett um echte Scan-/Plan-Logik erweitern und den Einsteiger-/Button-Only-Modus zu einem vollständigen, laienfreundlichen Workflow ausbauen. (2026-02-11)
+
+DONE: Vollständige Analyse der nächsten offenen Punkte/Optimierungen erstellt und als priorisierte 3-Punkte-Umsetzung in README dokumentiert. (2026-02-11)
+NEXT: Iteration mit genau 3 Umsetzungen starten: (1) Accessibility-Hilfe in Analyse/Plan, (2) Start-Autorepair-Härtung, (3) vollautomatische Quality-/Formatierungsläufe. (2026-02-11)

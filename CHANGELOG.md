@@ -1,3 +1,8 @@
+## 2026-02-11 – Analyse-Iteration: Nächste offene Punkte priorisiert
+- **Was:** README ergänzt um vollständige Analyse der drei nächsten offenen Optimierungspunkte (Accessibility-Hilfe, Start-Autoreparatur, Quality-Automation) inklusive Reihenfolge und Abnahmekriterien.
+- **Warum:** Der Projektstand war inhaltlich breit, aber die nächsten konkreten Schritte nicht kompakt priorisiert und für Laien nicht sofort umsetzbar beschrieben.
+- **Wirkung:** Es gibt jetzt einen klaren, messbaren Drei-Punkte-Plan mit kopierbaren Befehlen für die nächste merge-ready Iteration.
+
 ## 2026-02-11 – UI-Iteration: Farbige Trefferliste & Typ-Auswahl
 
 - **Was:** Die Analyse-Trefferliste ist farblich kodiert (hellblau für Bilder, helllila für Videos, hellorange für Archive, hellgrau für andere Dateien). Außerdem wurden neue Schaltflächen („Nur Bilder“, „Nur Videos“, „Nur Archive“, „Nur Andere“, „Alle") unter der Sortierauswahl ergänzt, um schnell nur bestimmte Dateitypen auszuwählen. Der Hilfe-Text im Analyse-Schritt erklärt nun die Farb-Kodierung und die Schnell-Auswahl.
