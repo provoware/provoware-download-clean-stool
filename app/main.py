@@ -33,6 +33,26 @@ class MainWindow(QMainWindow):
         "blau": "Ruhiges blaues Schema mit klaren Konturen und guter Erkennbarkeit.",
         "senior": "Extra große Schrift und starke Umrandungen für ruhiges Lesen.",
     }
+    GLOBAL_A11Y_STYLE = """
+        QPushButton:disabled {
+            background-color: #dbe3ef;
+            color: #1f2937;
+            border: 2px solid #4b5563;
+            opacity: 1;
+        }
+        QCheckBox::indicator {
+            width: 22px;
+            height: 22px;
+        }
+        QListWidget::item:selected {
+            background-color: #1d4ed8;
+            color: #ffffff;
+        }
+        QComboBox QAbstractItemView {
+            selection-background-color: #1d4ed8;
+            selection-color: #ffffff;
+        }
+    """
 
     def _show_error_with_mini_help(
         self,
@@ -270,15 +290,56 @@ class MainWindow(QMainWindow):
             )
 
         size_value, age_value, dup_mode, help_text = preset
-        self.combo_size.setCurrentText(size_value)
-        self.combo_age.setCurrentText(age_value)
-        self.combo_dups.setCurrentText(dup_mode)
+        self._set_combo_text_or_raise(
+            combo=self.combo_size,
+            value=size_value,
+            field_name="Größenfilter",
+        )
+        self._set_combo_text_or_raise(
+            combo=self.combo_age,
+            value=age_value,
+            field_name="Altersfilter",
+        )
+        self._set_combo_text_or_raise(
+            combo=self.combo_dups,
+            value=dup_mode,
+            field_name="Duplikatmodus",
+        )
         output_text = f"<b>Aktives Aufräumziel:</b> {help_text}"
         if not output_text.strip():
             raise RuntimeError(
                 "Aufräumhilfe fehlt. Nächster Schritt: Bitte Auswahl erneut setzen."
             )
         self.lbl_cleanup_goal_hint.setText(output_text)
+
+    def _set_combo_text_or_raise(
+        self, *, combo: QComboBox, value: str, field_name: str
+    ) -> None:
+        """Setzt Combo-Werte robust mit Input-/Output-Validierung und klaren Next Steps."""
+
+        clean_value = value.strip()
+        clean_field_name = field_name.strip()
+        if not clean_field_name:
+            raise ValueError(
+                "Feldname fehlt. Nächster Schritt: Bitte den Namen der Auswahl ergänzen."
+            )
+        if not clean_value:
+            raise ValueError(
+                f"Wert fehlt bei '{clean_field_name}'. Nächster Schritt: Bitte eine sichtbare Auswahl setzen."
+            )
+
+        if combo.findText(clean_value) < 0:
+            raise ValueError(
+                f"Wert '{clean_value}' ist bei '{clean_field_name}' nicht verfügbar. "
+                "Nächster Schritt: Bitte eine Option aus der Liste auswählen."
+            )
+
+        combo.setCurrentText(clean_value)
+        if combo.currentText().strip() != clean_value:
+            raise RuntimeError(
+                f"Auswahl '{clean_field_name}' konnte nicht gesetzt werden. "
+                "Nächster Schritt: Bitte erneut auswählen und speichern."
+            )
 
     # Theme stylesheets
     STYLES = {
@@ -512,7 +573,7 @@ class MainWindow(QMainWindow):
                 "Unbekanntes Theme '%s'. Nächster Schritt: In den Einstellungen ein gültiges Theme wählen.",
                 theme,
             )
-        style = self.STYLES[resolved_theme]
+        style = self.STYLES[resolved_theme] + self.GLOBAL_A11Y_STYLE
         if large_text and theme != "senior":
             # Increase base font size
             style += " QWidget { font-size: 14pt; }"
@@ -554,10 +615,22 @@ class MainWindow(QMainWindow):
             )
 
         theme_display, large_text, scale_text, position_text = preset
-        self.combo_theme.setCurrentText(theme_display)
+        self._set_combo_text_or_raise(
+            combo=self.combo_theme,
+            value=theme_display,
+            field_name="Farbschema",
+        )
         self.cb_large.setChecked(large_text)
-        self.combo_preview_scale.setCurrentText(scale_text)
-        self.combo_preview_position.setCurrentText(position_text)
+        self._set_combo_text_or_raise(
+            combo=self.combo_preview_scale,
+            value=scale_text,
+            field_name="Bereichsskalierung",
+        )
+        self._set_combo_text_or_raise(
+            combo=self.combo_preview_position,
+            value=position_text,
+            field_name="Vorschau-Position",
+        )
         self._sync_theme_preview()
 
     def _sync_theme_preview(self) -> None:
@@ -852,6 +925,9 @@ class MainWindow(QMainWindow):
             "Steuert die Größe der Vorschau-Fläche für bessere Lesbarkeit"
         )
         self.combo_preview_scale.setAccessibleName("Bereichsskalierung Vorschau")
+        self.combo_preview_scale.setAccessibleDescription(
+            "Auswahlfeld für die Vorschaugröße mit klaren Prozentwerten"
+        )
         self.combo_preview_scale.setMinimumWidth(140)
         lbl_preview_scale.setBuddy(self.combo_preview_scale)
         hl_preview_controls.addWidget(lbl_preview_scale)
@@ -865,6 +941,9 @@ class MainWindow(QMainWindow):
             "Legt fest, ob Aktion und Liste links, rechts oder untereinander liegen"
         )
         self.combo_preview_position.setAccessibleName("Vorschau-Position wählen")
+        self.combo_preview_position.setAccessibleDescription(
+            "Auswahlfeld für die Anordnung der Vorschauelemente"
+        )
         self.combo_preview_position.setMinimumWidth(220)
         lbl_preview_position.setBuddy(self.combo_preview_position)
         hl_preview_controls.addWidget(lbl_preview_position)
@@ -885,9 +964,16 @@ class MainWindow(QMainWindow):
         self.preview_action_button.setToolTip(
             "Nur Vorschau: So sieht ein Aktionsbutton im gewählten Theme aus"
         )
+        self.preview_action_button.setAccessibleName("Vorschau Primäraktion")
+        self.preview_action_button.setAccessibleDescription(
+            "Deaktivierter Beispielbutton zur Prüfung von Kontrast und Lesbarkeit"
+        )
         self.preview_row.addWidget(self.preview_action_button)
         self.preview_list = QListWidget()
         self.preview_list.setAccessibleName("Theme Vorschau-Liste")
+        self.preview_list.setAccessibleDescription(
+            "Beispielliste mit markiertem Eintrag zur Kontrastprüfung"
+        )
         self.preview_list.addItems(
             [
                 "Beispiel-Liste: aktive Auswahl",
