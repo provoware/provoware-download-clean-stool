@@ -1,0 +1,11 @@
+{
+  "name": "Quick Large",
+  "description": "Schnellaktion: findet Dateien über 100MB",
+  "filters": {
+    "types": ["images", "videos", "archives", "other"],
+    "size": "100MB",
+    "age": "any"
+  },
+  "duplicates_mode": "none",
+  "confirm_threshold": 10
+}

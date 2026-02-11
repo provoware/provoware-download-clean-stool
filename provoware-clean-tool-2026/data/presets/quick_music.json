@@ -1,0 +1,11 @@
+{
+  "name": "Quick Music",
+  "description": "Schnellaktion: sortiert nur Musikdateien",
+  "filters": {
+    "types": ["other"],
+    "size": "any",
+    "age": "any"
+  },
+  "duplicates_mode": "none",
+  "confirm_threshold": 10
+}

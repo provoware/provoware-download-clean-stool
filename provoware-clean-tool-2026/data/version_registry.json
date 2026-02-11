@@ -1,0 +1,19 @@
+{
+  "global_version": "2026.02.11.3",
+  "files": {
+    "app/main.py": "2026.02.11.3",
+    "core/settings.py": "2026.02.11",
+    "start.sh": "2026.02.11",
+    "AGENTS.md": "2.3",
+    "data/ui_texts.json": "2026.02.11.1",
+    "data/presets/quick_docs.json": "2026.02.11.1",
+    "data/presets/quick_music.json": "2026.02.11.1",
+    "data/presets/quick_all.json": "2026.02.11.1",
+    "app/web_api.py": "2026.02.11.1",
+    "core/__init__.py": "2026.02.11.1",
+    "tools/smoke_test.py": "2026.02.11.1",
+    "README.md": "2026.02.11.3",
+    "CHANGELOG.md": "2026.02.11.3",
+    "todo.txt": "2026.02.11.3"
+  }
+}

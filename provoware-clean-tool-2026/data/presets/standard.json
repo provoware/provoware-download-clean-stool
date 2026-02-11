@@ -1,0 +1,11 @@
+{
+  "name": "Standard",
+  "description": "Empfohlene Einstellungen für die meisten Benutzer.",
+  "filters": {
+    "types": ["images", "videos", "archives", "other"],
+    "size": "50MB",
+    "age": "180d"
+  },
+  "duplicates_mode": "quick",
+  "confirm_threshold": 20
+}

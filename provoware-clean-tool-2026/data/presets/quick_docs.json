@@ -1,0 +1,11 @@
+{
+  "name": "Quick Documents",
+  "description": "Schnellaktion: sortiert nur Dokumente",
+  "filters": {
+    "types": ["other"],
+    "size": "any",
+    "age": "any"
+  },
+  "duplicates_mode": "none",
+  "confirm_threshold": 10
+}

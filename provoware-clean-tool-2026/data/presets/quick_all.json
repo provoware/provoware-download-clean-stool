@@ -1,0 +1,11 @@
+{
+  "name": "Quick All",
+  "description": "Schnellaktion: sortiert alle Dateitypen",
+  "filters": {
+    "types": ["images", "videos", "archives", "other"],
+    "size": "any",
+    "age": "any"
+  },
+  "duplicates_mode": "none",
+  "confirm_threshold": 10
+}

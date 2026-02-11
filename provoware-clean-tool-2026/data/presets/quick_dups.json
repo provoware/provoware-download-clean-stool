@@ -1,0 +1,11 @@
+{
+  "name": "Quick Duplicates",
+  "description": "Schnellaktion: findet mögliche Duplikate",
+  "filters": {
+    "types": ["images", "videos", "archives", "other"],
+    "size": "any",
+    "age": "any"
+  },
+  "duplicates_mode": "quick",
+  "confirm_threshold": 10
+}

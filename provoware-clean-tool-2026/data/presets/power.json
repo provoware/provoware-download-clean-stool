@@ -1,0 +1,11 @@
+{
+  "name": "Power",
+  "description": "Für erfahrene Benutzer – aggressivere Regeln und optionaler Inhalts‑Hash für Duplikate.",
+  "filters": {
+    "types": ["images", "videos", "archives", "other"],
+    "size": "10MB",
+    "age": "90d"
+  },
+  "duplicates_mode": "safe",
+  "confirm_threshold": 50
+}

@@ -1,0 +1,41 @@
+DONE: Entwicklerbereich hat jetzt eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe in einfacher Sprache. (2026-02-11)
+DONE: Trefferliste lässt sich jetzt nach Name oder Größe sortieren, und im Plan-Schritt öffnet ein Rechtsklick-Menü den Zielordner direkt im Dateimanager. (2026-02-11)
+DONE: Filter-Buttons im Entwicklerbereich sind jetzt größer und haben Accessibility-Namen für bessere Tastatur-/Screenreader-Bedienung. (2026-02-11)
+NEXT: Zwei Mini-Punkte planen: Verlaufshilfe im Dashboard mit Export + klare Verlauf-Reset-Aktion ergänzen. (2026-02-11)
+DONE: Analyse-Trefferliste mit Auswahlstatus (X von Y) und Aktion 'Auswahlpfade kopieren' inkl. Next-Step-Fehlerhilfe abgeschlossen. (2026-02-12)
+DONE: Entwicklerbereich-Hilfe „Implementiert vs. Geplant“ mit Filtern „Alle/Nur offen“ inkl. Smoke-Mini-Prüfung ergänzt. (2026-02-12)
+NEXT: Zwei Mini-Punkte planen: Mehrfachauswahl-Aktionsbuttons in der Trefferliste + verkürzte Pfadanzeige mit Schnellaktionen. (2026-02-12)
+DONE: Laien-Schalter in den Einstellungen (Einsteiger-Modus, Dateitypen, Zielordner-Modus/Pfad, Hilfehinweise) inkl. robuster Validierung ergänzt. (2026-02-12)
+NEXT: GUI-Hilfebereich „Implementiert vs. Geplant“ mit Filter „Alle/Nur offen“ in zwei Mini-Punkten ergänzen. (2026-02-12)
+DONE: Optional-Startprüfung für Web-Frontend und AppImage mit klaren Next Steps in start.sh umgesetzt. (2026-02-11)
+DONE: Minimales app/web_api.py mit 2 sicheren Endpunkten (Status + Trockenlauf-Analyse) inklusive Input-/Output-Validierung umgesetzt. (2026-02-11)
+DONE: Globale A11y-Styles und zentrale Combo-Validierung mit klaren Next Steps umgesetzt. (2026-02-12)
+NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit Exportoption und kurzer Verlaufshilfe in zwei Mini-Punkten ergänzen. (2026-02-12)
+DONE: Auto-Modus für Vorschau-Skalierung/Position mit dynamischer Fensteranpassung und Resize-Update umgesetzt. (2026-02-11)
+NEXT: Hilfebereich „Implementiert vs. Geplant“ mit klaren Kategorien und zwei Filter-Buttons (Alle/Nur offen) in zwei Mini-Punkten ergänzen. (2026-02-11)
+DONE: Theme-Schnellwahl (Alt+1 bis Alt+5) und Live-Interaktivitätsstatus in der Vorschau umgesetzt. (2026-02-12)
+NEXT: Hilfebereich 'Implementiert vs. Geplant' mit Filtern 'Alle'/'Nur offen' als eigener, klarer Abschnitt im Startbildschirm ergänzen. (2026-02-12)
+DONE: Laienfreundliche Start-Zusammenfassung in start.sh und Schnellüberblick im README ergänzt. (2026-02-12)
+NEXT: Hilfebereich 'Implementiert vs. Geplant' direkt in der GUI mit Filter 'Alle/Nur offen' als zwei Mini-Punkte umsetzen. (2026-02-12)
+DONE: Sichtbare Fokusrahmen und UI-Dialog 'Grafik-Verbesserungen anzeigen' mit klaren Tipps ergänzt. (2026-02-12)
+NEXT: Hilfebereich 'Implementiert vs. Geplant' direkt in der GUI mit Filter 'Alle/Nur offen' als zwei Mini-Punkte umsetzen. (2026-02-12)
+DONE: Quality-Check prüft jetzt JSON-Pflichtfelder (settings, Manifest, Presets) und meldet Warnstatus am Laufende klar. (2026-02-12)
+NEXT: Hilfebereich "Implementiert vs. Geplant" in der GUI mit Filter "Alle/Nur offen" in zwei Mini-Punkten abschließen. (2026-02-12)
+
+# Neue Iteration
+DONE: Fenstertitel in `app/main.py` auf Deutsch („Downloads Aufräumer“) geändert und barrierearme Hilfe‑Schaltfläche im Startbildschirm integriert. (2026-02-12)
+DONE: Schnellvorlagen (Quick-Buttons) für typische Scans implementiert und ein zentrales Textsystem (texte.json) eingeführt. (2026-02-12)
+DONE: Dashboard-Verlauf (Dateien/MB pro Lauf) mit Export- und Lösch-Option im Entwicklerbereich ergänzt; der Verlauf wird nach jedem Planlauf automatisch aktualisiert. (2026-02-11)
+NEXT: Drei Mini-Punkte planen: Weitere Schnellstart-Buttons (4–6) mit frei speicherbaren Presets, minimaler Web-API-Prototyp (Status und Trockenlauf) und ein vollständiger Button-Only-Modus. (2026-02-11)
+DONE: Weitere Schnellstart-Buttons (4–6) mit Presets sowie ein minimaler Web-API-Prototyp (Status und Trockenlauf) umgesetzt und der Button-Only-Modus (Einsteiger-Modus) vorbereitet. (2026-02-11)
+
+# Aktuelle Iteration
+DONE: Namensänderung des Werkzeugs – Fenster- und Projekttitel auf „Provoware Clean Tool 2026“ geändert. (2026-02-11)
+DONE: Einfache Button-Factory eingeführt und Verlaufsschaltflächen vereinheitlicht (Tooltip, Accessible Name, Mindesthöhe). (2026-02-11)
+NEXT: Alle verbleibenden Referenzen („Downloads Organizer“, „Downloads Aufräumer“) in core/settings.py, core/__init__.py, tools/smoke_test.py und start.sh ersetzen. Versions-Registry einführen und AGENTS.md um Versionierungsvorgaben erweitern. (2026-02-11)
+DONE: Alle verbleibenden Referenzen („Downloads Organizer“, „Downloads Aufräumer“) in core/settings.py, core/__init__.py, tools/smoke_test.py und start.sh ersetzt. Versions-Registry eingeführt und AGENTS.md um Versionierungsvorgaben erweitert. (2026-02-11)
+
+DONE: Analyse-Trefferliste farblich kodiert (blau=Bilder, lila=Videos, orange=Archive, grau=andere) und Schaltflächen zur Schnell-Auswahl nach Dateityp (Nur Bilder, Nur Videos, Nur Archive, Nur Andere, Alle) ergänzt; Hilfe-Text entsprechend erweitert. (2026-02-11)
+
+# Geplante nächste Iteration
+NEXT: Drei Mini-Punkte planen: Weitere Schnellstart-Buttons (7–10) mit speicherbaren Nutzer-Presets, das Web-API-Skelett um echte Scan-/Plan-Logik erweitern und den Einsteiger-/Button-Only-Modus zu einem vollständigen, laienfreundlichen Workflow ausbauen. (2026-02-11)

@@ -1,0 +1,16 @@
+{
+  "kurzanleitung": "<b>Kurzanleitung:</b><br/>1) Ordner wählen.<br/>2) Scannen drücken.<br/>3) Vorschau prüfen.<br/>4) Aufräumen starten.<br/>Nutzen Sie die Aktionskarten auf der Startseite für typische Aufgaben.",
+  "quick_button_1_label": "Fotos sortieren",
+  "quick_button_2_label": "Große Dateien prüfen",
+  "quick_button_3_label": "Duplikate finden",
+  "quick_button_1_tooltip": "Scannt nur nach Bilddateien (JPG, PNG) und erstellt eine Vorschau.",
+  "quick_button_2_tooltip": "Scannt nach Dateien größer als 100MB und erstellt eine Vorschau.",
+  "quick_button_3_tooltip": "Scannt nach möglichen Duplikaten und erstellt eine Vorschau."
+  ,
+  "quick_button_4_label": "Dokumente sortieren",
+  "quick_button_4_tooltip": "Scannt nur nach Dokumenten (PDF, DOC) und erstellt eine Vorschau.",
+  "quick_button_5_label": "Musik sortieren",
+  "quick_button_5_tooltip": "Scannt nur nach Musikdateien (MP3, WAV) und erstellt eine Vorschau.",
+  "quick_button_6_label": "Alles sortieren",
+  "quick_button_6_tooltip": "Scannt alle Dateitypen und erstellt eine Vorschau."
+}

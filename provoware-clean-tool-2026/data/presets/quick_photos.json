@@ -1,0 +1,11 @@
+{
+  "name": "Quick Photos",
+  "description": "Schnellaktion: sortiert nur Bilder",
+  "filters": {
+    "types": ["images"],
+    "size": "any",
+    "age": "any"
+  },
+  "duplicates_mode": "none",
+  "confirm_threshold": 10
+}
