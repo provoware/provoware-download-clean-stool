@@ -12,3 +12,5 @@ DONE: Laienfreundliche Start-Zusammenfassung in start.sh und Schnellüberblick i
 NEXT: Hilfebereich 'Implementiert vs. Geplant' direkt in der GUI mit Filter 'Alle/Nur offen' als zwei Mini-Punkte umsetzen. (2026-02-12)
 DONE: Sichtbare Fokusrahmen und UI-Dialog 'Grafik-Verbesserungen anzeigen' mit klaren Tipps ergänzt. (2026-02-12)
 NEXT: Hilfebereich 'Implementiert vs. Geplant' direkt in der GUI mit Filter 'Alle/Nur offen' als zwei Mini-Punkte umsetzen. (2026-02-12)
+DONE: Quality-Check prüft jetzt JSON-Pflichtfelder (settings, Manifest, Presets) und meldet Warnstatus am Laufende klar. (2026-02-12)
+NEXT: Hilfebereich "Implementiert vs. Geplant" in der GUI mit Filter "Alle/Nur offen" in zwei Mini-Punkten abschließen. (2026-02-12)

@@ -24,6 +24,8 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 **Abgeschlossen:**
 
+- Quality-Check enthält jetzt einen JSON-Struktur-Check für settings, Standards-Manifest und alle Presets mit klaren Next Steps bei fehlenden Pflichtfeldern.
+- Abschlussmeldung im Quality-Check zeigt jetzt bei Warnungen einen klaren Warnstatus statt pauschal „OK“.
 - Einstellungen unterstützen jetzt einen laienfreundlichen Schalter-Standard mit Einsteiger-Modus, Dateitypenauswahl, Zielordner-Modus, Zielpfad und aktivierbaren Hilfehinweisen.
 - Kernmodul `core/settings.py` liefert jetzt eine kompakte Empfehlungs-Hilfe für Laien („welche Schalter sind sinnvoll?“) und validiert die neuen Einstellungswerte robust.
 

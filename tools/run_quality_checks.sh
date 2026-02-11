@@ -55,6 +55,45 @@ run_optional() {
   fi
 }
 
+validate_required_json() {
+  local file_path="$1"
+  local required_keys_csv="$2"
+
+  if [ ! -f "$file_path" ]; then
+    say "[QUALITY][WARN] JSON-Datei fehlt: $file_path"
+    say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Git neu auschecken."
+    WARNINGS=$((WARNINGS + 1))
+    return 0
+  fi
+
+  if ! python3 - "$file_path" "$required_keys_csv" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+file_path = Path(sys.argv[1])
+required_keys = [key for key in sys.argv[2].split(",") if key]
+
+try:
+    payload = json.loads(file_path.read_text(encoding="utf-8"))
+except Exception as exc:  # noqa: BLE001
+    print(f"[QUALITY][WARN] JSON ungültig in {file_path}: {exc}")
+    print("[QUALITY][HILFE] Nächster Schritt: JSON mit korrekten Klammern/Kommas speichern und den Check erneut starten.")
+    raise SystemExit(1)
+
+missing = [key for key in required_keys if key not in payload]
+if missing:
+    print(f"[QUALITY][WARN] Pflichtfelder fehlen in {file_path}: {', '.join(missing)}")
+    print("[QUALITY][HILFE] Nächster Schritt: Fehlende Felder ergänzen und danach erneut prüfen.")
+    raise SystemExit(1)
+
+print(f"[QUALITY][OK] JSON-Struktur geprüft: {file_path}")
+PY
+  then
+    WARNINGS=$((WARNINGS + 1))
+  fi
+}
+
 calculate_signature() {
   (
     cd "$ROOT_DIR"
@@ -171,11 +210,22 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
+say "[QUALITY] 6/6 JSON-Struktur-Check"
+validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode"
+validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy"
+validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold"
+validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold"
+validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold"
+
 if [ "$WARNINGS" -eq 0 ]; then
   write_state "ok" "$CURRENT_SIGNATURE"
 else
   write_state "warning" "$CURRENT_SIGNATURE"
 fi
 
-say "[QUALITY][OK] Alle verfügbaren Prüfungen erfolgreich beendet."
-say "[QUALITY][HILFE] Für automatische Korrekturen: AUTO_FIX=1 bash tools/run_quality_checks.sh"
+if [ "$WARNINGS" -eq 0 ]; then
+  say "[QUALITY][OK] Alle verfügbaren Prüfungen erfolgreich beendet."
+else
+  say "[QUALITY][WARN] Qualitätslauf beendet mit $WARNINGS Warnung(en)."
+  say "[QUALITY][HILFE] Nächster Schritt: AUTO_FIX=1 bash tools/run_quality_checks.sh und verbleibende Warnungen einzeln beheben."
+fi
