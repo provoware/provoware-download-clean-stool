@@ -24,11 +24,79 @@ LOGGER = setup_logger()
 
 
 class MainWindow(QMainWindow):
+    def _show_error_with_mini_help(
+        self,
+        *,
+        title: str,
+        happened_text: str,
+        next_clicks: list[str],
+        buttons: list[tuple[str, QMessageBox.ButtonRole]] | None = None,
+    ) -> str | None:
+        """Zeigt ein barrierearmes Fehlerfenster mit Mini-Hilfe und gibt den geklickten Button-Text zurück."""
+
+        clean_title = title.strip()
+        clean_happened_text = happened_text.strip()
+        clean_next_clicks = [entry.strip() for entry in next_clicks if entry.strip()]
+        if not clean_title:
+            raise ValueError(
+                "Fehlertitel fehlt. Nächster Schritt: Bitte einen klaren Titel setzen."
+            )
+        if not clean_happened_text:
+            raise ValueError(
+                "Fehlerbeschreibung fehlt. Nächster Schritt: Bitte kurz erklären, was passiert ist."
+            )
+        if not clean_next_clicks:
+            raise ValueError(
+                "Mini-Hilfe fehlt. Nächster Schritt: Mindestens eine klickbare Option ergänzen."
+            )
+
+        message = QMessageBox(self)
+        message.setWindowTitle(clean_title)
+        message.setIcon(QMessageBox.Warning)
+        message.setText(
+            "<b>Was ist passiert?</b><br/>"
+            f"{clean_happened_text}<br/><br/>"
+            "<b>Was kann ich jetzt klicken?</b>"
+        )
+        message.setInformativeText(
+            "\n".join(f"• {entry}" for entry in clean_next_clicks)
+        )
+        message.setAccessibleName(f"Fehlerdialog: {clean_title}")
+        message.setAccessibleDescription(
+            "Fehlerdialog mit Mini-Hilfe: Was ist passiert und welche Klicks jetzt sinnvoll sind"
+        )
+
+        added_buttons: dict[QPushButton, str] = {}
+        if buttons:
+            for text, role in buttons:
+                if text.strip():
+                    button = message.addButton(text.strip(), role)
+                    added_buttons[button] = text.strip()
+        if not added_buttons:
+            ok_button = message.addButton("OK", QMessageBox.AcceptRole)
+            added_buttons[ok_button] = "OK"
+
+        message.exec()
+        clicked = message.clickedButton()
+        clicked_text = added_buttons.get(clicked)
+        if clicked is not None and clicked_text is None:
+            raise RuntimeError(
+                "Unbekannter Dialog-Button. Nächster Schritt: Dialog-Konfiguration prüfen."
+            )
+        return clicked_text
+
     def __init__(self) -> None:
         super().__init__()
         ok, msg = run_selfcheck()
         if not ok:
-            QMessageBox.critical(self, "Fehler", msg)
+            self._show_error_with_mini_help(
+                title="Fehler",
+                happened_text=msg,
+                next_clicks=[
+                    "OK: Hinweis lesen und die Start-Routine erneut ausführen.",
+                    "Danach im Projektordner 'bash start.sh' starten.",
+                ],
+            )
             raise SystemExit(msg)
         self.settings = Settings.load()
         self.root_path = self._load_persistent_download_dir()
@@ -358,36 +426,31 @@ class MainWindow(QMainWindow):
         self._refresh_dashboard_info()
         # Ensure folder selected
         if not self.root_path:
-            message = QMessageBox(self)
-            message.setWindowTitle("Fehlende Angabe")
-            message.setIcon(QMessageBox.Warning)
-            message.setText("Bitte wählen Sie zuerst einen Ordner aus.")
-            message.setInformativeText(
-                "Nächster Schritt in einfacher Sprache:\n"
-                "• Erneut versuchen: Ordnerauswahl noch einmal öffnen.\n"
-                "• Reparatur: Hilfe bei häufigen Startproblemen anzeigen.\n"
-                "• Protokoll: Ort der Log-Datei anzeigen."
+            clicked = self._show_error_with_mini_help(
+                title="Fehlende Angabe",
+                happened_text="Bitte wählen Sie zuerst einen Ordner aus.",
+                next_clicks=[
+                    "Erneut versuchen: Ordnerauswahl noch einmal öffnen.",
+                    "Reparatur: Hilfe bei häufigen Startproblemen anzeigen.",
+                    "Protokoll: Ort der Log-Datei anzeigen.",
+                ],
+                buttons=[
+                    ("Erneut versuchen", QMessageBox.AcceptRole),
+                    ("Reparatur", QMessageBox.ActionRole),
+                    ("Protokoll", QMessageBox.HelpRole),
+                ],
             )
-            message.setAccessibleName("Fehlende Ordnerauswahl")
-            message.setAccessibleDescription(
-                "Dialog mit klaren nächsten Schritten für fehlende Ordnerauswahl"
-            )
-            retry_btn = message.addButton("Erneut versuchen", QMessageBox.AcceptRole)
-            repair_btn = message.addButton("Reparatur", QMessageBox.ActionRole)
-            log_btn = message.addButton("Protokoll", QMessageBox.HelpRole)
-            message.exec()
 
-            clicked = message.clickedButton()
-            if clicked == retry_btn:
+            if clicked == "Erneut versuchen":
                 self._choose_folder()
-            elif clicked == repair_btn:
+            elif clicked == "Reparatur":
                 QMessageBox.information(
                     self,
                     "Reparaturhilfe",
                     "Bitte führen Sie im Projektordner den Befehl 'bash start.sh' aus.\n"
                     "Das Programm prüft automatisch wichtige Voraussetzungen und zeigt Rückmeldungen an.",
                 )
-            elif clicked == log_btn:
+            elif clicked == "Protokoll":
                 log_path = Path(__file__).resolve().parent.parent / "logs" / "app.log"
                 QMessageBox.information(
                     self,
@@ -517,8 +580,13 @@ class MainWindow(QMainWindow):
             try:
                 raw = json.loads(p.read_text(encoding="utf-8"))
             except Exception as e:
-                QMessageBox.warning(
-                    self, "Fehler", f"Preset konnte nicht geladen werden: {e}"
+                self._show_error_with_mini_help(
+                    title="Fehler",
+                    happened_text=f"Preset konnte nicht geladen werden: {e}",
+                    next_clicks=[
+                        "OK: Meldung schließen und ein anderes Preset probieren.",
+                        "Datei im Ordner data/presets prüfen.",
+                    ],
                 )
                 return
             filters = raw.get("filters", {})
@@ -551,10 +619,13 @@ class MainWindow(QMainWindow):
         if self.cb_other.isChecked():
             types.append("other")
         if not types:
-            QMessageBox.warning(
-                self,
-                "Keine Dateitypen",
-                "Bitte wählen Sie mindestens einen Dateityp aus.",
+            self._show_error_with_mini_help(
+                title="Keine Dateitypen",
+                happened_text="Bitte wählen Sie mindestens einen Dateityp aus.",
+                next_clicks=[
+                    "Mindestens ein Kästchen bei Bilder, Videos, Archive oder Andere aktivieren.",
+                    "Dann auf Weiter klicken.",
+                ],
             )
             return
         self.settings.filters = Filters(
