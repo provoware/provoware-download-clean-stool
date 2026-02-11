@@ -11,13 +11,15 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.9%**
-- **Abgeschlossene Punkte:** **47**
+- **Entwicklungsfortschritt:** **99.95%**
+- **Abgeschlossene Punkte:** **49**
 - **Offene Punkte:** **2**
 - **Nächster Schritt:** Endnutzer-Transparenz „Implementiert vs. Geplant“ als eigener Hilfebereich in zwei Mini-Punkten ergänzen.
 
 **Abgeschlossen:**
 
+- Neue Theme-Schnellwahl (Alt+1 bis Alt+5) setzt jedes Farbschema direkt per Tastatur oder Klick und aktualisiert die Live-Vorschau sofort.
+- Live-Vorschau zeigt jetzt zusätzlich einen Interaktivitäts-/Kontraststatus mit Kurzbewertung und konkretem nächsten Klick in einfacher Sprache.
 - Theme-Vorschau hat jetzt den neuen Modus „Auto (Fensterbreite)“ für Bereichsskalierung und Position; das Layout passt sich bei Fenstergröße dynamisch und barrierearm automatisch an.
 - Vorschau aktualisiert Auto-Modi jetzt auch bei Fenster-Resize mit robuster Input-/Output-Validierung und klarer Auto-Rückmeldung im Hinweistext.
 - Theme-Stile enthalten jetzt globale A11y-Standards für deaktivierte Buttons, größere Checkbox-Indikatoren und klare Auswahl-Kontraste in Listen/Dropdowns.

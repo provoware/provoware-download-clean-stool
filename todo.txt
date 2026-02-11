@@ -4,3 +4,5 @@ DONE: Globale A11y-Styles und zentrale Combo-Validierung mit klaren Next Steps u
 NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit Exportoption und kurzer Verlaufshilfe in zwei Mini-Punkten ergänzen. (2026-02-12)
 DONE: Auto-Modus für Vorschau-Skalierung/Position mit dynamischer Fensteranpassung und Resize-Update umgesetzt. (2026-02-11)
 NEXT: Hilfebereich „Implementiert vs. Geplant“ mit klaren Kategorien und zwei Filter-Buttons (Alle/Nur offen) in zwei Mini-Punkten ergänzen. (2026-02-11)
+DONE: Theme-Schnellwahl (Alt+1 bis Alt+5) und Live-Interaktivitätsstatus in der Vorschau umgesetzt. (2026-02-12)
+NEXT: Hilfebereich 'Implementiert vs. Geplant' mit Filtern 'Alle'/'Nur offen' als eigener, klarer Abschnitt im Startbildschirm ergänzen. (2026-02-12)

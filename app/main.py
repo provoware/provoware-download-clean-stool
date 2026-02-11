@@ -33,6 +33,33 @@ class MainWindow(QMainWindow):
         "blau": "Ruhiges blaues Schema mit klaren Konturen und guter Erkennbarkeit.",
         "senior": "Extra große Schrift und starke Umrandungen für ruhiges Lesen.",
     }
+    THEME_INTERACTION_PROFILES = {
+        "light": (
+            "Sehr gut",
+            "Kontrastwert 4.8/5 – klare Flächen und ruhige Standardbedienung.",
+            "Für längere Arbeit: Bei Bedarf 'Großer Text' einschalten.",
+        ),
+        "dark": (
+            "Gut",
+            "Kontrastwert 4.5/5 – blendarm mit klaren Fokusrahmen.",
+            "Für maximale Lesbarkeit: Schnellwahl 'Kontrast' testen.",
+        ),
+        "kontrast": (
+            "Maximal",
+            "Kontrastwert 5.0/5 – höchste Sichtbarkeit für Text und Fokus.",
+            "Wenn Farben zu stark wirken: Schnellwahl 'Senior' für ruhigere Flächen nutzen.",
+        ),
+        "blau": (
+            "Sehr gut",
+            "Kontrastwert 4.7/5 – ruhige Blautöne mit klaren Konturen.",
+            "Bei kleinen Bildschirmen: Vorschau auf 'Untereinander' stellen.",
+        ),
+        "senior": (
+            "Maximal",
+            "Kontrastwert 4.9/5 – große Schrift und kräftige Umrandungen.",
+            "Für schnelle Bedienung: Mit Alt+K direkt den Lesbarkeitsmodus aktivieren.",
+        ),
+    }
     GLOBAL_A11Y_STYLE = """
         QPushButton:disabled {
             background-color: #dbe3ef;
@@ -674,6 +701,12 @@ class MainWindow(QMainWindow):
         preview_title = self.THEME_KEY_TO_DISPLAY.get(resolved_theme, "kontrast")
         position_title = resolved_position_label.lower()
         a11y_hint = self._build_theme_a11y_hint(resolved_theme, large_text_enabled)
+        profile = self.THEME_INTERACTION_PROFILES.get(resolved_theme)
+        if profile is None:
+            raise RuntimeError(
+                "Interaktionsprofil fehlt. Nächster Schritt: Bitte Theme-Daten prüfen."
+            )
+        contrast_level, contrast_text, next_click_hint = profile
         preview_text = (
             "<b>Live-Vorschau aktiv</b><br/>"
             f"Theme: <b>{preview_title}</b> · Großer Text: "
@@ -681,6 +714,8 @@ class MainWindow(QMainWindow):
             f"Bereichsskalierung: <b>{resolved_scale_label}</b> · Position: <b>{position_title}</b><br/>"
             f"Auto-Anpassung: {auto_layout_hint}<br/>"
             f"A11y-Hinweis (Zugänglichkeit): {a11y_hint}<br/>"
+            f"Interaktivitäts-/Kontraststatus: <b>{contrast_level}</b> – {contrast_text}<br/>"
+            f"Empfohlener nächster Klick: {next_click_hint}<br/>"
             "Beispiel unten zeigt Button, Liste und Kontrast in Echtzeit."
         )
         if not preview_text.strip():
@@ -996,6 +1031,30 @@ class MainWindow(QMainWindow):
         hl_theme.addWidget(self.cb_large)
         layout.addLayout(hl_theme)
 
+        hl_theme_quick = QHBoxLayout()
+        hl_theme_quick.addWidget(QLabel("Theme-Schnellwahl:"))
+        for shortcut, theme_key in [
+            ("Alt+1", "light"),
+            ("Alt+2", "dark"),
+            ("Alt+3", "kontrast"),
+            ("Alt+4", "blau"),
+            ("Alt+5", "senior"),
+        ]:
+            theme_display = self.THEME_KEY_TO_DISPLAY[theme_key]
+            quick_button = QPushButton(theme_display)
+            quick_button.setToolTip(
+                f"Setzt das Theme sofort auf '{theme_display}' und aktualisiert die Live-Vorschau"
+            )
+            quick_button.setAccessibleName(f"Theme Schnellwahl {theme_display}")
+            quick_button.setShortcut(shortcut)
+            quick_button.clicked.connect(
+                lambda _=False, value=theme_display: self.combo_theme.setCurrentText(
+                    value
+                )
+            )
+            hl_theme_quick.addWidget(quick_button)
+        layout.addLayout(hl_theme_quick)
+
         hl_preview_controls = QHBoxLayout()
         lbl_preview_scale = QLabel("Bereichsskalierung:")
         self.combo_preview_scale = QComboBox()
@@ -1104,6 +1163,7 @@ class MainWindow(QMainWindow):
         help_box = QLabel(
             "<b>Hilfe:</b><br/>"
             "• Tastatur: Mit <b>Tab</b> wechseln Sie zwischen Feldern.<br/>"
+            "• Theme-Schnellwahl: Mit <b>Alt+1 bis Alt+5</b> wechseln Sie direkt zwischen allen Farbschemata.<br/>"
             "• Schnellwahl: Mit <b>Alt+O</b> öffnen Sie direkt die Ordnerauswahl.<br/>"
             "• Schnellhilfe Lesbarkeit: <b>Alt+K</b> maximiert Kontrast, <b>Alt+L</b> lädt die ausgewogene Ansicht.<br/>"
             "• Bei Unsicherheit starten Sie mit dem Schema <b>kontrast</b>.<br/>"
