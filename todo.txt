@@ -1,2 +1,2 @@
-DONE: Zentrale Validierungs-Helper in `core/executor.py` angewendet und Undo-Input robust abgesichert. (2026-02-11)
-NEXT: Smoke-Test um gezielten Negativfall für beschädigte `last_undo.json` erweitern, damit die neue Validierung automatisch regressionssicher bleibt. (2026-02-11)
+DONE: Einheitliche Mini-Hilfe in Fehlerfenstern mit „Was ist passiert?“ + „Was kann ich jetzt klicken?“ ergänzt. (2026-02-11)
+NEXT: Die restlichen Info-Dialoge optional auf denselben Mini-Hilfe-Standard umstellen, damit alle Fenster dieselbe Struktur haben. (2026-02-11)

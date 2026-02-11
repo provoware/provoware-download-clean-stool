@@ -29,6 +29,7 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Startroutine mit Auto-Prüfung, Auto-Reparatur und klaren Endstatusmeldungen.
 - Qualitäts- und Smoke-Gates sind vorhanden und ausführbar.
 - Fehlerführung mit klaren Next Steps (erneut versuchen, reparieren, protokoll).
+- Fehlerfenster zeigen jetzt eine einheitliche Mini-Hilfe mit „Was ist passiert?“ und „Was kann ich jetzt klicken?“.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
@@ -114,7 +115,7 @@ Für den nächsten stabilen Release gelten diese Pflichtpunkte:
 
 1. Nach jedem Lauf einen Kurzbericht zeigen:
    - „X Dateien verschoben, Y MB frei, Undo möglich“.  
-2. In jedem Fehlerfenster eine Mini-Hilfe zeigen:
+2. Einheitliche Mini-Hilfe in Fehlerfenstern ist aktiv:
    - „Was ist passiert?“
    - „Was kann ich jetzt klicken?“
 3. In den Theme-Einstellungen kurze Vorschau ergänzen:

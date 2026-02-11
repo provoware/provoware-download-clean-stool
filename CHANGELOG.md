@@ -1,3 +1,8 @@
+## 2026-02-11 – UI-Iteration: Einheitliche Mini-Hilfe in Fehlerfenstern
+- **Was:** `app/main.py` nutzt jetzt einen zentralen Fehlerdialog-Helper mit den zwei Pflichtzeilen „Was ist passiert?“ und „Was kann ich jetzt klicken?“ für zentrale Fehlerfälle.
+- **Warum:** Die Fehlerführung sollte in jedem betroffenen Fehlerfenster gleich, barrierearm und sofort verständlich sein.
+- **Wirkung:** Nutzer:innen erhalten konsistente Next Steps direkt im Dialog und finden schneller die passende Aktion.
+
 ## 2026-02-11 – Executor-Iteration: Zentrale Validierung in Ausführung und Undo abgeschlossen
 - **Was:** `core/executor.py` validiert jetzt `ActionPlan`/`PlanItem`, prüft Move-Output und lädt Undo-Daten strikt typisiert mit klaren Next-Step-Fehlermeldungen.
 - **Warum:** Der letzte offene Release-Punkt verlangte denselben Input-/Output-Standard auch für den Ausführungs- und Undo-Pfad.
