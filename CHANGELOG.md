@@ -1,3 +1,8 @@
+## 2026-02-11 – A11y-Iteration: Automatischer Theme-Check im Quality-Gate integriert
+- **Was:** Neues Skript `tools/a11y_theme_check.py` prüft alle Themes automatisiert auf Mindestkontrast und sichtbare Fokus-Regeln; `tools/run_quality_checks.sh` führt diesen Check jetzt als festen Schritt aus.
+- **Warum:** Der offene Release-Punkt „A11y-Checks automatisiert prüfbar machen“ sollte als kleinstes vollständiges Inkrement abgeschlossen werden.
+- **Wirkung:** Kontrast- und Fokusprobleme werden früh erkannt, mit klaren Next Steps in einfacher Sprache vor dem App-Start.
+
 ## 2026-02-11 – Smoke-Iteration: Zusätzlicher Scanner-Test im Smoke-Test integriert
 - **Was:** `tools/smoke_test.py` prüft jetzt zusätzlich `core.scanner` (Größen-/Altersparser, Typfilter im Scan, Safe-Duplikaterkennung und ungültiger Modus).
 - **Warum:** Der offene Release-Punkt „zusätzliche automatische Tests pro Kernmodul“ sollte für `core.scanner` als nächster kleinster Schritt abgeschlossen werden.

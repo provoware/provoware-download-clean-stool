@@ -144,13 +144,13 @@ Pflichtkriterien:
 Verbindlicher Verweis: `RELEASE_CHECKLIST.md` ist die zentrale Statusdatei für den Release-Zustand.
 
 Aktueller Stand (Iteration):
-- **Fortschritt:** 78%
-- **Abgeschlossen:** 14 Punkte
-- **Offen:** 4 Punkte
+- **Fortschritt:** 83%
+- **Abgeschlossen:** 15 Punkte
+- **Offen:** 3 Punkte
 
 Nächste Release-Iteration (technisch sinnvoll):
-1. Quality-Gate um Format-/Lint-Checks erweitern (automatische Standardprüfung).
-2. Testabdeckung der Kernmodule (`core/`) erhöhen und im Smoke-/Quality-Lauf sichtbar machen.
+1. Input-/Output-Validierung mit einem gemeinsamen Helper in `core/` technisch erzwingen.
+2. Smoke-/Quality-Läufe um klare Validierungsfehler mit Next Steps ergänzen.
 
-Einfache Begründung: Erst saubere Regeln automatisch erzwingen, dann Funktionssicherheit mit zusätzlichen Tests absichern.
+Einfache Begründung: Nach automatischem A11y-Check folgt als nächstes ein zentraler Validierungsstandard, damit alle Kernfunktionen konsistent abgesichert sind.
 
