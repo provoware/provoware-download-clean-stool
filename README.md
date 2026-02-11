@@ -12,7 +12,7 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 - **Entwicklungsfortschritt:** **100%**
-- **Abgeschlossene Punkte:** **58**
+- **Abgeschlossene Punkte:** **60**
 - **Offene Punkte:** **0**
 - **Nächster Schritt:** Analysebereich weiter verschlanken: nächste zwei Mini-Punkte für Sortierung und Zielordner-Schnellaktionen pro Treffer planen.
 
@@ -23,6 +23,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
 **Abgeschlossen:**
+
+- Entwicklerbereich zeigt jetzt eine klare Status-Legende (✅ abgeschlossen / 🟡 offen) mit barrierearmer Kurz-Erklärung in einfacher Sprache.
+- Filter-Buttons im Entwicklerbereich haben jetzt größere Klickflächen und eigene Accessibility-Namen für bessere Tastatur- und Screenreader-Bedienung.
 
 - Analyse-Trefferliste zeigt jetzt einen klaren Auswahlstatus (X von Y) mit nächster Aktion in einfacher Sprache; Aktionsbuttons reagieren barrierearm auf den Auswahlzustand.
 - Neue Aktion „Auswahlpfade kopieren“ übernimmt markierte Trefferpfade direkt in die Zwischenablage; bei leerer Auswahl erscheint ein Fehlerdialog mit klaren Next Steps.

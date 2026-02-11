@@ -1,3 +1,7 @@
+DONE: Entwicklerbereich hat jetzt eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe in einfacher Sprache. (2026-02-11)
+NEXT: Zwei Mini-Punkte planen: Trefferliste nach Größe sortierbar machen + Zielordner-Schnellaktionen pro Treffer ergänzen. (2026-02-11)
+DONE: Filter-Buttons im Entwicklerbereich sind jetzt größer und haben Accessibility-Namen für bessere Tastatur-/Screenreader-Bedienung. (2026-02-11)
+NEXT: Zwei Mini-Punkte planen: Verlaufshilfe im Dashboard mit Export + klare Verlauf-Reset-Aktion ergänzen. (2026-02-11)
 DONE: Analyse-Trefferliste mit Auswahlstatus (X von Y) und Aktion 'Auswahlpfade kopieren' inkl. Next-Step-Fehlerhilfe abgeschlossen. (2026-02-12)
 NEXT: Zwei Mini-Punkte planen: Trefferliste nach Größe sortierbar machen + Zielordner-Schnellaktionen pro Treffer ergänzen. (2026-02-12)
 DONE: Entwicklerbereich-Hilfe „Implementiert vs. Geplant“ mit Filtern „Alle/Nur offen“ inkl. Smoke-Mini-Prüfung ergänzt. (2026-02-12)

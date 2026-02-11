@@ -1,3 +1,8 @@
+## 2026-02-12 – UI/Info-Iteration: Status-Legende + zugänglichere Filter im Entwicklerbereich
+- **Was:** `app/main.py` ergänzt im Entwicklerbereich eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe; die Filter-Buttons „Alle“ und „Nur offen“ wurden mit größeren Klickflächen und Accessibility-Namen ausgestattet. `README.md` und `todo.txt` wurden auf den neuen Iterationsstand synchronisiert.
+- **Warum:** Der Entwickler-Hilfebereich sollte visuell klarer, für Tastatur-/Screenreader-Nutzung verständlicher und in den Info-Dateien konsistent dokumentiert werden.
+- **Wirkung:** Besseres Layout mit schnellerer Orientierung im Statusbereich sowie nachvollziehbarer, einheitlicher Projektstand in den Infodateien.
+
 ## 2026-02-12 – UI-Iteration: Auswahlstatus + Pfadkopie in der Trefferliste
 - **Was:** `app/main.py` ergänzt im Analyse-Schritt einen live aktualisierten Auswahlstatus (X von Y) sowie den neuen Button „Auswahlpfade kopieren“ mit Zwischenablage-Ausgabe.
 - **Warum:** Die Trefferliste brauchte klarere Rückmeldung zur aktuellen Auswahl und eine schnelle, laienfreundliche Weitergabe markierter Dateipfade.
@@ -269,4 +274,3 @@
 - **Was:** `AGENTS.md` auf Version 2.1 angehoben und die Iterationsregel auf genau zwei vollständig abgeschlossene Punkte pro Iteration umgestellt (inkl. Scope/DoD/Planung).
 - **Warum:** Der Arbeitsmodus soll pro Durchlauf nicht nur einen, sondern zwei klar abgegrenzte, merge-fähige Fortschrittspunkte erzwingen.
 - **Wirkung:** Iterationen bleiben klein, aber liefern pro Merge mehr sichtbaren Fortschritt bei weiterhin klaren Qualitäts-Gates.
-

@@ -1324,6 +1324,20 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(dev_area_title)
 
+        dev_area_help = QLabel(
+            "<b>Status-Legende:</b> ✅ bedeutet abgeschlossen, 🟡 bedeutet noch offen.<br/>"
+            "<b>Layout-Hinweis:</b> Nutzen Sie die Filterbuttons, um offene Punkte schneller zu finden."
+        )
+        dev_area_help.setWordWrap(True)
+        dev_area_help.setAccessibleName("Status Legende und Layout-Hinweis")
+        dev_area_help.setAccessibleDescription(
+            "Erklärt in einfacher Sprache die Bedeutung der Statussymbole und die Filterbedienung"
+        )
+        dev_area_help.setStyleSheet(
+            "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+        )
+        layout.addWidget(dev_area_help)
+
         filter_bar = QHBoxLayout()
         self.btn_status_filter_all = QPushButton("Alle")
         self.btn_status_filter_open = QPushButton("Nur offen")
@@ -1332,6 +1346,12 @@ class MainWindow(QMainWindow):
         )
         self.btn_status_filter_open.setToolTip(
             "Zeigt nur geplante (offene) Punkte für die nächste Umsetzung"
+        )
+        self.btn_status_filter_all.setMinimumHeight(40)
+        self.btn_status_filter_open.setMinimumHeight(40)
+        self.btn_status_filter_all.setAccessibleName("Statusfilter alle Einträge")
+        self.btn_status_filter_open.setAccessibleName(
+            "Statusfilter nur offene Einträge"
         )
         self.btn_status_filter_all.clicked.connect(
             lambda: self._apply_project_status_filter("all")
