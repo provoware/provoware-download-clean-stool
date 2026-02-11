@@ -61,6 +61,13 @@ class MainWindow(QMainWindow):
         ),
     }
     GLOBAL_A11Y_STYLE = """
+        QPushButton:focus,
+        QComboBox:focus,
+        QListWidget:focus,
+        QCheckBox:focus {
+            outline: 3px solid #f59e0b;
+            outline-offset: 2px;
+        }
         QPushButton:disabled {
             background-color: #dbe3ef;
             color: #1f2937;
@@ -80,6 +87,12 @@ class MainWindow(QMainWindow):
             selection-color: #ffffff;
         }
     """
+    GRAPHICS_IMPROVEMENT_TIPS = [
+        "1) Fokus sichtbar halten: nutzen Sie gut erkennbare Ränder für Tastatur-Nutzung.",
+        "2) Textblöcke entzerren: mehr Abstand zwischen Karten, damit Inhalte schneller erfasst werden.",
+        "3) Farben absichern: prüfen Sie Theme-Kontrast immer mit Hell/Dunkel/Kontrast.",
+        "4) Status vereinheitlichen: dieselben Symbole (✅ ⚠️) in allen grafischen Bereichen zeigen.",
+    ]
 
     def _show_error_with_mini_help(
         self,
@@ -141,6 +154,24 @@ class MainWindow(QMainWindow):
                 "Unbekannter Dialog-Button. Nächster Schritt: Dialog-Konfiguration prüfen."
             )
         return clicked_text
+
+    def _build_graphics_improvement_text(self) -> str:
+        """Liefert eine kurze, laienfreundliche Checkliste für visuelle Verbesserungen."""
+
+        tips = [tip.strip() for tip in self.GRAPHICS_IMPROVEMENT_TIPS if tip.strip()]
+        if len(tips) < 3:
+            raise ValueError(
+                "Grafik-Hilfe unvollständig. Nächster Schritt: Mindestens drei konkrete Tipps ergänzen."
+            )
+        result = (
+            "<b>Was kann an den grafischen Elementen noch verbessert werden?</b><br/>"
+        )
+        result += "<br/>".join(f"• {escape(tip)}" for tip in tips)
+        if "•" not in result:
+            raise RuntimeError(
+                "Grafik-Hilfe konnte nicht aufgebaut werden. Nächster Schritt: Tipps prüfen und erneut öffnen."
+            )
+        return result
 
     def __init__(self) -> None:
         super().__init__()
@@ -1146,6 +1177,14 @@ class MainWindow(QMainWindow):
             lambda: self._apply_accessibility_quick_mode("balanced")
         )
         hl_accessibility_quick.addWidget(btn_balanced)
+
+        btn_graphics_tips = QPushButton("Grafik-Verbesserungen anzeigen")
+        btn_graphics_tips.setToolTip(
+            "Zeigt eine kurze Checkliste, wie Farben, Fokus und Abstände weiter verbessert werden können"
+        )
+        btn_graphics_tips.setAccessibleName("Grafik Verbesserungs-Tipps")
+        btn_graphics_tips.clicked.connect(self._show_graphics_improvement_help)
+        hl_accessibility_quick.addWidget(btn_graphics_tips)
         layout.addLayout(hl_accessibility_quick)
 
         self.combo_theme.currentTextChanged.connect(
@@ -1186,6 +1225,24 @@ class MainWindow(QMainWindow):
         btn_next.clicked.connect(self._welcome_next)
         layout.addWidget(btn_next)
         self._refresh_dashboard_info()
+
+    def _show_graphics_improvement_help(self) -> None:
+        """Zeigt eine laienfreundliche Liste mit visuellen Verbesserungsmöglichkeiten."""
+
+        tips_html = self._build_graphics_improvement_text()
+        message = QMessageBox(self)
+        message.setWindowTitle("Grafik-Verbesserungen")
+        message.setIcon(QMessageBox.Information)
+        message.setText(tips_html)
+        message.setInformativeText(
+            "Nächster Schritt: Einen Punkt auswählen, anwenden und danach im Theme-Wechsel gegenprüfen."
+        )
+        message.setStandardButtons(QMessageBox.Ok)
+        message.setAccessibleName("Dialog Grafik Verbesserungen")
+        message.setAccessibleDescription(
+            "Dialog mit klaren Empfehlungen für bessere Lesbarkeit, Kontrast und Tastaturfokus"
+        )
+        message.exec()
 
     def _refresh_dashboard_info(self) -> None:
         selected_folder = self.root_path or Path(self.settings.download_dir)

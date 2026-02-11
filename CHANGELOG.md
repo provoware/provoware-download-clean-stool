@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Fokusrahmen + Grafik-Checkliste
+- **Was:** `app/main.py` ergänzt sichtbare Fokusrahmen für zentrale Eingabeelemente und einen neuen Hilfebutton „Grafik-Verbesserungen anzeigen“ mit 4 konkreten UI-Tipps.
+- **Warum:** Die Frage nach weiteren grafischen Verbesserungen sollte direkt in der Oberfläche beantwortet werden, während die Tastatur-Nutzung noch klarer erkennbar wird.
+- **Wirkung:** Bessere Barrierefreiheit durch deutlichen Fokuszustand und sofort nutzbare, laienfreundliche Empfehlungen zu Kontrast, Abständen und Statuskonsistenz.
+
 ## 2026-02-12 – Start/README-Iteration: Laien-Übersicht + Schnellüberblick
 - **Was:** `start.sh` ergänzt eine validierte Abschluss-Zusammenfassung in einfacher Sprache mit klaren Next Steps; `README.md` ergänzt einen kompakten Schnellüberblick für den Warnfall.
 - **Warum:** Nutzer:innen sollten den Gesamtstatus ohne Fachwissen sofort verstehen und bei Warnungen direkt die richtigen Befehle sehen.

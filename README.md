@@ -11,8 +11,8 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.97%**
-- **Abgeschlossene Punkte:** **51**
+- **Entwicklungsfortschritt:** **99.98%**
+- **Abgeschlossene Punkte:** **53**
 - **Offene Punkte:** **2**
 - **Nächster Schritt:** Endnutzer-Transparenz „Implementiert vs. Geplant“ als eigener Hilfebereich in zwei Mini-Punkten ergänzen.
 
@@ -24,6 +24,8 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 **Abgeschlossen:**
 
+- Neues Fokus-Highlight markiert jetzt interaktive Elemente (Button, Auswahlfelder, Listen, Checkboxen) klar mit gut sichtbarem Rahmen für bessere Tastaturbedienung.
+- Neue Schaltfläche „Grafik-Verbesserungen anzeigen“ öffnet eine kurze Checkliste mit 4 konkreten UI-Optimierungen in einfacher Sprache.
 - Neue Theme-Schnellwahl (Alt+1 bis Alt+5) setzt jedes Farbschema direkt per Tastatur oder Klick und aktualisiert die Live-Vorschau sofort.
 - Live-Vorschau zeigt jetzt zusätzlich einen Interaktivitäts-/Kontraststatus mit Kurzbewertung und konkretem nächsten Klick in einfacher Sprache.
 - Theme-Vorschau hat jetzt den neuen Modus „Auto (Fensterbreite)“ für Bereichsskalierung und Position; das Layout passt sich bei Fenstergröße dynamisch und barrierearm automatisch an.
