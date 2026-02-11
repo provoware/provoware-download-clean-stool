@@ -11,9 +11,9 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.98%**
-- **Abgeschlossene Punkte:** **53**
-- **Offene Punkte:** **2**
+- **Entwicklungsfortschritt:** **99.99%**
+- **Abgeschlossene Punkte:** **54**
+- **Offene Punkte:** **1**
 - **Nächster Schritt:** Endnutzer-Transparenz „Implementiert vs. Geplant“ als eigener Hilfebereich in zwei Mini-Punkten ergänzen.
 
 ### Schnellüberblick (laienfreundlich)
@@ -23,6 +23,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
 **Abgeschlossen:**
+
+- Einstellungen unterstützen jetzt einen laienfreundlichen Schalter-Standard mit Einsteiger-Modus, Dateitypenauswahl, Zielordner-Modus, Zielpfad und aktivierbaren Hilfehinweisen.
+- Kernmodul `core/settings.py` liefert jetzt eine kompakte Empfehlungs-Hilfe für Laien („welche Schalter sind sinnvoll?“) und validiert die neuen Einstellungswerte robust.
 
 - Neues Fokus-Highlight markiert jetzt interaktive Elemente (Button, Auswahlfelder, Listen, Checkboxen) klar mit gut sichtbarem Rahmen für bessere Tastaturbedienung.
 - Neue Schaltfläche „Grafik-Verbesserungen anzeigen“ öffnet eine kurze Checkliste mit 4 konkreten UI-Optimierungen in einfacher Sprache.
@@ -277,4 +280,3 @@ chmod +x appimagetool-x86_64.AppImage
 ```
 
 **Laienhinweis:** AppImage ist ein „portable Paket“ (eine einzelne ausführbare Datei). Das ist praktisch, braucht aber einen sauberen Build-Schritt mit Tests.
-

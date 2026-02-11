@@ -60,6 +60,11 @@ class Settings:
     schema_version: int
     file_revision: int
     ui_texts: Dict[str, str]
+    novice_mode: bool
+    allowed_file_types: List[str]
+    organizer_target_mode: str
+    organizer_target_path: str
+    assistant_tips_enabled: bool
 
     @staticmethod
     def load(path: Path | None = None) -> "Settings":
@@ -107,7 +112,82 @@ class Settings:
             schema_version=max(int(merged.get("schema_version", 1)), SCHEMA_VERSION),
             file_revision=max(int(merged.get("file_revision", 0)), 0),
             ui_texts=ui_texts,
+            novice_mode=bool(merged.get("novice_mode", True)),
+            allowed_file_types=Settings._normalize_allowed_file_types(
+                merged.get(
+                    "allowed_file_types",
+                    ["images", "documents", "videos", "audio", "archives", "other"],
+                )
+            ),
+            organizer_target_mode=Settings._normalize_target_mode(
+                str(merged.get("organizer_target_mode", "single_folder"))
+            ),
+            organizer_target_path=Settings._normalize_target_path(
+                str(merged.get("organizer_target_path", ""))
+            ),
+            assistant_tips_enabled=bool(merged.get("assistant_tips_enabled", True)),
         )
+
+    @staticmethod
+    def _normalize_allowed_file_types(raw_types: object) -> List[str]:
+        """Normalize selected file types with safe defaults for novice users."""
+
+        allowed = {"images", "documents", "videos", "audio", "archives", "other"}
+        if not isinstance(raw_types, list):
+            raise ValueError(
+                "Dateitypen-Auswahl ist ungültig. Nächster Schritt: Bitte Dateitypen per Schalter neu wählen."
+            )
+        normalized = [
+            str(item).strip().lower() for item in raw_types if str(item).strip()
+        ]
+        filtered = [item for item in normalized if item in allowed]
+        if not filtered:
+            return ["images", "documents", "videos", "other"]
+        return list(dict.fromkeys(filtered))
+
+    @staticmethod
+    def _normalize_target_mode(mode: str) -> str:
+        """Validate and normalize organizer target mode."""
+
+        supported_modes = {"single_folder", "topic_folders"}
+        clean_mode = mode.strip().lower()
+        if clean_mode not in supported_modes:
+            return "single_folder"
+        return clean_mode
+
+    @staticmethod
+    def _normalize_target_path(path_value: str) -> str:
+        """Normalize target path text and validate stable output."""
+
+        clean_path = path_value.strip()
+        if not clean_path:
+            return ""
+        return str(Path(clean_path).expanduser())
+
+    def beginner_setting_hints(self) -> Dict[str, str]:
+        """Provide simple, actionable setting help texts for non-technical users."""
+
+        active_types = ", ".join(self.allowed_file_types)
+        hints = {
+            "novice_mode": "Einfacher Modus: zeigt nur klare Schalter und blendet Expertenoptionen aus.",
+            "allowed_file_types": (
+                f"Dateitypen-Schalter aktiv: {active_types}. Tipp: Für mehr Ruhe nur Bilder + Dokumente aktiv lassen."
+            ),
+            "organizer_target_mode": (
+                "Ordnerziel: Ein Sammelordner (single_folder) oder Themenordner (topic_folders)."
+            ),
+            "organizer_target_path": (
+                "Zielpfad: Wählen Sie am besten einen festen Ordner wie ~/Sortiert, damit nichts verloren geht."
+            ),
+            "assistant_tips_enabled": (
+                "Hilfehinweise: Zeigt kurze Next Steps wie 'Erneut versuchen', 'Reparatur', 'Protokoll'."
+            ),
+        }
+        if not hints:
+            raise RuntimeError(
+                "Einstellungs-Hilfe konnte nicht aufgebaut werden. Nächster Schritt: Einstellungen laden und erneut öffnen."
+            )
+        return hints
 
     def save(self, path: Path | None = None) -> None:
         """Save settings to disk with deterministic version metadata."""
