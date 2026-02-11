@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Flexible Vorschau-Skalierung + variable Positionierung
+- **Was:** `app/main.py` ergänzt zwei neue Vorschau-Regler: „Bereichsskalierung“ (100/115/130/150%) und „Vorschau-Position“ (links/rechts/untereinander), jeweils mit robuster Input-/Output-Validierung und klaren Next-Step-Fehlertexten.
+- **Warum:** Für unterschiedliche Bildschirmgrößen und Sehbedarfe fehlte bisher eine direkte Feinsteuerung der Vorschaufläche und ihrer Anordnung.
+- **Wirkung:** Mehr Flexibilität, bessere Barrierefreiheit und schnellere Theme-/Kontrastprüfung, weil Layout und Größe direkt live angepasst werden können.
+
 ## 2026-02-12 – Release-Iteration: Modulcheck bereinigt + Doku finalisiert
 - **Was:** `start.sh` nutzt jetzt eine zentrale Funktion für die Prüfung fehlender Python-Module, und die Release-Dokumente wurden auf den aktuellen Stand (92%) angehoben.
 - **Warum:** Doppelter Prüfcode war unnötig und erschwerte Wartung; zusätzlich brauchte der Release-Stand klare, konsistente Leitlinien für Entwickler:innen und Laien.

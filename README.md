@@ -11,15 +11,17 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **92%**
-- **Abgeschlossene Punkte:** **31**
+- **Entwicklungsfortschritt:** **94%**
+- **Abgeschlossene Punkte:** **33**
 - **Offene Punkte:** **2**
-- **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB je Lauf) umsetzen und den Hilfebereich „Implementiert vs. Geplant“ als eigene Seite ergänzen.
+- **Nächster Schritt:** Interaktive Hauptansicht aus dem Zielbild (linke Kategorie-Navigation + zentrale Aktionskarten) als nächste zwei Mini-Punkte umsetzen.
 
 **Abgeschlossen:**
 - `AGENTS.md` verlangt jetzt pro Iteration genau zwei vollständig abgeschlossene Punkte statt einem Einzelpunkt, inklusive angepasster DoD- und Planungsregeln.
 - Neue Schnellwahl „Aufräumziel“ steuert typische Reinigungen (ausgewogen, große Dateien, alte Dateien, Duplikate zuerst) mit farbiger Hilfe in einfacher Sprache.
 - Linux-Berechtigungsprüfung ist jetzt im Dashboard, vor Analyse und vor Ausführung integriert; bei fehlenden Rechten erscheinen klare Next Steps inklusive Terminal-Befehl.
+- Neue Vorschau-Steuerung „Bereichsskalierung“ erlaubt 100–150% Live-Skalierung für verschiedene Bildschirmgrößen mit robuster Input-/Output-Validierung.
+- Neue Vorschau-Steuerung „Vorschau-Position“ erlaubt flexible Anordnung (links/rechts/untereinander) für bessere Orientierung und Kontrastprüfung.
 - Neue Live-Theme-Vorschau im ersten Schritt zeigt Farben, Fokus und Listenbeispiel sofort; Theme und großer Text werden direkt mit klarer Vorschauhilfe angewendet.
 - Startroutine prüft jetzt `sudo` vor System-Reparaturen und gibt bei fehlender Berechtigung klare Next Steps in einfacher Sprache statt still zu scheitern.
 - Startroutine nutzt jetzt einen zentralen Modul-Check statt doppeltem Inline-Code; dadurch ist die Prüflogik wartbarer und leichter testbar.

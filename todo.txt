@@ -1,2 +1,2 @@
-DONE: Startcode bereinigt (zentraler Modul-Check statt doppelter Inline-Prüfung) und Release-/Entwicklerdoku auf finalen Stand synchronisiert. (2026-02-12)
-NEXT: Dashboard-Verlaufsstatistik (Dateien/MB je Lauf) plus Hilfebereich „Implementiert vs. Geplant“ als zwei nächste Mini-Punkte umsetzen. (2026-02-12)
+DONE: Vorschau um Bereichsskalierung (100–150%) und variable Positionierung (links/rechts/untereinander) erweitert, inkl. Validierung und Live-Hinweistext. (2026-02-12)
+NEXT: Interaktive Hauptansicht mit linker Kategorie-Navigation und zentralen Aktionskarten in zwei kleinen, abgeschlossenen Mini-Punkten umsetzen. (2026-02-12)
