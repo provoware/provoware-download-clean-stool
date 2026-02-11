@@ -139,18 +139,29 @@ Pflichtkriterien:
 4. Fehlermeldungen per Styleguide vereinheitlichen.
 5. Release-Checkliste vor Freeze einmal komplett durchlaufen.
 
-## 11) Release-Finalisierung (Iterationstracking)
+## 11) Release-Finalisierung (Iterationstracking, Stand 2026-02-12)
 
 Verbindlicher Verweis: `RELEASE_CHECKLIST.md` ist die zentrale Statusdatei für den Release-Zustand.
 
 Aktueller Stand (Iteration):
-- **Fortschritt:** 83%
-- **Abgeschlossen:** 15 Punkte
-- **Offen:** 3 Punkte
+- **Fortschritt:** 92%
+- **Abgeschlossen:** 31 Punkte
+- **Offen:** 2 Punkte
 
 Nächste Release-Iteration (technisch sinnvoll):
-1. Input-/Output-Validierung mit einem gemeinsamen Helper in `core/` technisch erzwingen.
-2. Smoke-/Quality-Läufe um klare Validierungsfehler mit Next Steps ergänzen.
+1. Dashboard-Verlaufsstatistik (Dateien/MB je Lauf) als zentrale Nutzertransparenz ergänzen.
+2. Hilfebereich „Implementiert vs. Geplant“ als feste Ansicht in der GUI ergänzen.
 
-Einfache Begründung: Nach automatischem A11y-Check folgt als nächstes ein zentraler Validierungsstandard, damit alle Kernfunktionen konsistent abgesichert sind.
+Einfache Begründung: Der Kern ist technisch stabil; jetzt erhöhen diese zwei UX-Punkte die Release-Reife sichtbar für Laien und Support.
 
+
+## 12) Konkrete Start- und Prüfkommandos (vollständig, kopierbar)
+
+```bash
+python -m compileall -q .
+bash tools/run_quality_checks.sh
+python tools/smoke_test.py
+bash start.sh
+```
+
+Laienhinweis: Wenn ein Schritt fehlschlägt, zuerst die angezeigte Hilfe im Dialog lesen und genau den ersten vorgeschlagenen Schritt ausführen.
