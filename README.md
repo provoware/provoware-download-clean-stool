@@ -11,12 +11,16 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **97%**
-- **Abgeschlossene Punkte:** **37**
+- **Entwicklungsfortschritt:** **99%**
+- **Abgeschlossene Punkte:** **41**
 - **Offene Punkte:** **2**
 - **Nächster Schritt:** Interaktive Hauptansicht aus dem Zielbild (linke Kategorie-Navigation + zentrale Aktionskarten) als nächste zwei Mini-Punkte umsetzen.
 
 **Abgeschlossen:**
+- Startansicht enthält jetzt eine linke Kategorie-Leiste als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) mit klaren, barrierearmen Kategorien.
+- Startansicht enthält jetzt zentrale Aktionskarten als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) mit leicht verständlichen Kurztexten.
+- Dashboard zeigt jetzt einen eigenen Persistenz-Status (✅/⚠️), der nach jedem Speichern klar meldet, ob Einstellungen beim Neustart verfügbar sind.
+- Speichern wird jetzt aktiv verifiziert (Reload-Check): Ordner, Theme, Textgröße und Duplikatmodus werden direkt nach dem Schreiben geprüft und bei Problemen mit Next Steps erklärt.
 - Neue Schnellbuttons „Lesbarkeit sofort maximieren“ (`Alt+K`) und „Ausgewogene Ansicht laden“ (`Alt+L`) setzen Theme, Textgröße, Vorschau-Skalierung und Position in einem Klick für barrierearme Starts.
 - Live-Theme-Vorschau zeigt jetzt zusätzlich einen klaren A11y-Hinweis (Zugänglichkeit) je Farbschema inklusive Textgrößenstatus in einfacher Sprache.
 - Dashboard-Schnellübersicht ist jetzt HTML-sicher (maskierte Sonderzeichen) und zeigt Berechtigungsstatus konsistent mit klaren Symbolen für OK/Warnung.
