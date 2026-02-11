@@ -125,6 +125,78 @@ def run_core_planner_checks(planner_module: object, scan_result_cls: type) -> No
             )
 
 
+def run_core_scanner_checks(scanner_module: object) -> None:
+    """Run minimal core validation checks for scanner logic."""
+    if scanner_module is None:
+        raise AssertionError("Scanner-Modul fehlt. Bitte Smoke-Test-Import prüfen.")
+
+    scan_directory = getattr(scanner_module, "scan_directory", None)
+    detect_duplicates = getattr(scanner_module, "detect_duplicates", None)
+    parse_size = getattr(scanner_module, "_parse_size", None)
+    parse_age = getattr(scanner_module, "_parse_age", None)
+    if (
+        scan_directory is None
+        or detect_duplicates is None
+        or parse_size is None
+        or parse_age is None
+    ):
+        raise AssertionError(
+            "scan_directory, detect_duplicates oder Parser fehlen im Scanner-Modul."
+        )
+
+    if parse_size("2kb") != 2048:
+        raise AssertionError("_parse_size sollte KB-Werte korrekt umwandeln.")
+    if parse_size("kaputt") != 0:
+        raise AssertionError("_parse_size sollte bei ungültigen Werten 0 liefern.")
+    if int(parse_age("2h")) != 7200:
+        raise AssertionError("_parse_age sollte Stunden korrekt in Sekunden umwandeln.")
+    if parse_age("kaputt") != 0.0:
+        raise AssertionError("_parse_age sollte bei ungültigen Werten 0.0 liefern.")
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        root = Path(tmp_dir) / "downloads"
+        root.mkdir(parents=True, exist_ok=True)
+
+        duplicate_a = root / "a" / "same.txt"
+        duplicate_b = root / "b" / "same.txt"
+        other_file = root / "photo.png"
+
+        duplicate_a.parent.mkdir(parents=True, exist_ok=True)
+        duplicate_b.parent.mkdir(parents=True, exist_ok=True)
+
+        duplicate_a.write_text("DUPLICATE", encoding="utf-8")
+        duplicate_b.write_text("DUPLICATE", encoding="utf-8")
+        other_file.write_text("IMG", encoding="utf-8")
+
+        scan_results = scan_directory(
+            root=root,
+            types=["other"],
+            size_threshold=0,
+            age_threshold=0.0,
+        )
+        if len(scan_results) != 2:
+            raise AssertionError(
+                "scan_directory sollte bei Typfilter 'other' nur Textdateien liefern."
+            )
+
+        duplicate_groups = detect_duplicates(scan_results, mode="safe")
+        if len(duplicate_groups) != 1:
+            raise AssertionError(
+                "detect_duplicates im Modus 'safe' sollte genau eine Duplikatgruppe finden."
+            )
+
+        duplicate_count = len(next(iter(duplicate_groups.values())))
+        if duplicate_count != 2:
+            raise AssertionError(
+                "Duplikatgruppe im Modus 'safe' sollte beide gleichen Dateien enthalten."
+            )
+
+        if detect_duplicates(scan_results, mode="ungültig") != {}:
+            raise AssertionError(
+                "detect_duplicates sollte bei ungültigem Modus ein leeres Ergebnis liefern."
+            )
+
+
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
     if str(repo_root) not in sys.path:
@@ -159,6 +231,12 @@ def main() -> int:
         run_core_planner_checks(planner_module, scan_result_cls)
     except Exception as e:
         print("Core planner checks failed:", e)
+        return 1
+
+    try:
+        run_core_scanner_checks(scanner_module)
+    except Exception as e:
+        print("Core scanner checks failed:", e)
         return 1
 
     try:

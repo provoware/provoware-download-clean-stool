@@ -1,3 +1,8 @@
+## 2026-02-11 – Smoke-Iteration: Zusätzlicher Scanner-Test im Smoke-Test integriert
+- **Was:** `tools/smoke_test.py` prüft jetzt zusätzlich `core.scanner` (Größen-/Altersparser, Typfilter im Scan, Safe-Duplikaterkennung und ungültiger Modus).
+- **Warum:** Der offene Release-Punkt „zusätzliche automatische Tests pro Kernmodul“ sollte für `core.scanner` als nächster kleinster Schritt abgeschlossen werden.
+- **Wirkung:** Scanner-Fehler werden früher erkannt, die Startroutine bleibt stabiler und gibt klarere Qualitätssignale vor dem GUI-Start.
+
 ## 2026-02-10 – Smoke-Iteration: Zusätzlicher Planner-Test im Smoke-Test integriert
 - **Was:** `tools/smoke_test.py` prüft jetzt zusätzlich die Planungslogik (`build_plan`) inkl. Duplikat-Kennzeichnung, relativem Zielpfad und `summary()`-Ergebnissen.
 - **Warum:** Der offene Release-Punkt „zusätzliche automatische Tests pro Kernmodul“ wurde für das Modul `core.planner` konkret weiter reduziert.
