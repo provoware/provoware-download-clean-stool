@@ -175,3 +175,9 @@
 - **Was:** Das `light`-Theme in `app/main.py` wurde von leer auf vollständige, einheitliche Styles (Buttons, Fokus, Listen, Auswahlfarben) umgestellt.
 - **Warum:** Interaktive Elemente waren im hellen Modus visuell zu zurückhaltend; Fokuszustände und Lesbarkeit sollten klarer und barriereärmer werden.
 - **Wirkung:** Bessere Nutzerführung über sichtbare Hover-/Fokuszustände, konsistente Kontraste und verständlichere Bedienung mit Tastatur.
+
+## 2026-02-11 – Prozess-Iteration: AGENTS auf Zwei-Punkte-Iteration umgestellt
+- **Was:** `AGENTS.md` auf Version 2.1 angehoben und die Iterationsregel auf genau zwei vollständig abgeschlossene Punkte pro Iteration umgestellt (inkl. Scope/DoD/Planung).
+- **Warum:** Der Arbeitsmodus soll pro Durchlauf nicht nur einen, sondern zwei klar abgegrenzte, merge-fähige Fortschrittspunkte erzwingen.
+- **Wirkung:** Iterationen bleiben klein, aber liefern pro Merge mehr sichtbaren Fortschritt bei weiterhin klaren Qualitäts-Gates.
+
