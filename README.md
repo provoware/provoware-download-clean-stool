@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **100%**
-- **Abgeschlossene Punkte:** **21**
-- **Offene Punkte:** **0**
-- **Nächster Schritt:** Zusätzlichen automatischen Smoke-Test für einen beschädigten Undo-Metadatenfall ergänzen, damit Validierungsfehler in der Startroutine noch früher auffallen.
+- **Entwicklungsfortschritt:** **82%**
+- **Abgeschlossene Punkte:** **23**
+- **Offene Punkte:** **5**
+- **Nächster Schritt:** Interaktive Hauptansicht wie im Zielbild (linke Kategorien + klickbare Aktionen ohne Texteingabe) als erstes sichtbares UI-Inkrement implementieren.
 
 **Abgeschlossen:**
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
@@ -33,9 +33,25 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
-- Aktuell keine offenen Pflichtpunkte im Kernpfad.
+- Interaktive Hauptansicht aus dem Zielbild fehlt noch (linke Kategorie-Navigation + zentrale Aktionskarten).
+- Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
+- Dashboard-Statistik mit Verlauf (z. B. Dateien/MB pro Lauf) fehlt noch.
+- Erweiterte Ordnerverwaltung (mehrere Zielordner inkl. Vorlagen pro Dateityp) fehlt noch.
+- Endnutzer-Transparenz „Implementiert vs. Geplant“ im Tool fehlt noch als eigener Hilfebereich.
 
-Kurz erklärt: Auch der Executor nutzt jetzt zentrale Input-/Output-Validierung; damit ist der durchgängige Kernpfad technisch abgesichert.
+Kurz erklärt: Der Kernpfad ist stabil (Scannen, Planen, Verschieben, Undo, Validierung), aber die große, voll-interaktive Komfortoberfläche aus dem Zielbild ist noch nicht vollständig umgesetzt.
+
+## 0.1) Transparenz: Warum sind noch nicht alle Wunschfunktionen drin?
+
+Die bisherige Umsetzung hat zuerst den **sicheren Kernpfad** priorisiert: Validierung, Undo, Qualitäts-Gates, Start-Reparatur, verständliche Fehlerhilfe.
+
+Die von Ihnen genannte Oberfläche aus dem Zielbild ist eine **größere UX-Ausbaustufe** (UX = Bedienerlebnis) mit mehreren Bausteinen:
+- neues Dashboard mit Live-Statistik,
+- zusätzliche Aktionsflächen,
+- mehrstufige Zielordner-Logik,
+- vollständige Button-/Dropdown-Navigation.
+
+Diese Punkte sind realistisch, aber sie wurden noch nicht als eigene abgeschlossene Mini-Iterationen umgesetzt. Der aktuelle Stand ist deshalb „technisch robust im Kern“, aber noch nicht „vollständig wie im Zielbild“.
 
 ## 1) Was jetzt als Standard gilt
 

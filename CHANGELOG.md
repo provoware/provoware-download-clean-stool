@@ -1,3 +1,8 @@
+## 2026-02-11 – Doku-Iteration: Transparente Lückenliste zum Zielbild ergänzt
+- **Was:** `README.md` zeigt den Status jetzt ehrlich mit offenen UX-Funktionen (Zielbild, Button-only, Dashboard-Statistik, Ordnervorlagen) und erklärt den Unterschied zwischen stabilem Kernpfad und geplanter Komfortoberfläche.
+- **Warum:** Die Rückfrage „Warum fehlt das alles noch?“ sollte direkt im Projekt verständlich beantwortet werden, statt implizit „fertig“ zu signalisieren.
+- **Wirkung:** Nutzer:innen sehen sofort, welche Funktionen bereits robust implementiert sind und welche als nächste Iterationen konkret folgen.
+
 ## 2026-02-11 – UI-Iteration: Einheitliche Mini-Hilfe in Fehlerfenstern
 - **Was:** `app/main.py` nutzt jetzt einen zentralen Fehlerdialog-Helper mit den zwei Pflichtzeilen „Was ist passiert?“ und „Was kann ich jetzt klicken?“ für zentrale Fehlerfälle.
 - **Warum:** Die Fehlerführung sollte in jedem betroffenen Fehlerfenster gleich, barrierearm und sofort verständlich sein.

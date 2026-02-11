@@ -1,2 +1,2 @@
-DONE: Einheitliche Mini-Hilfe in Fehlerfenstern mit „Was ist passiert?“ + „Was kann ich jetzt klicken?“ ergänzt. (2026-02-11)
-NEXT: Die restlichen Info-Dialoge optional auf denselben Mini-Hilfe-Standard umstellen, damit alle Fenster dieselbe Struktur haben. (2026-02-11)
+DONE: README-Status auf realistischen Umsetzungsstand gestellt und offene Zielbild-Funktionen transparent ergänzt. (2026-02-11)
+NEXT: Interaktive Hauptansicht wie im Zielbild (linke Kategorien + Aktionskarten ohne Texteingabe) als nächste kleinste UI-Iteration umsetzen. (2026-02-11)
