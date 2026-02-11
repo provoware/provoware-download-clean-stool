@@ -1,3 +1,8 @@
+## 2026-02-11 – Executor-Iteration: Zentrale Validierung in Ausführung und Undo abgeschlossen
+- **Was:** `core/executor.py` validiert jetzt `ActionPlan`/`PlanItem`, prüft Move-Output und lädt Undo-Daten strikt typisiert mit klaren Next-Step-Fehlermeldungen.
+- **Warum:** Der letzte offene Release-Punkt verlangte denselben Input-/Output-Standard auch für den Ausführungs- und Undo-Pfad.
+- **Wirkung:** Fehler in Move/Undo werden früher und verständlicher erkannt; beschädigte Undo-Daten führen nicht mehr zu stillen Folgefehlern.
+
 ## 2026-02-11 – UX-Iteration: Persistente Benutzereinstellungen und klarer Offline-Hinweis
 - **Was:** `app/main.py` lädt den gespeicherten Download-Ordner beim Start, zeigt ihn direkt an und speichert Theme-/Text-Einstellungen jetzt sofort persistent; zusätzlich ergänzt das Dashboard einen verständlichen Offline-Hinweis.
 - **Warum:** Die Anfrage verlangte verlässliche Persistenz und bessere Mobilität/Offline-Transparenz ohne zusätzlichen Klickaufwand.

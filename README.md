@@ -11,13 +11,14 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **95%**
-- **Abgeschlossene Punkte:** **20**
-- **Offene Punkte:** **1**
-- **Nächster Schritt:** Zentrale Input-/Output-Validierung als letzten Kernschritt in `core/executor.py` technisch erzwingen, damit auch Ausführung und Undo denselben Standard nutzen.
+- **Entwicklungsfortschritt:** **100%**
+- **Abgeschlossene Punkte:** **21**
+- **Offene Punkte:** **0**
+- **Nächster Schritt:** Zusätzlichen automatischen Smoke-Test für einen beschädigten Undo-Metadatenfall ergänzen, damit Validierungsfehler in der Startroutine noch früher auffallen.
 
 **Abgeschlossen:**
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
+- Ausführung und Undo im `core/executor.py` nutzen jetzt zentrale Input-/Output-Validierung inklusive robuster Undo-Datenprüfung mit klaren Next Steps.
 - Neuer zentraler Validierungs-Helper in `core/validation.py`; `planner.build_plan` prüft jetzt Input- und Output-Standards mit klaren Next-Step-Fehlertexten.
 - `core/scanner.py` nutzt jetzt zentrale Input-/Output-Validierung (Pfad, Filterliste, Schwellenwerte, Duplikatmodus) mit klaren Next-Step-Fehlertexten in einfacher Sprache.
 - Quality-Gate enthält jetzt einen automatischen A11y-Theme-Check (Kontrast + sichtbarer Fokus) mit verständlichen Next-Step-Hinweisen.
@@ -31,9 +32,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
-- Input-/Output-Validierung im `executor` ergänzen und mit einem Undo-Fehlerszenario absichern.
+- Aktuell keine offenen Pflichtpunkte im Kernpfad.
 
-Kurz erklärt: Der Scanner ist jetzt validiert; als letzter Kernschritt folgt der Executor für durchgängige Input-/Output-Sicherheit.
+Kurz erklärt: Auch der Executor nutzt jetzt zentrale Input-/Output-Validierung; damit ist der durchgängige Kernpfad technisch abgesichert.
 
 ## 1) Was jetzt als Standard gilt
 

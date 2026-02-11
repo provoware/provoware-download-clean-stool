@@ -1,2 +1,2 @@
-DONE: Persistente Benutzereinstellungen beim Start ergänzt (Ordner + Theme/Text) und Offline-Hinweis im Dashboard ergänzt. (2026-02-11)
-NEXT: Zentrale Validierungs-Helper als letzten Kernschritt in `core/executor.py` anwenden und Undo-Input absichern. (2026-02-11)
+DONE: Zentrale Validierungs-Helper in `core/executor.py` angewendet und Undo-Input robust abgesichert. (2026-02-11)
+NEXT: Smoke-Test um gezielten Negativfall für beschädigte `last_undo.json` erweitern, damit die neue Validierung automatisch regressionssicher bleibt. (2026-02-11)
