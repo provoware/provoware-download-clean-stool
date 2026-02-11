@@ -11,10 +11,16 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.95%**
-- **Abgeschlossene Punkte:** **49**
+- **Entwicklungsfortschritt:** **99.97%**
+- **Abgeschlossene Punkte:** **51**
 - **Offene Punkte:** **2**
 - **Nächster Schritt:** Endnutzer-Transparenz „Implementiert vs. Geplant“ als eigener Hilfebereich in zwei Mini-Punkten ergänzen.
+
+### Schnellüberblick (laienfreundlich)
+
+- **Was wurde automatisch geprüft?** Abhängigkeiten, Qualitätsregeln, Smoke-Test und Startbedingungen.
+- **Was ist neu für bessere Übersicht?** Die Startroutine zeigt jetzt am Ende eine kompakte Ergebnisbox mit klaren nächsten Schritten.
+- **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
 **Abgeschlossen:**
 
@@ -61,6 +67,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 - Startroutine prüft jetzt optional die Ausbaupfade „Web-Frontend“ und „AppImage-Build“ und zeigt dafür klare Next Steps mit vollständigen Befehlen.
 - README enthält jetzt eine laienfreundliche Mini-Roadmap für Web-Frontend und AppImage mit zwei kleinsten Startpunkten.
+
+- Startroutine zeigt jetzt am Ende eine kompakte Laien-Übersicht (Abhängigkeiten, Qualität, Auto-Reparatur, optionale Ausbaupfade) mit klaren Next Steps.
+- README-Status enthält jetzt einen Schnellüberblick in einfacher Sprache mit kopierbaren Befehlen für den Warnfall.
 
 **Offen (für „perfekte“ Release-Version):**
 - Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
