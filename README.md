@@ -11,12 +11,13 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **94%**
+- **Entwicklungsfortschritt:** **95%**
 - **Abgeschlossene Punkte:** **20**
 - **Offene Punkte:** **1**
 - **Nächster Schritt:** Zentrale Input-/Output-Validierung als letzten Kernschritt in `core/executor.py` technisch erzwingen, damit auch Ausführung und Undo denselben Standard nutzen.
 
 **Abgeschlossen:**
+- Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
 - Neuer zentraler Validierungs-Helper in `core/validation.py`; `planner.build_plan` prüft jetzt Input- und Output-Standards mit klaren Next-Step-Fehlertexten.
 - `core/scanner.py` nutzt jetzt zentrale Input-/Output-Validierung (Pfad, Filterliste, Schwellenwerte, Duplikatmodus) mit klaren Next-Step-Fehlertexten in einfacher Sprache.
 - Quality-Gate enthält jetzt einen automatischen A11y-Theme-Check (Kontrast + sichtbarer Fokus) mit verständlichen Next-Step-Hinweisen.

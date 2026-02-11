@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Fehler", msg)
             raise SystemExit(msg)
         self.settings = Settings.load()
-        self.root_path: Path | None = None
+        self.root_path = self._load_persistent_download_dir()
         self.plan: ActionPlan | None = None
         self.scan_results = []
         self.duplicates_map = {}
@@ -40,6 +40,23 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stack)
         self._create_pages()
         self.apply_theme(self.settings.theme, self.settings.large_text)
+
+    def _load_persistent_download_dir(self) -> Path | None:
+        """Load persisted download directory if it exists and is accessible."""
+
+        configured_dir = self.settings.download_dir.strip()
+        if not configured_dir:
+            return None
+
+        candidate = Path(configured_dir).expanduser()
+        if not candidate.exists() or not candidate.is_dir():
+            LOGGER.warning(
+                "Gespeicherter Ordner ungültig: %s. Nächster Schritt: Bitte Ordner neu wählen.",
+                candidate,
+            )
+            return None
+
+        return candidate
 
     # Theme stylesheets
     STYLES = {
@@ -252,6 +269,8 @@ class MainWindow(QMainWindow):
         hl_folder.addWidget(self.lbl_folder)
         hl_folder.addWidget(btn_choose)
         layout.addLayout(hl_folder)
+        if self.root_path:
+            self.lbl_folder.setText(str(self.root_path))
         btn_choose.clicked.connect(self._choose_folder)
         # Theme selection
         hl_theme = QHBoxLayout()
@@ -304,6 +323,7 @@ class MainWindow(QMainWindow):
         self.lbl_dashboard_info.setText(
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
             f"• System: {platform.system()} {platform.release()}<br/>"
+            "• Offline-Betrieb: aktiv (keine Internetverbindung nötig)<br/>"
             f"• Aktueller Zielordner: {folder_text}<br/>"
             f"• Aktives Preset: {self.settings.presets}<br/>"
             f"• Dateitypen-Filter: {active_types}<br/>"
@@ -311,7 +331,8 @@ class MainWindow(QMainWindow):
             "<b>Hilfe in einfacher Sprache:</b><br/>"
             "1) Wählen Sie einen Ordner.<br/>"
             "2) Wählen Sie ein gut lesbares Farbschema.<br/>"
-            "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten."
+            "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten.<br/>"
+            "4) Ihre Einstellungen werden dauerhaft gespeichert."
         )
 
     def _choose_folder(self) -> None:
@@ -330,6 +351,9 @@ class MainWindow(QMainWindow):
             selected_theme, selected_theme
         )
         self.settings.large_text = self.cb_large.isChecked()
+        if self.root_path:
+            self.settings.download_dir = str(self.root_path)
+        self.settings.save()
         self.apply_theme(self.settings.theme, self.settings.large_text)
         self._refresh_dashboard_info()
         # Ensure folder selected
@@ -372,8 +396,6 @@ class MainWindow(QMainWindow):
                     "Diese Datei hilft bei der Fehlersuche und kann an den Support weitergegeben werden.",
                 )
             return
-        self.settings.download_dir = str(self.root_path)
-        self.settings.save()
         self.stack.setCurrentWidget(self.page_options)
 
     # ---------------------------
