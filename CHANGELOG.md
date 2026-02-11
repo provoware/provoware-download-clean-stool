@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Auswahlstatus + Pfadkopie in der Trefferliste
+- **Was:** `app/main.py` ergänzt im Analyse-Schritt einen live aktualisierten Auswahlstatus (X von Y) sowie den neuen Button „Auswahlpfade kopieren“ mit Zwischenablage-Ausgabe.
+- **Warum:** Die Trefferliste brauchte klarere Rückmeldung zur aktuellen Auswahl und eine schnelle, laienfreundliche Weitergabe markierter Dateipfade.
+- **Wirkung:** Bessere Orientierung, barriereärmere Aktionen und klare Next Steps bei leerer Auswahl ohne stilles Scheitern.
+
 ## 2026-02-12 – UI/Smoke-Iteration: Status-Hilfebereich + Filterprüfung
 - **Was:** `app/main.py` ergänzt im Entwicklerbereich den Hilfebereich „Implementiert vs. Geplant“ mit zwei Filtern („Alle“, „Nur offen“); `tools/smoke_test.py` enthält eine Mini-Prüfung für beide Filterpfade.
 - **Warum:** Nutzer:innen sollen den Projektstatus sofort sehen, und die Filterlogik soll automatisiert gegen Abstürze abgesichert sein.

@@ -12,9 +12,9 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 - **Entwicklungsfortschritt:** **100%**
-- **Abgeschlossene Punkte:** **56**
+- **Abgeschlossene Punkte:** **58**
 - **Offene Punkte:** **0**
-- **Nächster Schritt:** Entwicklerbereich weiter verschlanken: nächste zwei Mini-Punkte für Mehrfachauswahl-Aktionen in der Trefferliste planen.
+- **Nächster Schritt:** Analysebereich weiter verschlanken: nächste zwei Mini-Punkte für Sortierung und Zielordner-Schnellaktionen pro Treffer planen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -24,6 +24,8 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 **Abgeschlossen:**
 
+- Analyse-Trefferliste zeigt jetzt einen klaren Auswahlstatus (X von Y) mit nächster Aktion in einfacher Sprache; Aktionsbuttons reagieren barrierearm auf den Auswahlzustand.
+- Neue Aktion „Auswahlpfade kopieren“ übernimmt markierte Trefferpfade direkt in die Zwischenablage; bei leerer Auswahl erscheint ein Fehlerdialog mit klaren Next Steps.
 - Quality-Check enthält jetzt einen JSON-Struktur-Check für settings, Standards-Manifest und alle Presets mit klaren Next Steps bei fehlenden Pflichtfeldern.
 - Abschlussmeldung im Quality-Check zeigt jetzt bei Warnungen einen klaren Warnstatus statt pauschal „OK“.
 - Einstellungen unterstützen jetzt einen laienfreundlichen Schalter-Standard mit Einsteiger-Modus, Dateitypenauswahl, Zielordner-Modus, Zielpfad und aktivierbaren Hilfehinweisen.

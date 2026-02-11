@@ -1760,15 +1760,38 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(self.list_scan_results)
 
+        self.lbl_scan_selection_status = QLabel(
+            "Ausgewählt: 0 von 0 · Aktion: Bitte zuerst Analyse starten."
+        )
+        self.lbl_scan_selection_status.setWordWrap(True)
+        self.lbl_scan_selection_status.setAccessibleName("Auswahlstatus Trefferliste")
+        self.lbl_scan_selection_status.setAccessibleDescription(
+            "Zeigt Anzahl markierter Treffer und die nächste sinnvolle Aktion"
+        )
+        layout.addWidget(self.lbl_scan_selection_status)
+
         selection_buttons = QHBoxLayout()
         self.btn_select_all_scan = QPushButton("Alle markieren")
         self.btn_select_all_scan.clicked.connect(self.list_scan_results.selectAll)
         self.btn_select_none_scan = QPushButton("Auswahl löschen")
         self.btn_select_none_scan.clicked.connect(self.list_scan_results.clearSelection)
-        for button in (self.btn_select_all_scan, self.btn_select_none_scan):
+        self.btn_copy_selected_paths = QPushButton("Auswahlpfade kopieren")
+        self.btn_copy_selected_paths.setToolTip(
+            "Kopiert die vollständigen Dateipfade der markierten Treffer in die Zwischenablage"
+        )
+        self.btn_copy_selected_paths.clicked.connect(self._copy_selected_scan_paths)
+        for button in (
+            self.btn_select_all_scan,
+            self.btn_select_none_scan,
+            self.btn_copy_selected_paths,
+        ):
             button.setMinimumHeight(38)
             selection_buttons.addWidget(button)
         layout.addLayout(selection_buttons)
+        self.list_scan_results.itemSelectionChanged.connect(
+            self._update_scan_selection_status
+        )
+        self._update_scan_selection_status()
 
         # Navigation
         nav = QHBoxLayout()
@@ -1812,14 +1835,95 @@ class MainWindow(QMainWindow):
         )
         self.list_scan_results.clear()
         for hit in results:
-            row = QListWidgetItem(f"{hit.path} · {hit.size / (1024 * 1024):.2f} MB")
-            row.setData(Qt.UserRole, hit.path)
+            hit_path = str(hit.path).strip()
+            if not hit_path:
+                raise ValueError(
+                    "Leerer Trefferpfad erkannt. Nächster Schritt: Scan erneut starten oder ungültige Datei prüfen."
+                )
+            row = QListWidgetItem(
+                self._format_scan_hit_row_text(hit_path, hit.size / (1024 * 1024))
+            )
+            row.setData(Qt.UserRole, hit_path)
+            row.setToolTip(hit_path)
             self.list_scan_results.addItem(row)
         if total_files > 0:
             self.list_scan_results.selectAll()
         # disable next if nothing to move
         self.btn_next_plan.setEnabled(total_files > 0)
+        self._update_scan_selection_status()
         return True
+
+    def _format_scan_hit_row_text(self, hit_path: str, size_mb: float) -> str:
+        cleaned_path = hit_path.strip()
+        if not cleaned_path:
+            raise ValueError(
+                "Pfadtext ist leer. Nächster Schritt: Analyse erneut starten und nur gültige Treffer anzeigen."
+            )
+        if size_mb < 0:
+            raise ValueError(
+                "Dateigröße ist negativ. Nächster Schritt: Scan erneut starten und Dateisystem prüfen."
+            )
+
+        max_visible_chars = 72
+        if len(cleaned_path) > max_visible_chars:
+            short_path = f"…{cleaned_path[-(max_visible_chars - 1):]}"
+        else:
+            short_path = cleaned_path
+        row_text = f"{short_path} · {size_mb:.2f} MB"
+        if "MB" not in row_text:
+            raise RuntimeError(
+                "Treffertext unvollständig. Nächster Schritt: Anzeigeformat prüfen und erneut analysieren."
+            )
+        return row_text
+
+    def _copy_selected_scan_paths(self) -> None:
+        selected_paths = [
+            str(item.data(Qt.UserRole)).strip()
+            for item in self.list_scan_results.selectedItems()
+            if str(item.data(Qt.UserRole)).strip()
+        ]
+        if not selected_paths:
+            self._show_error_with_mini_help(
+                title="Keine Auswahl zum Kopieren",
+                happened_text="Bitte markieren Sie mindestens eine Datei in der Trefferliste.",
+                next_clicks=[
+                    "Erneut versuchen: In Schritt 3 eine oder mehrere Zeilen markieren.",
+                    "Reparatur: Bei Bedarf zuerst auf 'Alle markieren' klicken.",
+                    "Protokoll: Danach 'Auswahlpfade kopieren' erneut ausführen.",
+                ],
+            )
+            return
+
+        QApplication.clipboard().setText("\n".join(selected_paths))
+        copied_count = len(selected_paths)
+        self.lbl_scan_selection_status.setText(
+            f"Ausgewählt: {copied_count} von {self.list_scan_results.count()} · Aktion: Pfade in Zwischenablage kopiert."
+        )
+
+    def _update_scan_selection_status(self) -> None:
+        total_count = self.list_scan_results.count()
+        selected_count = len(self.list_scan_results.selectedItems())
+        has_entries = total_count > 0
+        has_selection = selected_count > 0
+
+        self.btn_select_all_scan.setEnabled(has_entries)
+        self.btn_select_none_scan.setEnabled(has_entries)
+        self.btn_copy_selected_paths.setEnabled(has_selection)
+
+        if not has_entries:
+            action_hint = "Bitte zuerst Analyse starten."
+        elif not has_selection:
+            action_hint = (
+                "Mindestens eine Datei markieren oder auf 'Alle markieren' klicken."
+            )
+        else:
+            action_hint = (
+                "Sie können mit 'Weiter' planen oder die Auswahlpfade kopieren."
+            )
+
+        self.lbl_scan_selection_status.setText(
+            f"Ausgewählt: {selected_count} von {total_count} · Aktion: {action_hint}"
+        )
 
     def _scan_next(self) -> None:
         perm_ok, perm_message, perm_steps = self._check_folder_permissions(
