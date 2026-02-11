@@ -1,2 +1,2 @@
-DONE: Smoke-Test um zusätzlichen automatischen Planner-Check erweitert (Duplikat-Grund, Zielpfad, Summary). (2026-02-10)
-NEXT: Nächsten zusätzlichen automatischen Test für core.scanner ergänzen und danach A11y-Checks automatisierbar machen. (2026-02-10)
+DONE: Smoke-Test um zusätzlichen automatischen Scanner-Check erweitert (Parser, Typfilter, Safe-Duplikaterkennung, ungültiger Modus). (2026-02-11)
+NEXT: A11y-Checks für Kontrast, Fokus und Tastaturbedienung automatisierbar machen und in tools/run_quality_checks.sh integrieren. (2026-02-11)
