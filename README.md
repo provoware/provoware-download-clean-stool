@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.99%**
-- **Abgeschlossene Punkte:** **54**
-- **Offene Punkte:** **1**
-- **Nächster Schritt:** Endnutzer-Transparenz „Implementiert vs. Geplant“ als eigener Hilfebereich in zwei Mini-Punkten ergänzen.
+- **Entwicklungsfortschritt:** **100%**
+- **Abgeschlossene Punkte:** **56**
+- **Offene Punkte:** **0**
+- **Nächster Schritt:** Entwicklerbereich weiter verschlanken: nächste zwei Mini-Punkte für Mehrfachauswahl-Aktionen in der Trefferliste planen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -80,7 +80,7 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 **Offen (für „perfekte“ Release-Version):**
 - Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
-- Endnutzer-Transparenz „Implementiert vs. Geplant“ im Tool fehlt noch als eigener Hilfebereich.
+- Entwicklerbereich enthält jetzt den Hilfebereich „Implementiert vs. Geplant“ mit Filtern „Alle“ und „Nur offen“.
 
 Kurz erklärt: Der Kernpfad ist stabil (Scannen, Planen, Verschieben, Undo, Validierung), aber die große, voll-interaktive Komfortoberfläche aus dem Zielbild ist noch nicht vollständig umgesetzt.
 

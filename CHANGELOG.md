@@ -1,3 +1,8 @@
+## 2026-02-12 – UI/Smoke-Iteration: Status-Hilfebereich + Filterprüfung
+- **Was:** `app/main.py` ergänzt im Entwicklerbereich den Hilfebereich „Implementiert vs. Geplant“ mit zwei Filtern („Alle“, „Nur offen“); `tools/smoke_test.py` enthält eine Mini-Prüfung für beide Filterpfade.
+- **Warum:** Nutzer:innen sollen den Projektstatus sofort sehen, und die Filterlogik soll automatisiert gegen Abstürze abgesichert sein.
+- **Wirkung:** Mehr Transparenz in der GUI sowie stabile Smoke-Absicherung mit sinnvollen Statusinhalten für beide Filtermodi.
+
 ## 2026-02-12 – Qualitäts-Iteration: JSON-Pflichtfelder + ehrliche Abschlussmeldung
 - **Was:** `tools/run_quality_checks.sh` prüft jetzt zusätzlich zentrale JSON-Dateien auf Pflichtfelder und zeigt bei Warnungen einen klaren Warn-Abschluss statt pauschalem OK.
 - **Warum:** Für Release-Reife fehlte eine automatische Strukturprüfung variabler Konfigurationsdateien und eine eindeutigere Ergebnisanzeige bei verbleibenden Warnungen.

@@ -197,6 +197,51 @@ def run_core_scanner_checks(scanner_module: object) -> None:
             )
 
 
+def run_gui_status_filter_checks(main_module: object) -> None:
+    """Prüft den Hilfebereich 'Implementiert vs. Geplant' inkl. Filter ohne GUI-Crash."""
+    if main_module is None:
+        raise AssertionError("GUI-Modul fehlt. Bitte app.main-Import prüfen.")
+
+    main_window_cls = getattr(main_module, "MainWindow", None)
+    if main_window_cls is None:
+        raise AssertionError("MainWindow fehlt im GUI-Modul app.main.")
+
+    window = main_window_cls.__new__(main_window_cls)
+    entries = main_window_cls._get_project_status_entries(window)
+    if not entries:
+        raise AssertionError(
+            "Projektstatus-Liste darf nicht leer sein. Mindestens ein Punkt ist nötig."
+        )
+
+    states = {entry["state"] for entry in entries}
+    if "done" not in states or "open" not in states:
+        raise AssertionError(
+            "Projektstatus-Liste sollte mindestens einen 'done' und einen 'open' Eintrag haben."
+        )
+
+    all_texts = [
+        main_window_cls._format_project_status_entry(entry) for entry in entries
+    ]
+    if not all_texts or not all(
+        "Implementiert" in text or "Geplant" in text for text in all_texts
+    ):
+        raise AssertionError("Filter 'Alle' sollte verständliche Status-Texte liefern.")
+
+    open_texts = [
+        main_window_cls._format_project_status_entry(entry)
+        for entry in entries
+        if entry["state"] == "open"
+    ]
+    if not open_texts:
+        raise AssertionError(
+            "Filter 'Nur offen' sollte mindestens einen geplanten Punkt anzeigen."
+        )
+    if not all(text.startswith("🟡 Geplant:") for text in open_texts):
+        raise AssertionError(
+            "Filter 'Nur offen' sollte nur geplante Statuspunkte enthalten."
+        )
+
+
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
     if str(repo_root) not in sys.path:
@@ -241,9 +286,15 @@ def main() -> int:
 
     try:
         # Attempt to import the main window without starting the event loop
-        importlib.import_module("app.main")
+        main_module = importlib.import_module("app.main")
     except Exception as e:
         print("Import failed:", e)
+        return 1
+
+    try:
+        run_gui_status_filter_checks(main_module)
+    except Exception as e:
+        print("GUI status filter checks failed:", e)
         return 1
 
     print("Smoke test passed")
