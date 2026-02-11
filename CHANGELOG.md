@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Theme-Schnellwahl + Interaktivitätsstatus
+- **Was:** `app/main.py` ergänzt Theme-Schnellwahl-Tasten (`Alt+1` bis `Alt+5`) und erweitert die Live-Vorschau um einen klaren Interaktivitäts-/Kontraststatus mit nächstem Klick.
+- **Warum:** Der Theme-Wechsel sollte schneller und ohne Umwege nutzbar sein; zusätzlich fehlte eine laienfreundliche Rückmeldung zur aktuellen visuellen Qualität.
+- **Wirkung:** Bedienung ist direkter per Tastatur/Klick möglich, und Nutzer:innen erhalten sofort verständliche Hinweise zu Kontrast, Lesbarkeit und nächster Aktion.
+
 ## 2026-02-11 – UI-Iteration: Auto-Vorschauprofil + Resize-Aktualisierung
 - **Was:** `app/main.py` ergänzt für Vorschau-Skalierung und Vorschau-Position jeweils „Auto (Fensterbreite)“, löst daraus ein dynamisches Profil auf und aktualisiert die Vorschau bei Fenstergrößenänderung automatisch.
 - **Warum:** Die UI sollte sich ohne manuelles Nachstellen flexibel an unterschiedliche Bildschirmgrößen anpassen und dabei barrierearme Lesbarkeit/Kontrast erhalten.
