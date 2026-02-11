@@ -1,2 +1,2 @@
-DONE: Vorschau um Bereichsskalierung (100–150%) und variable Positionierung (links/rechts/untereinander) erweitert, inkl. Validierung und Live-Hinweistext. (2026-02-12)
+DONE: Dashboard-Schnellübersicht HTML-sicher gemacht und Berechtigungsstatus mit klaren Symbolen vereinheitlicht. (2026-02-12)
 NEXT: Interaktive Hauptansicht mit linker Kategorie-Navigation und zentralen Aktionskarten in zwei kleinen, abgeschlossenen Mini-Punkten umsetzen. (2026-02-12)
