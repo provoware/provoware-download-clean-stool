@@ -2,14 +2,17 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 from .scanner import ScanResult
+from .validation import (require_condition, require_existing_dir,
+                         require_sequence_of_type, require_type)
 
 
 @dataclass
 class PlanItem:
     """Represents a single file move action."""
+
     src: Path
     dest: Path
     reason: str
@@ -18,12 +21,15 @@ class PlanItem:
 @dataclass
 class ActionPlan:
     """Contains the list of file moves and summary information."""
+
     items: List[PlanItem] = field(default_factory=list)
 
     def summary(self) -> Tuple[int, int]:
         """Return a tuple (count, total_bytes) for the plan."""
         count = len(self.items)
-        total_bytes = sum(item.src.stat().st_size for item in self.items if item.src.exists())
+        total_bytes = sum(
+            item.src.stat().st_size for item in self.items if item.src.exists()
+        )
         return count, total_bytes
 
 
@@ -51,29 +57,40 @@ def build_plan(
     ActionPlan
         A plan containing all file moves and reasons (duplicate or filtered).
     """
+    validated_files = require_sequence_of_type(files, ScanResult, "files")
+    validated_root = require_existing_dir(root, "root")
+    validated_trash_dir = require_type(trash_dir, Path, "trash_dir")
+    for group_id, group_files in duplicate_groups.items():
+        require_type(group_id, int, "duplicate_groups.group_id")
+        require_sequence_of_type(
+            group_files, ScanResult, f"duplicate_groups[{group_id}]"
+        )
+
     plan = ActionPlan()
-    # Mark duplicates
     duplicates_set = set()
     for group in duplicate_groups.values():
-        # choose one file to keep: the most recently modified
         if not group:
             continue
         keep = max(group, key=lambda x: x.mtime)
-        for f in group:
-            if f is not keep:
-                duplicates_set.add(f.path)
-    for f in files:
-        reason = ""
-        if f.path in duplicates_set:
-            reason = "duplicate"
-        else:
-            reason = "filtered"
-        src = f.path
-        # compute relative path to root
+        for file_entry in group:
+            if file_entry is not keep:
+                duplicates_set.add(file_entry.path)
+
+    for file_entry in validated_files:
+        reason = "duplicate" if file_entry.path in duplicates_set else "filtered"
+        src = file_entry.path
         try:
-            rel = src.relative_to(root)
+            rel = src.relative_to(validated_root)
         except ValueError:
-            rel = src.name
-        dest = trash_dir / rel
+            rel = Path(src.name)
+        dest = validated_trash_dir / rel
         plan.items.append(PlanItem(src=src, dest=dest, reason=reason))
+
+    require_condition(
+        len(plan.items) == len(validated_files),
+        (
+            "Interner Planungsfehler: Anzahl geplanter Aktionen passt nicht zu den Eingabedateien. "
+            "Nächster Schritt: Protokoll prüfen und Planung erneut starten."
+        ),
+    )
     return plan

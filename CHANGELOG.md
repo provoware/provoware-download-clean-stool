@@ -1,3 +1,8 @@
+## 2026-02-11 – Core-Iteration: Zentrale Input-/Output-Validierung im Planner erzwungen
+- **Was:** Neues Modul `core/validation.py` ergänzt und `core/planner.py` nutzt diese Helper jetzt verbindlich für Eingabetypen, Verzeichnisprüfung und Output-Konsistenzprüfung.
+- **Warum:** Der offene Release-Punkt verlangte einen zentralen, technisch erzwungenen Validierungsstandard statt verteilter Einzelprüfungen.
+- **Wirkung:** Planungsfehler werden früher mit klaren Next Steps in einfacher Sprache erkannt; die Kernlogik wird robuster und einheitlicher.
+
 ## 2026-02-11 – A11y-Iteration: Automatischer Theme-Check im Quality-Gate integriert
 - **Was:** Neues Skript `tools/a11y_theme_check.py` prüft alle Themes automatisiert auf Mindestkontrast und sichtbare Fokus-Regeln; `tools/run_quality_checks.sh` führt diesen Check jetzt als festen Schritt aus.
 - **Warum:** Der offene Release-Punkt „A11y-Checks automatisiert prüfbar machen“ sollte als kleinstes vollständiges Inkrement abgeschlossen werden.

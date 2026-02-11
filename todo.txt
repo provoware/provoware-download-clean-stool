@@ -1,2 +1,2 @@
-DONE: A11y-Theme-Check automatisiert (Kontrast + sichtbarer Fokus) und fest im Quality-Gate integriert. (2026-02-11)
-NEXT: Input-/Output-Validierung als zentralen Standard technisch erzwingen (z. B. mit gemeinsamen Validierungs-Helpern in core/). (2026-02-11)
+DONE: Input-/Output-Validierung zentral eingeführt (`core/validation.py`) und in `core/planner.py` technisch erzwungen. (2026-02-11)
+NEXT: Zentrale Validierungs-Helper als nächsten kleinen Schritt auch in `core/scanner.py` und `core/executor.py` anwenden. (2026-02-11)
