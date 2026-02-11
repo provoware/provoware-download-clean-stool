@@ -1,3 +1,8 @@
+## 2026-02-11 – UX-Iteration: Persistente Benutzereinstellungen und klarer Offline-Hinweis
+- **Was:** `app/main.py` lädt den gespeicherten Download-Ordner beim Start, zeigt ihn direkt an und speichert Theme-/Text-Einstellungen jetzt sofort persistent; zusätzlich ergänzt das Dashboard einen verständlichen Offline-Hinweis.
+- **Warum:** Die Anfrage verlangte verlässliche Persistenz und bessere Mobilität/Offline-Transparenz ohne zusätzlichen Klickaufwand.
+- **Wirkung:** Nutzer:innen starten schneller, verlieren Einstellungen nicht zwischen Sitzungen und erhalten klare Orientierung, dass die Kernfunktion offline nutzbar bleibt.
+
 ## 2026-02-11 – Scanner-Iteration: Zentrale Validierung in Scan- und Duplikatpfad integriert
 - **Was:** `core/scanner.py` validiert jetzt Eingaben (Root-Verzeichnis, Typfilter, Schwellenwerte, Modus) und prüft Ausgaben mit klaren Next-Step-Fehlern.
 - **Warum:** Der Scanner sollte denselben robusten Input-/Output-Standard wie der Planner nutzen, damit Fehler früh und verständlich auffallen.
