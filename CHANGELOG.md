@@ -1,3 +1,8 @@
+## 2026-02-11 – Start-Iteration: Optional-Check Web-Frontend + AppImage-Roadmap
+- **Was:** `start.sh` prüft jetzt optional die Bereitschaft für Web-Frontend- und AppImage-Ausbaupfade mit klaren Next Steps; `README.md` ergänzt eine einfache Mini-Roadmap mit sofort nutzbaren Befehlen.
+- **Warum:** Die Frage nach Web-Frontend und AppImage sollte ohne Umwege direkt im Projekt beantwortet und als kleinster umsetzbarer Startpfad vorbereitet werden.
+- **Wirkung:** Nutzer:innen sehen sofort, was bereits bereit ist, welche Abhängigkeiten fehlen und wie die nächsten zwei Mini-Schritte konkret aussehen.
+
 ## 2026-02-11 – UI-Iteration: auswählbare Trefferliste + Workflow-Beispiele
 - **Was:** `app/main.py` ergänzt im Analyse-Schritt eine auswählbare Trefferliste mit Mehrfachauswahl sowie die Aktionstasten „Alle markieren“ und „Auswahl löschen“; zusätzlich wurden im Options-Schritt zwei kurze Workflow-Beispiele in einfacher Sprache ergänzt.
 - **Warum:** Bisher konnten gefundene Dateien nicht gezielt ausgewählt werden, und der Ablauf war für zwei typische Alltagsszenarien noch nicht klar genug erklärt.

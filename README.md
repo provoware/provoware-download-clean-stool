@@ -11,8 +11,8 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.5%**
-- **Abgeschlossene Punkte:** **43**
+- **Entwicklungsfortschritt:** **99.7%**
+- **Abgeschlossene Punkte:** **45**
 - **Offene Punkte:** **1**
 - **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB pro Lauf) als zwei kleine, messbare Mini-Punkte ergänzen.
 
@@ -52,6 +52,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Fehlerführung mit klaren Next Steps (erneut versuchen, reparieren, protokoll).
 - Fehlerfenster zeigen jetzt eine einheitliche Mini-Hilfe mit „Was ist passiert?“ und „Was kann ich jetzt klicken?“.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
+
+- Startroutine prüft jetzt optional die Ausbaupfade „Web-Frontend“ und „AppImage-Build“ und zeigt dafür klare Next Steps mit vollständigen Befehlen.
+- README enthält jetzt eine laienfreundliche Mini-Roadmap für Web-Frontend und AppImage mit zwei kleinsten Startpunkten.
 
 **Offen (für „perfekte“ Release-Version):**
 - Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
@@ -223,3 +226,39 @@ ldconfig -p | rg "libGL.so.1|libEGL.so.1|libxkbcommon.so.0"
 ---
 
 Stand dieser Informationsdatei: 2026-02-12
+
+
+## 8) Mini-Roadmap: Web-Frontend und AppImage (einfach erklärt)
+
+Kurzantwort auf die häufige Frage „Ist das einfach?“: **Ja, als kleiner Zusatz ist es gut machbar**, wenn wir in zwei Mini-Punkten arbeiten.
+
+### 8.1 Web-Frontend (Browser-Oberfläche)
+
+- Idee: Bestehende Kernlogik (`core/`) bleibt unverändert.
+- Neu: Ein kleines API-Modul (Programmierschnittstelle) in `app/web_api.py`, z. B. mit FastAPI oder Flask.
+- Vorteil: Desktop-GUI und Web-UI können später parallel bestehen.
+
+**Kleinster Startbefehl:**
+
+```bash
+python3 -m pip install fastapi uvicorn
+uvicorn app.web_api:app --reload --host 0.0.0.0 --port 8000
+```
+
+### 8.2 AppImage (portable Linux-App)
+
+- Idee: Das bestehende Projekt wird in ein AppDir gepackt und danach als `.AppImage` gebaut.
+- Neu: Ein Build-Skript, das die vorhandene `start.sh` und Python-Umgebung einbindet.
+- Vorteil: Nutzer:innen können eine Datei herunterladen und direkt starten.
+
+**Kleinster Startbefehl:**
+
+```bash
+mkdir -p tools/appimage
+cd tools/appimage
+wget https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage
+chmod +x appimagetool-x86_64.AppImage
+```
+
+**Laienhinweis:** AppImage ist ein „portable Paket“ (eine einzelne ausführbare Datei). Das ist praktisch, braucht aber einen sauberen Build-Schritt mit Tests.
+

@@ -1,2 +1,2 @@
-DONE: Analyse-Trefferliste mit Mehrfachauswahl plus Aktionstasten „Alle markieren/Auswahl löschen“ umgesetzt. (2026-02-11)
-NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit klarer Mini-Hilfe und Exportoption in zwei Mini-Punkten umsetzen. (2026-02-11)
+DONE: Optional-Startprüfung für Web-Frontend und AppImage mit klaren Next Steps in start.sh umgesetzt. (2026-02-11)
+NEXT: Minimales app/web_api.py mit 2 sicheren Endpunkten (Status + Trockenlauf-Analyse) und Input-/Output-Validierung umsetzen. (2026-02-11)
