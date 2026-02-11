@@ -1,3 +1,8 @@
+## 2026-02-12 – Settings-Iteration: Laien-Schalter + Einstellungs-Hilfetexte
+- **Was:** `core/settings.py` erweitert um Einsteiger-Modus, Dateitypen-Schalter, Zielordner-Modus/Zielpfad und aktivierbare Hilfehinweise inklusive robuster Normalisierung; `README.md` Release-Status und „Abgeschlossen“-Liste entsprechend aktualisiert.
+- **Warum:** Für Laien fehlten klare, schalterbasierte Einstellungsoptionen mit verständlichen Empfehlungen statt technischer Rohwerte.
+- **Wirkung:** Einstellungen sind jetzt stärker barrierearm geführt, valider beim Laden/Speichern und liefern direkt nutzbare Next-Step-Hinweise in einfacher Sprache.
+
 ## 2026-02-12 – UI-Iteration: Fokusrahmen + Grafik-Checkliste
 - **Was:** `app/main.py` ergänzt sichtbare Fokusrahmen für zentrale Eingabeelemente und einen neuen Hilfebutton „Grafik-Verbesserungen anzeigen“ mit 4 konkreten UI-Tipps.
 - **Warum:** Die Frage nach weiteren grafischen Verbesserungen sollte direkt in der Oberfläche beantwortet werden, während die Tastatur-Nutzung noch klarer erkennbar wird.
