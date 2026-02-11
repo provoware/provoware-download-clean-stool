@@ -160,7 +160,54 @@ fi
 echo "[STATUS] $OVERALL_ICON Gesamtstatus Abhängigkeiten: $OVERALL_STATUS"
 echo "[STATUS] $OVERALL_MESSAGE"
 
-# 3) Kritische Imports prüfen (ohne Crash)
+# 3) Optionalen Ausbau prüfen (Web-Frontend + AppImage)
+check_optional_toolchain() {
+  local feature_name="$1"
+  local check_cmd="$2"
+  local install_hint="$3"
+  local success_hint="$4"
+
+  if [ -z "$feature_name" ] || [ -z "$check_cmd" ] || [ -z "$install_hint" ] || [ -z "$success_hint" ]; then
+    echo "[WARN] Optional-Check wurde übersprungen: unvollständige Eingaben." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: start.sh unverändert nutzen oder den Optional-Check mit allen Parametern aufrufen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  echo "[CHECK][OPTIONAL] Prüfe Ausbaupfad: $feature_name"
+  if bash -lc "$check_cmd" >/dev/null 2>&1; then
+    echo "[OK][OPTIONAL] $feature_name ist bereit."
+    echo "[HILFE][OPTIONAL] $success_hint"
+    return 0
+  fi
+
+  echo "[WARN][OPTIONAL] $feature_name ist noch nicht eingerichtet."
+  echo "[HILFE][OPTIONAL] Nächster Schritt: $install_hint"
+  return 1
+}
+
+WEB_OPTIONAL_STATUS="WARN"
+APPIMAGE_OPTIONAL_STATUS="WARN"
+
+if check_optional_toolchain \
+  "Web-Frontend (Flask/FastAPI + Build-Werkzeuge)" \
+  "command -v python3 >/dev/null && python3 -m pip --version >/dev/null" \
+  "python3 -m pip install flask fastapi uvicorn" \
+  "Sie können als nächsten Mini-Schritt eine API in app/web_api.py anlegen und danach mit uvicorn lokal starten."; then
+  WEB_OPTIONAL_STATUS="OK"
+fi
+
+if check_optional_toolchain \
+  "AppImage-Build (linuxdeploy + appimagetool)" \
+  "command -v appimagetool >/dev/null || command -v linuxdeploy >/dev/null" \
+  "mkdir -p tools/appimage && cd tools/appimage && wget https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage && chmod +x appimagetool-x86_64.AppImage" \
+  "Sie können als nächsten Mini-Schritt ein AppDir vorbereiten und daraus eine portable AppImage-Datei bauen."; then
+  APPIMAGE_OPTIONAL_STATUS="OK"
+fi
+
+echo "[STATUS][OPTIONAL] Web-Frontend-Bereitschaft: $WEB_OPTIONAL_STATUS"
+echo "[STATUS][OPTIONAL] AppImage-Bereitschaft: $APPIMAGE_OPTIONAL_STATUS"
+
+# 4) Kritische Imports prüfen (ohne Crash)
 echo "[CHECK] Prüfe kritische Module"
 check_missing_python_modules() {
   "$VENV_PY" - <<'PY'
@@ -218,7 +265,7 @@ Hilfe-Datei: exports/setup_log.txt"
   fi
 fi
 
-# 4) Qualitätsprüfung (ohne den Nutzer zu verwirren)
+# 5) Qualitätsprüfung (ohne den Nutzer zu verwirren)
 echo "[CHECK] Führe Qualitätsprüfung aus"
 QUALITY_STATUS="OK"
 QUALITY_ICON="✅"
@@ -245,7 +292,7 @@ echo "[STATUS] Hinweise: WARN=$QUALITY_WARN_COUNT, INFO=$QUALITY_INFO_COUNT"
 echo "[HILFE] Nächster Schritt: $QUALITY_HINT"
 echo "[HILFE] Log-Datei: $QUALITY_LOG"
 
-# 5) Linux-Systembibliotheken prüfen (vor Smoke-Test)
+# 6) Linux-Systembibliotheken prüfen (vor Smoke-Test)
 check_and_repair_linux_lib() {
   local lib_name="$1"
   local apt_package="$2"
@@ -328,7 +375,7 @@ check_and_repair_linux_lib "libGL.so.1" "libgl1" "Grafik-Baustein" "Die grafisch
 check_and_repair_linux_lib "libEGL.so.1" "libegl1" "EGL-Grafik-Baustein" "Die grafische Oberfläche braucht diesen Baustein für die GPU-Verbindung (Grafikbeschleunigung)." "EGL-Baustein fehlt"
 check_and_repair_linux_lib "libxkbcommon.so.0" "libxkbcommon0" "Tastatur-Baustein" "Die grafische Oberfläche braucht diesen Baustein für Tastatur und Eingabe." "Tastatur-Baustein fehlt"
 
-# 6) Smoke-Test mit venv python
+# 7) Smoke-Test mit venv python
 echo "[CHECK] Starte Smoke-Test"
 if ! "$VENV_PY" tools/smoke_test.py >>"$SETUP_LOG" 2>&1; then
   echo "[ERROR] Smoke-Test fehlgeschlagen"
@@ -342,7 +389,7 @@ Details: exports/setup_log.txt" "Smoke-Test"
   exit 1
 fi
 
-# 7) GUI starten
+# 8) GUI starten
 echo "[RUN] Starte GUI"
 if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
   echo "[WARN] Keine grafische Sitzung erkannt (headless). GUI-Start wird übersprungen."
