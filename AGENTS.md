@@ -1,17 +1,18 @@
 # AGENTS.md
-# AGENTS.md – Two-Point-Completion Iteration (Merge-Ready by Default)
-Version: 2.1
-Ziel: Jede Iteration schließt **genau zwei klar abgegrenzte Punkte vollständig** ab, ist merge-ready und erhöht den Release-Reifegrad.
-Leitmotiv: Zwei kleinste vollständige Punkte pro Iteration, harte Qualitäts-Gates, sofort integrierbar.
+# AGENTS.md – Three-Point-Completion Iteration (Merge-Ready by Default)
+Version: 2.3
+Ziel: Jede Iteration schließt **genau drei klar abgegrenzte Punkte vollständig** ab, ist merge-ready und erhöht den Release-Reifegrad.
+Leitmotiv: Drei kleinste vollständige Punkte pro Iteration, harte Qualitäts-Gates, sofort integrierbar. Eine der drei Aufgaben muss immer eine sinnvolle Erweiterung der Hilfselemente, der Texte oder der Barrierefreiheit sein.
 
 ────────────────────────────────────────────────────────────
 
 ## 0) Grundregel (Atomare Iteration)
 Jede Iteration muss:
-- genau **2 klar abgegrenzte Punkte** vollständig abschließen (nicht nur „anarbeiten“)
-- beide Punkte so klein wie möglich halten (smallest shippable change)
-- merge-ready sein (Code + Doku + Checks erledigt)
-- den Release-Fortschritt messbar erhöhen
+ - genau **3 klar abgegrenzte Punkte** vollständig abschließen (nicht nur „anarbeiten“)
+ - mindestens einen Punkt beinhalten, der eine sinnvolle Erweiterung der Hilfselemente, der Texte oder der Barrierefreiheit darstellt
+ - alle Punkte so klein wie möglich halten (smallest shippable change)
+ - merge-ready sein (Code + Doku + Checks erledigt)
+ - den Release-Fortschritt messbar erhöhen
 
 Maximal:
 - 1 Problemklasse
@@ -30,16 +31,16 @@ Vor dem Patch festhalten:
 - Exakter Patch-Block je Datei
 - Abnahmekriterium „fertig“ (1 Satz, testbar)
 
-Verboten:
-- Nebenbei-Refactorings außerhalb des Patch-Blocks
-- Umbenennen/Umstrukturieren ohne zwingenden Grund
-- Mehr als 2 Punkte in einer Iteration
-- Teilergebnisse ohne klare Fertigstellung
+ Verboten:
+ - Nebenbei-Refactorings außerhalb des Patch-Blocks
+ - Umbenennen/Umstrukturieren ohne zwingenden Grund
+ - Mehr als 3 Punkte in einer Iteration
+ - Teilergebnisse ohne klare Fertigstellung
 
 ────────────────────────────────────────────────────────────
 
 ## 2) Patch-Methodik (vollständig, klein, robust)
-- Nur notwendige Änderungen für die zwei konkreten Punkte.
+ - Nur notwendige Änderungen für die drei konkreten Punkte.
 - Keine neuen Abhängigkeiten ohne zwingenden Bedarf.
 - Jede betroffene Funktion validiert Eingaben (input) und bestätigt Ergebnis (output).
 - Fehlerpfade enthalten klare Next Steps in einfacher Sprache.
@@ -116,22 +117,23 @@ Ganz oben in README immer aktualisieren:
 ────────────────────────────────────────────────────────────
 
 ## 7) Definition of Done (nur dann DONE)
-Eine Iteration ist nur DONE, wenn:
-- zwei klar definierte Punkte vollständig abgeschlossen
-- merge-ready (kein offener Pflichtpunkt)
-- Change-Scope eingehalten
-- Gates grün ODER sauber als NEXT ITERATION dokumentiert
-- README + CHANGELOG + todo aktualisiert
-- mindestens 1 Hilfeelement verbessert/ergänzt
-- mindestens 1 Accessibility-Aspekt verbessert/geprüft
-- Release-Reifegrad erhöht und klar dokumentiert
+ Eine Iteration ist nur DONE, wenn:
+ - drei klar definierte Punkte vollständig abgeschlossen sind
+ - mindestens eine Aufgabe eine sinnvolle Erweiterung der Hilfselemente, Texte oder Barrierefreiheit darstellt
+ - merge-ready (kein offener Pflichtpunkt)
+ - Change-Scope eingehalten
+ - Gates grün ODER sauber als NEXT ITERATION dokumentiert
+ - README + CHANGELOG + todo aktualisiert
+ - mindestens 1 Hilfeelement verbessert/ergänzt
+ - mindestens 1 Accessibility-Aspekt verbessert/geprüft
+ - Release-Reifegrad erhöht und klar dokumentiert
 
 ────────────────────────────────────────────────────────────
 
 ## 8) Merge- und Release-Flow (Standard)
 Nach jeder DONE-Iteration:
 - zeitnah mergen (kein unnötiges Warten)
-- direkt nächste zwei kleinste vollständige Punkte planen
+ - direkt die nächsten drei kleinsten vollständigen Punkte planen
 - immer auf vollständig release-fertig hinarbeiten
 
 Release-Doku bei Release-bezogenen Iterationen zusätzlich:
@@ -160,8 +162,9 @@ Minimalformat:
 - Abnahmekriterium:
 
 ### C) Patch (kurz)
-- Punkt 1 – Änderung:
-- Punkt 2 – Änderung:
+ - Punkt 1 – Änderung:
+ - Punkt 2 – Änderung:
+ - Punkt 3 – Änderung:
 
 ### D) Gates
 - G1:
@@ -175,3 +178,28 @@ Minimalformat:
 - Doku: README + CHANGELOG + todo aktualisiert
 - Laienvorschläge: 2 kurze Empfehlungen
 - Nächster Schritt: 1 detaillierter Vorschlag in einfacher Sprache
+
+## 10) Versionierung und Registry (neu)
+
+Alle Änderungen am Code oder an Dokumenten müssen in der Versions‑Registry (`data/version_registry.json`) nachgeführt werden.
+
+Richtlinien:
+
+- **global_version**: Setzt das Datum der letzten Iteration im Format `YYYY.MM.DD`.
+- **files**: Für jede geänderte Datei muss die Versionsnummer (Datum oder, bei Dokumenten, eine Nummer) erhöht oder eingetragen werden.
+- Das Aktualisieren der Registry zählt als Teil der Iterationsarbeit und darf keine weiteren Dateien beeinflussen.
+- Änderungen ohne Anpassung der Registry gelten als unvollständig.
+
+Beispiel:
+
+```json
+{
+  "global_version": "2026.02.11",
+  "files": {
+    "app/main.py": "2026.02.11",
+    "core/settings.py": "2026.02.11",
+    "start.sh": "2026.02.11",
+    "AGENTS.md": "2.3"
+  }
+}
+```

@@ -1,7 +1,36 @@
-## 2026-02-12 – UI-Iteration: Vierer-Menüleiste + deutsches Rechtsklick-Menü aus Text-JSON
-- **Was:** `app/main.py` ergänzt eine klare Menüleiste mit genau vier Punkten (Datei, Ansicht, Hilfe, Einstellungen), bindet neue Menütexte über JSON-Schlüssel an und ergänzt ein kurzes deutsches Rechtsklick-Menü in der Trefferliste samt 1-Zeilen-Hinweis „Was passiert dann?“.
-- **Warum:** Die Navigation sollte senior-sicher, logisch und in einfacher deutscher Sprache funktionieren, ohne unnötige Fachwörter in der Oberfläche.
-- **Wirkung:** Klare, einheitliche Bedienung mit kurzen Menüs und verständlicher Aktions-Rückmeldung direkt in der Oberfläche.
+## 2026-02-11 – UI-Iteration: Farbige Trefferliste & Typ-Auswahl
+
+- **Was:** Die Analyse-Trefferliste ist farblich kodiert (hellblau für Bilder, helllila für Videos, hellorange für Archive, hellgrau für andere Dateien). Außerdem wurden neue Schaltflächen („Nur Bilder“, „Nur Videos“, „Nur Archive“, „Nur Andere“, „Alle") unter der Sortierauswahl ergänzt, um schnell nur bestimmte Dateitypen auszuwählen. Der Hilfe-Text im Analyse-Schritt erklärt nun die Farb-Kodierung und die Schnell-Auswahl.
+- **Warum:** Laien sollen die verschiedenen Dateitypen auf einen Blick unterscheiden können und ohne komplizierte Mehrfachauswahl schnell nur die gewünschten Dateien markieren können.
+- **Wirkung:** Bessere Übersichtlichkeit durch Farbkodierung, schnelleres Arbeiten durch direkte Typauswahl, verständliche Anleitung zum Nutzen der neuen Funktionen.
+
+## 2026-02-11 – Schnellstart‑Buttons 4–6, Web‑API & Button‑Only‑Iteration
+
+- **Was:** Im Options-Schritt wurden drei weitere Schnellstart‑Buttons (Dokumente sortieren, Musik sortieren, Alles sortieren) ergänzt. Sie laden jeweils eigene Presets (`quick_docs`, `quick_music`, `quick_all`), starten sofort einen Scan und zeigen die Vorschau an. Zudem wurde ein erstes API‑Skelett (`app/web_api.py`) mit zwei Endpunkten (`/status`, `/dry_run`) geschaffen und der Einsteiger‑Modus (Button‑Only) implementiert, der komplexe Filter im Options‑Schritt ausblendet und die Schnellstart‑Buttons in den Mittelpunkt rückt.
+- **Warum:** Einige Nutzer:innen möchten ihre Dateien ohne manuelle Filter oder komplexe Menüs aufräumen, andere wünschen eine webbasierte Steuerung. Weitere Schnellstart‑Buttons decken zusätzliche Dateitypen ab, ein API‑Prototyp ermöglicht künftige Web‑UIs und der Einsteiger‑Modus erleichtert die Bedienung für Laien.
+- **Wirkung:** Schnellerer Einstieg durch sechs große Schnellstart‑Schalter, laienfreundliche Web‑Schnittstelle für Statusabfrage und Trockenlauf, sowie vereinfachte Oberfläche im Einsteiger‑Modus. Zusammen legen die Änderungen die Grundlage für mehr Komfort und flexiblere Nutzung.
+
+## 2026-02-11 – Namens- & Refactoring-Iteration
+
+- **Was:** Der Fenstertitel und die Projektbezeichnung wurden von „Downloads Organizer/Aufräumer“ in „Provoware Clean Tool 2026“ geändert. Zudem wurde eine Hilfsmethode zur standardisierten Button-Erzeugung eingeführt, die konsistente Größen, Tooltips und Accessibility‑Namen setzt. Verlaufsschaltflächen nutzen diese nun.
+- **Warum:** Ein einheitlicher Name erhöht die Wiedererkennung des Tools und vermeidet Verwirrung. Einheitliche Buttons verbessern Lesbarkeit und Barrierefreiheit.
+- **Wirkung:** Klare Benennung des Programms; alle Hauptfunktionen der Verlaufsansicht verfügen jetzt über konsistente Schaltflächen mit verbesserter Barrierefreiheit.
+
+## 2026-02-11 – Dashboard-Verlauf-Iteration
+
+- **Was:** Ein neues Modul `core/history.py` speichert jeden Aufräumlauf mit Zeitstempel, Dateianzahl und Megabyte-Anzahl in einer JSON-Datei. Die Startseite (Entwicklerbereich) zeigt jetzt einen Verlauf aller Läufe mit Export- und Lösch-Schaltflächen. Nach einer erfolgreichen Ausführung wird automatisch ein neuer Eintrag angelegt. Hilfetexte erklären den Verlauf und führen zu Export oder Reset.  
+- **Warum:** Nutzer:innen sollen sehen, wie viel Speicherplatz sie über mehrere Aufräumläufe gewonnen haben, die Daten exportieren können oder bei Bedarf den Verlauf löschen. Dies stärkt die Transparenz und gibt Kontrolle über die eigenen Nutzungsdaten.  
+- **Wirkung:** Im Dashboard gibt es jetzt eine barrierearme Verlaufsliste; Export speichert die Historie als CSV in den Ordner `exports`, und ein Lösch-Knopf entfernt alle Einträge. Die Änderung verbessert die Nachvollziehbarkeit und die Bedienung bleibt laienfreundlich.
+
+## 2026-02-12 – UI/Language-Iteration: Deutscher Fenstertitel + Hilfe-Knopf
+## 2026-02-12 – Quick-Buttons & Textsystem-Iteration
+**Was:** Im Options-Schritt wurden drei Schnellstart-Buttons („Fotos sortieren“, „Große Dateien prüfen“, „Duplikate finden“) hinzugefügt, die jeweils ein voreingestelltes Preset laden und sofort einen Scan starten. Ein zentraler Textkatalog (`ui_texts.json`) speichert jetzt die Kurzanleitung und die Bezeichnungen/Tooltips der Schnellstart-Buttons. Darüber hinaus wurde die Analyse-Trefferliste sortierbar nach Name oder Größe gestaltet und im Plan-Schritt ein Rechtsklick-Menü „Zielordner öffnen“ ergänzt.  
+**Warum:** Häufige Reinigungsaufgaben sollen ohne manuelle Filtereinstellung direkt ausführbar sein. Ein zentraler Textkatalog vereinfacht spätere Textänderungen und Übersetzungen. Die Sortier-Optionen und das Kontextmenü erhöhen die Übersicht und sparen Klicks.  
+**Wirkung:** Schnellere, laienfreundliche Bedienung durch große Schnellstart-Kacheln; besser wartbarer Code durch zentrale Textdatei; höhere Orientierung in der Analyse- und Plan-Ansicht durch Sortierfunktion und zusätzlichen Kontextbefehl.
+
+- **Was:** `app/main.py` setzt nun den Fenstertitel vollständig auf Deutsch („Downloads Aufräumer“) und ergänzt auf der Startseite eine barrierearme „Hilfe“-Schaltfläche mit Kurzanleitung; `README.md` Release-Status und „Abgeschlossen“-Liste entsprechend aktualisiert.
+- **Warum:** Englischsprachige Begriffe verwirrten Laien, und eine schnell zugängliche Hilfe war nicht vorhanden.
+- **Wirkung:** Klarere Benennung ohne Fachbegriffe, schnellerer Einstieg durch leicht verständliche Anleitung und vollständige Dokumentation der Änderung in den Infodateien.
 
 ## 2026-02-12 – UI/Info-Iteration: Status-Legende + zugänglichere Filter im Entwicklerbereich
 - **Was:** `app/main.py` ergänzt im Entwicklerbereich eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe; die Filter-Buttons „Alle“ und „Nur offen“ wurden mit größeren Klickflächen und Accessibility-Namen ausgestattet. `README.md` und `todo.txt` wurden auf den neuen Iterationsstand synchronisiert.
@@ -93,6 +122,11 @@
 - **Wirkung:** Weniger Redundanz im Startcode, bessere Wartbarkeit und verständliche, synchronisierte Release-Dokumentation mit klaren nächsten Schritten.
 
 ## 2026-02-11 – UI-Iteration: Linux-Berechtigungen + Aufräumziel-Schnellwahl
+
+## 2026-02-11 – Analyse-Iteration: Trefferliste sortieren & Zielordner-Öffnen-Menü
+- **Was:** `app/main.py` ermöglicht nun die Sortierung der Trefferliste im Analyse-Schritt nach Name oder Dateigröße über ein Dropdown-Feld. Im Plan-Schritt ist ein neues Kontextmenü verfügbar: Ein Rechtsklick auf einen Eintrag bietet die Option „Zielordner öffnen“, die den entsprechenden Zielordner im Dateimanager startet. Zudem wurden `README.md` und `todo.txt` aktualisiert, um diese Änderungen zu dokumentieren.
+- **Warum:** Viele Nutzer:innen wünschten, große Dateien schneller erkennen zu können und die Möglichkeit zu haben, aus dem Plan direkt zum Zielordner zu springen. Das erleichtert die Überprüfung des Aufräumvorschlags und reduziert die Navigation im Dateisystem.
+- **Wirkung:** Die Trefferauswahl ist übersichtlicher und praxistauglicher: Größere Dateien können leicht nach vorne sortiert werden, und der Zugriff auf das Zielverzeichnis erfolgt per Klick – ohne mühsames Suchen im Explorer.
 - **Was:** `app/main.py` prüft jetzt Linux-Rechte (Lesen/Öffnen/Schreiben) im Dashboard sowie vor Scan/Plan/Ausführung und ergänzt zusätzlich eine neue Schnellwahl „Aufräumziel“ mit vier üblichen Reinigungsprofilen.
 - **Warum:** Nutzer:innen wollten klare Sicherheit bei Berechtigungen und zugleich eine laienfreundliche, maximal konfigurierbare Führung für typische Aufräumaufgaben.
 - **Wirkung:** Weniger Abbrüche durch Rechteprobleme, verständliche Next Steps inklusive `chmod`-Hinweis und schnellerer Einstieg über farbig erklärte Reinigungsoptionen.

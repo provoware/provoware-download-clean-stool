@@ -1,4 +1,4 @@
-# Downloads Organizer – Informationsstand (barrierearm, einheitlich, laienfreundlich)
+# Provoware Clean Tool 2026 – Informationsstand (barrierearm, einheitlich, laienfreundlich)
 
 Dieses Projekt sortiert den Ordner **Downloads** sicher und nachvollziehbar.
 Der Fokus liegt auf:
@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **100%**
-- **Abgeschlossene Punkte:** **62**
-- **Offene Punkte:** **0**
-- **Nächster Schritt:** Analysebereich weiter verschlanken: nächste zwei Mini-Punkte für Sortierung und Zielordner-Schnellaktionen pro Treffer planen.
+ - **Entwicklungsfortschritt:** **100%**
+ - **Abgeschlossene Punkte:** **77**
+ - **Offene Punkte:** **0**
+ - **Nächster Schritt:** Weitere Schnellstart-Buttons (7–10), das Web‑API‑Gerüst mit echter Scan‑/Planlogik erweitern und den Button‑Only‑Modus (Einsteiger‑Modus) zum vollwertigen Workflow ausbauen; verbleibende Umbenennungen abschließen und die Versions‑Registry nachführen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -23,9 +23,6 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
 **Abgeschlossen:**
-
-- Neue Menüleiste ist jetzt senior-sicher auf genau vier Punkte begrenzt: Datei, Ansicht, Hilfe, Einstellungen.
-- Neues deutsches Rechtsklick-Menü in der Trefferliste bietet nur kurze Aktionen (Öffnen, Ansehen, Zurückholen, Ignorieren) plus 1-Zeilen-Hinweis „Was passiert dann?“ aus Text-JSON.
 
 - Entwicklerbereich zeigt jetzt eine klare Status-Legende (✅ abgeschlossen / 🟡 offen) mit barrierearmer Kurz-Erklärung in einfacher Sprache.
 - Filter-Buttons im Entwicklerbereich haben jetzt größere Klickflächen und eigene Accessibility-Namen für bessere Tastatur- und Screenreader-Bedienung.
@@ -55,7 +52,7 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Live-Theme-Vorschau zeigt jetzt zusätzlich einen klaren A11y-Hinweis (Zugänglichkeit) je Farbschema inklusive Textgrößenstatus in einfacher Sprache.
 - Dashboard-Schnellübersicht ist jetzt HTML-sicher (maskierte Sonderzeichen) und zeigt Berechtigungsstatus konsistent mit klaren Symbolen für OK/Warnung.
 - Startseite hat jetzt ein robusteres, luftigeres Layout (einheitliche Abstände, Mindestbreiten, Hilfe-/Dashboard-Karten) plus Tastatur-Schnellwahl `Alt+O` für die Ordnerauswahl.
-- `AGENTS.md` verlangt jetzt pro Iteration genau zwei vollständig abgeschlossene Punkte statt einem Einzelpunkt, inklusive angepasster DoD- und Planungsregeln.
+ - `AGENTS.md` verlangt jetzt pro Iteration genau drei vollständig abgeschlossene Punkte statt zwei, inklusive angepasster DoD- und Planungsregeln.
 - Neue Schnellwahl „Aufräumziel“ steuert typische Reinigungen (ausgewogen, große Dateien, alte Dateien, Duplikate zuerst) mit farbiger Hilfe in einfacher Sprache.
 - Linux-Berechtigungsprüfung ist jetzt im Dashboard, vor Analyse und vor Ausführung integriert; bei fehlenden Rechten erscheinen klare Next Steps inklusive Terminal-Befehl.
 - Neue Vorschau-Steuerung „Bereichsskalierung“ erlaubt 100–150% Live-Skalierung für verschiedene Bildschirmgrößen mit robuster Input-/Output-Validierung.
@@ -80,6 +77,30 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Fehlerfenster zeigen jetzt eine einheitliche Mini-Hilfe mit „Was ist passiert?“ und „Was kann ich jetzt klicken?“.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
+    - Werkzeugname überarbeitet: Aus „Downloads Organizer“ bzw. „Downloads Aufräumer“ wurde „Provoware Clean Tool 2026“ für eine klare, laienfreundliche Benennung.
+    - Einheitliche Erstellung der Verlaufsschaltflächen: neue Hilfsmethode `_create_standard_button()` sorgt für konsistente Größe, Tooltip und Accessibility‑Namen – die Verlaufsexport- und Verlaufslösch-Knöpfe nutzen diese nun.
+
+    - Analyse-Trefferliste sortierbar nach Name/Größe: Ein Dropdown erlaubt die Sortierung nach alphabetischer Reihenfolge oder nach Dateigröße; nach dem Scan werden die Treffer entsprechend neu aufgebaut. Die Plan-Liste hat jetzt ein Kontextmenü, mit dem sich der Zielordner eines geplanten Eintrags direkt im Dateimanager öffnen lässt.
+
+    - Neue Hilfe-Schaltfläche auf der Startseite: Sie öffnet eine Kurzanleitung in einfacher Sprache, die die vier Hauptschritte erklärt (Ordner wählen, Scannen, Vorschau prüfen, Aufräumen starten) und auf die Aktionskarten hinweist. Die Schaltfläche ist barrierearm gestaltet und verfügt über klare Accessibility‑Namen.
+
+    - Drei Schnellstart-Buttons („Fotos sortieren“, „Große Dateien prüfen“, „Duplikate finden“) stehen jetzt im Options-Schritt bereit. Sie laden jeweils ein voreingestelltes Preset, starten automatisch einen Scan und zeigen die Ergebnisse in einer Vorschau. Große Klickflächen, klare Beschriftungen und hilfreiche Tooltips machen diese Buttons auch für Laien leicht nutzbar.
+
+    - Eine zentrale Textdatei (`data/ui_texts.json`) speichert die Kurzanleitung sowie Beschriftungen und Tooltips der Schnellstart-Buttons. Diese externe Datei ermöglicht zukünftige Anpassungen oder Übersetzungen der Texte ohne Codeänderungen.
+    - Ein Verlauf im Entwicklerbereich zeigt jetzt, wie viele Dateien und Megabytes bei früheren Aufräuml\u00e4ufen verarbeitet wurden. Die Liste kann als CSV exportiert oder gel\u00f6scht werden; nach jedem Planlauf wird ein Eintrag hinzugef\u00fcgt. Hilfetexte erkl\u00e4ren die Bedienung.
+
+    - Drei weitere Schnellstart-Buttons (\u201eDokumente sortieren\u201c, \u201eMusik sortieren\u201c, \u201eAlles sortieren\u201c) wurden erg\u00e4nzt. Sie nutzen eigene Presets (quick_docs, quick_music, quick_all) und starten den Scan sofort. Die Buttons sind gro\u00df, haben klare Beschriftungen und laienfreundliche Tooltips.
+
+    - Ein neues API-Skelett (`app/web_api.py`) stellt zwei FastAPI-Endpunkte zur Verf\u00fcgung: `/status` liefert den aktuellen Systemstatus, `/dry_run` f\u00fchrt einen Platzhalter-Trockenlauf aus. Die Endpunkte liefern laienfreundliche JSON-Antworten und dienen als Grundlage f\u00fcr weitere Web-Funktionen.
+
+    - Der Einsteiger- bzw. Button-Only-Modus (novice_mode) blendet jetzt komplexe Filter, Grenzen und Ziele im Optionen-Schritt aus und r\u00fcckt die Schnellstart-Buttons in den Mittelpunkt. Dadurch k\u00f6nnen Laien ohne Facheinstellungen direkt eine Aufr\u00e4umaktion starten.
+
+    - Die Analyse-Trefferliste ist jetzt farblich kodiert: Bilder erscheinen hellblau, Videos helllila, Archive hellorange und andere Dateien hellgrau. Dies erleichtert die Orientierung und unterscheidet Dateitypen auf einen Blick.
+
+    - Unter der Sortierauswahl im Analyse-Schritt befinden sich neue Schaltfl\u00e4chen ("Nur Bilder", "Nur Videos", "Nur Archive", "Nur Andere", "Alle"). Diese Buttons markieren automatisch nur die gew\u00fcnschten Dateitypen oder alle Treffer und heben andere Auswahlm\u00f6glichkeiten auf – ideal f\u00fcr Laien.
+
+    - Der Hilfe-Text im Analyse-Schritt erkl\u00e4rt nun die Farbcodierung der Trefferliste und die neue Schnell-Auswahl per Button in einfacher Sprache.
+
 - Startroutine prüft jetzt optional die Ausbaupfade „Web-Frontend“ und „AppImage-Build“ und zeigt dafür klare Next Steps mit vollständigen Befehlen.
 - README enthält jetzt eine laienfreundliche Mini-Roadmap für Web-Frontend und AppImage mit zwei kleinsten Startpunkten.
 
@@ -87,8 +108,8 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - README-Status enthält jetzt einen Schnellüberblick in einfacher Sprache mit kopierbaren Befehlen für den Warnfall.
 
 **Offen (für „perfekte“ Release-Version):**
-- Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
-- Entwicklerbereich enthält jetzt den Hilfebereich „Implementiert vs. Geplant“ mit Filtern „Alle“ und „Nur offen“.
+ - Vollständiger Button-Only-Modus ohne freie Texteingaben (alle Schritte nur mit Buttons und Dropdowns).
+ - Weitere Schnellstart-Buttons (7–10) als große Kacheln inklusive speicherbarer Nutzer‑Presets.
 
 Kurz erklärt: Der Kernpfad ist stabil (Scannen, Planen, Verschieben, Undo, Validierung), aber die große, voll-interaktive Komfortoberfläche aus dem Zielbild ist noch nicht vollständig umgesetzt.
 

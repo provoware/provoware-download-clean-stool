@@ -1,7 +1,7 @@
-"""Smoke test for Downloads Organizer.
+"""Smoke test für das Provoware Clean Tool 2026.
 
-This script performs a minimal import of the core modules and the GUI to
-ensure there are no import‑time errors. It is used during development.
+Dieses Skript führt minimale Importe der Kernmodule und der GUI aus, um
+sicherzustellen, dass zur Entwicklungszeit keine Importfehler auftreten.
 """
 
 import importlib

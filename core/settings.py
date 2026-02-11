@@ -12,7 +12,7 @@ SCHEMA_VERSION = 2
 def _default_ui_texts() -> Dict[str, str]:
     """Central fallback catalog for user-facing texts (German)."""
     return {
-        "app_title": "Downloads Organizer",
+        "app_title": "Provoware Clean Tool 2026",
         "error_title": "Fehler",
         "warn_missing_folder_title": "Fehlende Angabe",
         "warn_missing_folder_body": "Bitte wählen Sie einen Ordner aus.",

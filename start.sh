@@ -86,7 +86,7 @@ run_with_sudo() {
   return 1
 }
 
-echo "[START] Downloads Organizer – Auto-Setup"
+echo "[START] Provoware Clean Tool 2026 – Auto-Setup"
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
 
 # 1) venv sicher erstellen

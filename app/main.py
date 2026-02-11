@@ -7,15 +7,33 @@ import sys
 from html import escape
 from pathlib import Path
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
-                               QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
-                               QLabel, QListWidget, QListWidgetItem,
-                               QMainWindow, QMenu, QMessageBox, QPushButton,
-                               QStackedWidget, QVBoxLayout, QWidget)
+# QtCore: erweitern um QUrl für Datei-URLs
+from PySide6.QtCore import Qt, QUrl
+from PySide6.QtWidgets import (
+    QAbstractItemView,
+    QApplication,
+    QBoxLayout,
+    QCheckBox,
+    QComboBox,
+    QFileDialog,
+    QHBoxLayout,
+    QLabel,
+    QListWidget,
+    QListWidgetItem,
+    QMainWindow,
+    QMessageBox,
+    QPushButton,
+    QStackedWidget,
+    QVBoxLayout,
+    QWidget,
+    QMenu,
+)
+
+# QtGui: QDesktopServices öffnet Ordner/Dateien im Dateimanager
+from PySide6.QtGui import QDesktopServices, QColor
 
 from core.executor import execute_move_plan, undo_last
+from core.history import read_history, append_history, clear_history
 from core.logger import setup_logger
 from core.planner import ActionPlan, build_plan
 from core.scanner import (_parse_age, _parse_size, detect_duplicates,
@@ -27,26 +45,6 @@ LOGGER = setup_logger()
 
 
 class MainWindow(QMainWindow):
-    TEXT_JSON_DEFAULTS = {
-        "menue.datei": "Datei",
-        "menue.ansicht": "Ansicht",
-        "menue.hilfe": "Hilfe",
-        "menue.einstellungen": "Einstellungen",
-        "menue.datei.ordner_waehlen": "Ordner wählen",
-        "menue.datei.beenden": "Beenden",
-        "menue.ansicht.theme_hell": "Theme hell",
-        "menue.ansicht.theme_kontrast": "Theme Kontrast",
-        "menue.hilfe.kurz": "Kurzhilfe anzeigen",
-        "menue.einstellungen.speichern": "Einstellungen speichern",
-        "menue.hinweis.datei": "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
-        "menue.hinweis.ansicht": "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
-        "menue.hinweis.hilfe": "Was passiert dann? Eine kurze Hilfe mit klaren Schritten wird gezeigt.",
-        "menue.hinweis.einstellungen": "Was passiert dann? Ihre Auswahl wird sicher gespeichert.",
-        "menue.rechtsklick.oeffnen": "Öffnen",
-        "menue.rechtsklick.ansehen": "Ansehen",
-        "menue.rechtsklick.zurueckholen": "Zurückholen",
-        "menue.rechtsklick.ignorieren": "Ignorieren",
-    }
     THEME_A11Y_HINTS = {
         "light": "Helles Standardschema mit guter Lesbarkeit für normale Raumbeleuchtung.",
         "dark": "Dunkles Schema für blendfreie Nutzung am Abend oder in dunklen Räumen.",
@@ -126,9 +124,9 @@ class MainWindow(QMainWindow):
             "detail": "Farbthemen mit Kontrast-Hinweisen sind direkt auswählbar.",
         },
         {
-            "state": "open",
+            "state": "done",
             "title": "Dateigröße als Sortier-Filter",
-            "detail": "Trefferliste soll optional nach Größe gruppieren und sortieren.",
+            "detail": "Trefferliste lässt sich jetzt nach Name oder Größe sortieren.",
         },
         {
             "state": "open",
@@ -287,6 +285,39 @@ class MainWindow(QMainWindow):
         )
         return self.list_project_status.count() > 0
 
+    def _show_general_help(self) -> None:
+        """Zeigt eine kurze Kurzanleitung in deutscher Sprache.
+
+        Diese Anleitung erklärt die vier Hauptschritte des Programms
+        (Ordner wählen, Scannen, Vorschau, Aufräumen) sowie den Einsatz der
+        Schnellstart-Karten. Das Dialogfenster ist barrierearm gestaltet.
+        """
+        # Die Meldung verwendet HTML zur Strukturierung, bleibt jedoch kurz und verständlich.
+        # Greife zunächst auf den zentralen Textkatalog zurück (falls vorhanden),
+        # andernfalls wird ein fester Standardtext verwendet. So können Texte später
+        # leicht angepasst werden, ohne den Code zu ändern.
+        help_text = self.ui_texts.get(
+            "kurzanleitung",
+            (
+                "<b>Kurzanleitung:</b><br/>"
+                "1) Ordner wählen.<br/>"
+                "2) Scannen drücken.<br/>"
+                "3) Vorschau prüfen.<br/>"
+                "4) Aufräumen starten.<br/>"
+                "Nutzen Sie die Aktionskarten auf der Startseite für typische Aufgaben."
+            ),
+        )
+        message = QMessageBox(self)
+        message.setIcon(QMessageBox.Information)
+        message.setWindowTitle("Hilfe")
+        message.setTextFormat(Qt.RichText)
+        message.setText(help_text)
+        message.setAccessibleName("Hilfe-Dialog")
+        message.setAccessibleDescription(
+            "Dialogfenster mit einer kurzen Anleitung zur Nutzung des Programms"
+        )
+        message.exec()
+
     def __init__(self) -> None:
         super().__init__()
         ok, msg = run_selfcheck()
@@ -309,141 +340,48 @@ class MainWindow(QMainWindow):
         self.plan: ActionPlan | None = None
         self.scan_results = []
         self.duplicates_map = {}
-        self.setWindowTitle(self._text_json("status.app_titel", "Downloads Organizer"))
+        # Lade zentralen Textkatalog, damit alle Hilfe- und UI‑Texte anpassbar sind.
+        self.ui_texts: dict[str, str] = {}
+        self._load_ui_texts()
+        # Liste für Verlaufsdaten wird im Willkommensbereich initialisiert
+        self.list_history: QListWidget | None = None
+        # Set a clear, fully German window title for laienfreundliche Bedienung
+        # Zukünftiger Name des Werkzeugs: „Provoware Clean Tool 2026“.
+        self.setWindowTitle("Provoware Clean Tool 2026")
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
-        self._setup_main_menu()
         self._create_pages()
         self.apply_theme(self.settings.theme, self.settings.large_text)
 
-    def _text_json(self, key: str, fallback: str) -> str:
-        """Liest Oberflächentexte aus JSON-Einstellungen mit robuster Fallback-Prüfung."""
+    def _load_ui_texts(self) -> None:
+        """
+        Lädt optionale UI‑Texte aus einer zentralen JSON‑Datei im data‑Ordner.
 
-        clean_key = key.strip()
-        if not clean_key:
-            raise ValueError(
-                "Text-Schlüssel fehlt. Nächster Schritt: Bitte einen gültigen Schlüssel setzen."
+        Der Katalog enthält HTML‑Texte (z. B. Kurzanleitung) sowie Beschriftungen
+        und Tooltips für Schnellstart‑Buttons. Wird die Datei nicht gefunden oder
+        ist sie fehlerhaft, wird ein leerer Katalog verwendet. Texte im Code
+        fungieren dann als Fallback.
+        """
+        try:
+            file_path = (
+                Path(__file__).resolve().parent.parent
+                / "data"
+                / "ui_texts.json"
             )
-        text_map = (
-            self.settings.ui_texts if isinstance(self.settings.ui_texts, dict) else {}
-        )
-        raw_text = str(
-            text_map.get(clean_key, self.TEXT_JSON_DEFAULTS.get(clean_key, fallback))
-        ).strip()
-        if not raw_text:
-            raise ValueError(
-                f"Text für '{clean_key}' ist leer. Nächster Schritt: Text in data/settings.json ergänzen."
-            )
-        return raw_text
+            if file_path.exists():
+                import json
 
-    def _set_action_hint(self, text_key: str, fallback: str) -> None:
-        """Setzt den 1-Zeilen-Hinweis 'Was passiert dann?' aus Text-JSON."""
-
-        hint = self._text_json(text_key, fallback)
-        if hasattr(self, "lbl_action_hint"):
-            self.lbl_action_hint.setText(hint)
-
-    def _setup_main_menu(self) -> None:
-        """Erstellt eine senior-sichere Menüleiste mit genau vier Menüpunkten."""
-
-        menubar = self.menuBar()
-        menubar.clear()
-
-        menu_datei = menubar.addMenu(self._text_json("menue.datei", "Datei"))
-        action_ordner = QAction(
-            self._text_json("menue.datei.ordner_waehlen", "Ordner wählen"), self
-        )
-        action_ordner.triggered.connect(self._pick_folder)
-        action_ordner.triggered.connect(
-            lambda: self._set_action_hint(
-                "menue.hinweis.datei",
-                "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
-            )
-        )
-        menu_datei.addAction(action_ordner)
-        action_beenden = QAction(
-            self._text_json("menue.datei.beenden", "Beenden"), self
-        )
-        action_beenden.triggered.connect(self.close)
-        menu_datei.addAction(action_beenden)
-
-        menu_ansicht = menubar.addMenu(self._text_json("menue.ansicht", "Ansicht"))
-        action_hell = QAction(
-            self._text_json("menue.ansicht.theme_hell", "Theme hell"), self
-        )
-        action_hell.triggered.connect(
-            lambda: self._set_theme_by_key_from_menu(
-                "light",
-                "menue.hinweis.ansicht",
-                "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
-            )
-        )
-        menu_ansicht.addAction(action_hell)
-        action_kontrast = QAction(
-            self._text_json("menue.ansicht.theme_kontrast", "Theme Kontrast"), self
-        )
-        action_kontrast.triggered.connect(
-            lambda: self._set_theme_by_key_from_menu(
-                "kontrast",
-                "menue.hinweis.ansicht",
-                "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
-            )
-        )
-        menu_ansicht.addAction(action_kontrast)
-
-        menu_hilfe = menubar.addMenu(self._text_json("menue.hilfe", "Hilfe"))
-        action_hilfe = QAction(
-            self._text_json("menue.hilfe.kurz", "Kurzhilfe anzeigen"), self
-        )
-        action_hilfe.triggered.connect(
-            lambda: self._show_error_with_mini_help(
-                title=self._text_json("menue.hilfe", "Hilfe"),
-                happened_text="Sie sind im Klartext-Modus. Alle Schritte sind kurz erklärt.",
-                next_clicks=[
-                    "Weiter: Erst Ordner wählen, dann Optionen prüfen.",
-                    "Wenn etwas unklar ist: Hilfe erneut öffnen.",
-                ],
-            )
-        )
-        action_hilfe.triggered.connect(
-            lambda: self._set_action_hint(
-                "menue.hinweis.hilfe",
-                "Was passiert dann? Eine kurze Hilfe mit klaren Schritten wird gezeigt.",
-            )
-        )
-        menu_hilfe.addAction(action_hilfe)
-
-        menu_einstellungen = menubar.addMenu(
-            self._text_json("menue.einstellungen", "Einstellungen")
-        )
-        action_speichern = QAction(
-            self._text_json("menue.einstellungen.speichern", "Einstellungen speichern"),
-            self,
-        )
-        action_speichern.triggered.connect(
-            lambda: self._save_settings_with_feedback("Menü speichern")
-        )
-        action_speichern.triggered.connect(
-            lambda: self._set_action_hint(
-                "menue.hinweis.einstellungen",
-                "Was passiert dann? Ihre Auswahl wird sicher gespeichert.",
-            )
-        )
-        menu_einstellungen.addAction(action_speichern)
-
-    def _set_theme_by_key_from_menu(
-        self, theme_key: str, hint_key: str, hint_fallback: str
-    ) -> None:
-        """Setzt Theme aus der Menüleiste mit direkter Rückmeldung."""
-
-        clean_theme_key = theme_key.strip().lower()
-        if clean_theme_key not in self.THEME_KEY_TO_DISPLAY:
-            raise ValueError(
-                "Theme-Wert ist ungültig. Nächster Schritt: Menüpunkt 'Ansicht' prüfen."
-            )
-        self.settings.theme = clean_theme_key
-        self.apply_theme(self.settings.theme, self.cb_large.isChecked())
-        self._set_action_hint(hint_key, hint_fallback)
+                with file_path.open("r", encoding="utf-8") as f:
+                    raw = json.load(f)
+                    if isinstance(raw, dict):
+                        self.ui_texts = raw
+                        return
+            # falls Datei nicht existiert, leeres dict
+            self.ui_texts = {}
+        except Exception:
+            # bei Fehlern wird der Katalog geleert, damit der Fallback greift
+            self.ui_texts = {}
+        return
 
     def _load_persistent_download_dir(self) -> Path | None:
         """Load persisted download directory if it exists and is accessible."""
@@ -1195,6 +1133,16 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(mainview_hint)
 
+        # Hilfe-Schaltfläche: zeigt eine kurze Kurzanleitung für den Einstieg.
+        btn_help = QPushButton("Hilfe")
+        btn_help.setToolTip("Zeigt eine kurze Hilfe zur Bedienung")
+        btn_help.setAccessibleName("Hilfe anzeigen")
+        btn_help.setAccessibleDescription(
+            "Öffnet eine Kurzanleitung zur Bedienung in einfacher Sprache"
+        )
+        btn_help.clicked.connect(self._show_general_help)
+        layout.addWidget(btn_help)
+
         preview_shell = QHBoxLayout()
         preview_shell.setSpacing(12)
 
@@ -1530,6 +1478,58 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.list_project_status)
         self._apply_project_status_filter("all")
 
+        # Verlauf (History) anzeigen: zeigt die letzten Läufe mit Anzahl Dateien und Megabytes.
+        history_title = QLabel("<b>Verlauf (Dateien/MB pro Lauf)</b>")
+        history_title.setAccessibleName("Verlauf Titel")
+        history_title.setAccessibleDescription(
+            "Überschrift des Verlaufbereichs mit Zusammenfassung früherer Aufräumläufe"
+        )
+        layout.addWidget(history_title)
+
+        history_help = QLabel(
+            "In diesem Verlauf sehen Sie, wie viele Dateien und Megabyte bei früheren Läufen bearbeitet wurden."
+            " Sie können den Verlauf exportieren oder löschen."
+        )
+        history_help.setWordWrap(True)
+        history_help.setAccessibleName("Verlaufs-Hilfe")
+        history_help.setAccessibleDescription(
+            "Kurze Erklärung des Verlaufbereichs mit Hinweisen zur Bedienung"
+        )
+        history_help.setStyleSheet(
+            "border: 1px solid #6b7280; border-radius: 10px; padding: 8px;"
+        )
+        layout.addWidget(history_help)
+
+        self.list_history = QListWidget()
+        self.list_history.setAccessibleName("Verlaufsliste")
+        self.list_history.setAccessibleDescription(
+            "Liste der letzten Läufe mit Anzahl der Dateien und Gesamtspeicherplatz"
+        )
+        self.list_history.setMinimumHeight(110)
+        layout.addWidget(self.list_history)
+
+        hist_btns = QHBoxLayout()
+        # Verlaufsschaltflächen einheitlich anlegen
+        self.btn_export_history = self._create_standard_button(
+            "Verlauf exportieren",
+            "Speichert den Verlauf als CSV-Datei",
+            self._export_history,
+            accessible_name="Verlauf exportieren",
+            accessible_description="Exportiert den Verlauf in eine CSV-Datei für die Weiterverwendung",
+        )
+        self.btn_clear_history = self._create_standard_button(
+            "Verlauf löschen",
+            "Löscht alle Einträge im Verlauf",
+            self._clear_history,
+            accessible_name="Verlauf löschen",
+            accessible_description="Löscht alle gespeicherten Verlaufsdaten nach Bestätigung",
+        )
+        for btn in (self.btn_export_history, self.btn_clear_history):
+            hist_btns.addWidget(btn)
+        layout.addLayout(hist_btns)
+        # Verlauf laden
+        self._refresh_history_display()
+
         # Navigation buttons
         btn_next = QPushButton("Weiter →")
         btn_next.setToolTip("Speichert die Auswahl und geht zum nächsten Schritt")
@@ -1599,6 +1599,101 @@ class MainWindow(QMainWindow):
             "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten.<br/>"
             "4) Prüfen Sie im Dashboard, ob der Speicherstatus auf ✅ steht."
         )
+
+        # Wenn ein Verlauf angezeigt wird, diesen ebenfalls aktualisieren
+        if getattr(self, "list_history", None) is not None:
+            self._refresh_history_display()
+
+    def _refresh_history_display(self) -> None:
+        """
+        Füllt die Verlaufsliste mit Daten aus der Verlaufsdatei.
+        Jeder Eintrag zeigt Datum, Anzahl der Dateien und Gesamtgröße.
+        """
+        if self.list_history is None:
+            return
+        try:
+            history_entries = read_history()
+        except Exception:
+            history_entries = []
+        self.list_history.clear()
+        for entry in history_entries:
+            ts = entry.get("timestamp", "")
+            files = entry.get("files", 0)
+            size_mb = entry.get("size_mb", 0.0)
+            try:
+                size_val = float(size_mb)
+            except Exception:
+                size_val = 0.0
+            item_text = f"{ts} – {files} Dateien · {size_val:.2f} MB"
+            li = QListWidgetItem(item_text)
+            li.setData(Qt.UserRole, entry)
+            self.list_history.addItem(li)
+
+    def _export_history(self) -> None:
+        """
+        Exportiert den Verlauf als CSV-Datei in den Ordner 'exports'.
+        Zeigt eine kurze Rückmeldung nach erfolgreichem Export.
+        """
+        try:
+            history_entries = read_history()
+        except Exception:
+            history_entries = []
+        if not history_entries:
+            QMessageBox.information(
+                self,
+                "Verlauf exportieren",
+                "Keine Einträge im Verlauf vorhanden."
+            )
+            return
+        export_dir = Path(__file__).resolve().parent.parent / "exports"
+        export_dir.mkdir(parents=True, exist_ok=True)
+        csv_path = export_dir / "history.csv"
+        try:
+            with csv_path.open("w", encoding="utf-8") as f:
+                f.write("timestamp;files;size_mb\n")
+                for entry in history_entries:
+                    f.write(
+                        f"{entry['timestamp']};{entry['files']};{entry['size_mb']}\n"
+                    )
+            QMessageBox.information(
+                self,
+                "Verlauf exportieren",
+                f"Der Verlauf wurde erfolgreich exportiert nach:\n{csv_path}"
+            )
+        except Exception as exc:
+            QMessageBox.warning(
+                self,
+                "Export-Fehler",
+                f"Export nicht möglich: {exc}"
+            )
+
+    def _clear_history(self) -> None:
+        """
+        Löscht alle Verlaufsdaten nach Bestätigung.
+        """
+        reply = QMessageBox.question(
+            self,
+            "Verlauf löschen",
+            "Möchten Sie wirklich alle Einträge im Verlauf löschen?",
+            QMessageBox.Yes | QMessageBox.No,
+        )
+        if reply != QMessageBox.Yes:
+            return
+        try:
+            clear_history()
+            if self.list_history is not None:
+                self._refresh_history_display()
+            QMessageBox.information(
+                self,
+                "Verlauf gelöscht",
+                "Der Verlauf wurde erfolgreich gelöscht."
+            )
+        except Exception as exc:
+            QMessageBox.warning(
+                self,
+                "Fehler beim Löschen",
+                f"Löschen nicht möglich: {exc}"
+            )
 
     def _choose_folder(self) -> None:
         path = QFileDialog.getExistingDirectory(
@@ -1808,6 +1903,170 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(self.lbl_workflow_examples)
 
+        # 6) Schnellstart-Buttons – große Kacheln für direkte Aktionen
+        quick_label = QLabel(
+            "<b>6) Schnellstart-Buttons</b><br/>"
+            "Starten Sie eine der folgenden Schnell-Aktionen:"
+        )
+        quick_label.setWordWrap(True)
+        quick_label.setAccessibleName("Schnellstart-Überschrift")
+        quick_label.setAccessibleDescription(
+            "Kurze Erklärung zu den Schnellstart-Buttons für häufige Aufgaben"
+        )
+        layout.addWidget(quick_label)
+
+        hl_quick = QHBoxLayout()
+        # Erzeuge die drei Schnellstart-Knöpfe und verwende Texte aus dem Katalog (mit Fallback).
+        self.btn_quick1 = QPushButton(
+            self.ui_texts.get("quick_button_1_label", "Fotos sortieren")
+        )
+        self.btn_quick2 = QPushButton(
+            self.ui_texts.get("quick_button_2_label", "Große Dateien prüfen")
+        )
+        self.btn_quick3 = QPushButton(
+            self.ui_texts.get("quick_button_3_label", "Duplikate finden")
+        )
+        # Tooltips (Zusatzinfos)
+        self.btn_quick1.setToolTip(
+            self.ui_texts.get(
+                "quick_button_1_tooltip",
+                "Scannt nur nach Bilddateien (JPG, PNG) und erstellt eine Vorschau.",
+            )
+        )
+        self.btn_quick2.setToolTip(
+            self.ui_texts.get(
+                "quick_button_2_tooltip",
+                "Scannt nach Dateien größer als 100MB und erstellt eine Vorschau.",
+            )
+        )
+        self.btn_quick3.setToolTip(
+            self.ui_texts.get(
+                "quick_button_3_tooltip",
+                "Scannt nach möglichen Duplikaten und erstellt eine Vorschau.",
+            )
+        )
+        # Accessibility: klare Namen und Beschreibungen
+        self.btn_quick1.setAccessibleName("Schnellstart Fotos")
+        self.btn_quick1.setAccessibleDescription(
+            "Startet sofort einen Scan mit dem Preset für Fotos"
+        )
+        self.btn_quick2.setAccessibleName("Schnellstart Große Dateien")
+        self.btn_quick2.setAccessibleDescription(
+            "Startet sofort einen Scan mit dem Preset für große Dateien"
+        )
+        self.btn_quick3.setAccessibleName("Schnellstart Duplikate")
+        self.btn_quick3.setAccessibleDescription(
+            "Startet sofort einen Scan mit dem Preset für Duplikate"
+        )
+        # Größere Schaltflächen für bessere Bedienbarkeit
+        for btn in (self.btn_quick1, self.btn_quick2, self.btn_quick3):
+            btn.setMinimumHeight(48)
+            hl_quick.addWidget(btn)
+        # Verbindungen herstellen
+        self.btn_quick1.clicked.connect(
+            lambda: self._quick_scan_preset("quick_photos")
+        )
+        self.btn_quick2.clicked.connect(
+            lambda: self._quick_scan_preset("quick_large")
+        )
+        self.btn_quick3.clicked.connect(
+            lambda: self._quick_scan_preset("quick_dups")
+        )
+        layout.addLayout(hl_quick)
+
+        # Zweite Reihe Schnellstart-Buttons (4–6)
+        hl_quick2 = QHBoxLayout()
+        # Erzeuge weitere Schnellstart-Knöpfe (4–6) mit Katalog-Texten oder Fallbacks
+        self.btn_quick4 = QPushButton(
+            self.ui_texts.get("quick_button_4_label", "Dokumente sortieren")
+        )
+        self.btn_quick5 = QPushButton(
+            self.ui_texts.get("quick_button_5_label", "Musik sortieren")
+        )
+        self.btn_quick6 = QPushButton(
+            self.ui_texts.get("quick_button_6_label", "Alles sortieren")
+        )
+        # Tooltips für Buttons 4–6
+        self.btn_quick4.setToolTip(
+            self.ui_texts.get(
+                "quick_button_4_tooltip",
+                "Scannt nur nach Dokumenten (PDF, DOC) und erstellt eine Vorschau.",
+            )
+        )
+        self.btn_quick5.setToolTip(
+            self.ui_texts.get(
+                "quick_button_5_tooltip",
+                "Scannt nur nach Musikdateien (MP3, WAV) und erstellt eine Vorschau.",
+            )
+        )
+        self.btn_quick6.setToolTip(
+            self.ui_texts.get(
+                "quick_button_6_tooltip",
+                "Scannt alle Dateitypen und erstellt eine Vorschau.",
+            )
+        )
+        # Accessibility für Buttons 4–6
+        self.btn_quick4.setAccessibleName("Schnellstart Dokumente")
+        self.btn_quick4.setAccessibleDescription(
+            "Startet sofort einen Scan mit dem Preset für Dokumente"
+        )
+        self.btn_quick5.setAccessibleName("Schnellstart Musik")
+        self.btn_quick5.setAccessibleDescription(
+            "Startet sofort einen Scan mit dem Preset für Musik"
+        )
+        self.btn_quick6.setAccessibleName("Schnellstart Alles")
+        self.btn_quick6.setAccessibleDescription(
+            "Startet sofort einen Scan mit dem Preset für alle Dateitypen"
+        )
+        # Größere Schaltflächen für barrierearme Bedienbarkeit
+        for btn in (self.btn_quick4, self.btn_quick5, self.btn_quick6):
+            btn.setMinimumHeight(48)
+            hl_quick2.addWidget(btn)
+        # Verbindungen herstellen
+        self.btn_quick4.clicked.connect(
+            lambda: self._quick_scan_preset("quick_docs")
+        )
+        self.btn_quick5.clicked.connect(
+            lambda: self._quick_scan_preset("quick_music")
+        )
+        self.btn_quick6.clicked.connect(
+            lambda: self._quick_scan_preset("quick_all")
+        )
+        layout.addLayout(hl_quick2)
+
+        # Im Einsteiger-/Button‑Only‑Modus blenden wir komplexe Filter aus und heben Schnellstart hervor.
+        if self.settings.novice_mode:
+            # Verstecke Preset-Auswahl
+            preset_box.hide()
+            btn_senior.hide()
+            btn_std.hide()
+            btn_power.hide()
+            self.current_preset_label.hide()
+            # Verstecke Dateitypen
+            filters_box.hide()
+            self.cb_images.hide()
+            self.cb_videos.hide()
+            self.cb_archives.hide()
+            self.cb_other.hide()
+            # Verstecke Grenz-Einstellungen
+            limits_box.hide()
+            self.combo_size.hide()
+            self.combo_age.hide()
+            # Verstecke Duplikat-Prüfung
+            duplicates_box.hide()
+            self.combo_dups.hide()
+            # Verstecke Aufräumziel
+            cleanup_goal_box.hide()
+            self.combo_cleanup_goal.hide()
+            self.lbl_cleanup_goal_hint.hide()
+            # Verstecke Workflow-Beispiele und Tipps
+            footer_hint.hide()
+            self.lbl_workflow_examples.hide()
+            # Passe Überschrift der Schnellstart-Buttons an
+            quick_label.setText(
+                "<b>1) Schnellstart-Buttons</b><br/>Wählen Sie eine einfache Aufräumaktion aus:"
+            )
+
         nav = QHBoxLayout()
         btn_prev = QPushButton("← Zurück")
         btn_prev.clicked.connect(lambda: self.stack.setCurrentWidget(self.page_welcome))
@@ -1819,6 +2078,29 @@ class MainWindow(QMainWindow):
         layout.addLayout(nav)
         # initialise checkboxes from settings
         self._apply_filters_from_settings()
+
+    def _quick_scan_preset(self, preset_name: str) -> None:
+        """
+        Führt eine Schnellstart-Aktion aus: lädt ein Preset, speichert die Einstellungen,
+        startet die Analyse und zeigt die Ergebnisse an.
+
+        Wenn kein Ordner ausgewählt wurde, wird ein klarer Fehlerdialog mit nächstem Schritt angezeigt.
+        """
+        # Überprüfen, ob ein Ordner gewählt wurde
+        if not self.root_path:
+            self._show_error_with_mini_help(
+                title="Ordner fehlt",
+                happened_text="Bitte wählen Sie zuerst einen Ordner aus.",
+                next_clicks=[
+                    "OK: Klicken Sie auf 'Ordner wählen…' und wählen Sie Ihren Download-Ordner aus.",
+                    "Danach den Schnellstart-Button erneut drücken.",
+                ],
+            )
+            return
+        # Lade das Preset (setzt Checkboxen und Filter)
+        self._load_preset(preset_name)
+        # Speichere Filter und starte Scan wie im Options-Schritt
+        self._options_next()
 
     def _apply_filters_from_settings(self) -> None:
         f = self.settings.filters
@@ -1913,12 +2195,99 @@ class MainWindow(QMainWindow):
         self.lbl_scan_status.setWordWrap(True)
         layout.addWidget(self.lbl_scan_status)
 
+
+        # Hinweis, wie die Trefferliste genutzt wird
         self.lbl_scan_help = QLabel(
-            "<b>Trefferliste:</b> Wählen Sie die gefundenen Dateien aus, die in den Plan übernommen "
-            "werden sollen. Ohne Auswahl werden alle Treffer verwendet."
+            "<b>Trefferliste:</b> Wählen Sie die gefundenen Dateien aus, die in den Plan übernommen werden sollen. "
+            "Ohne Auswahl werden alle Treffer verwendet. Die Liste ist farblich kodiert: blau = Bilder, "
+            "lila = Videos, orange = Archive, grau = andere Dateien. Unter der Sortierauswahl finden Sie "
+            "Buttons wie 'Nur Bilder', um schnell nur einen Dateityp zu markieren."
         )
         self.lbl_scan_help.setWordWrap(True)
         layout.addWidget(self.lbl_scan_help)
+
+        # Sortierfeld für die Trefferliste: Name oder Größe
+        sort_layout = QHBoxLayout()
+        lbl_sort = QLabel("Sortieren nach:")
+        lbl_sort.setAccessibleName("Sortierlabel")
+        lbl_sort.setAccessibleDescription("Beschriftung für die Sortierauswahl der Trefferliste")
+        self.combo_scan_sort = QComboBox()
+        self.combo_scan_sort.addItems(["Name", "Größe"])
+        self.combo_scan_sort.setAccessibleName("Sortierauswahl")
+        self.combo_scan_sort.setAccessibleDescription(
+            "Sortieroptionen für die Trefferliste: alphabetisch oder nach Dateigröße"
+        )
+        self.combo_scan_sort.setToolTip("Sortiert die Trefferliste entweder nach Dateiname oder nach Größe")
+        # Beim Wechsel der Sortieroption die Liste neu aufbauen
+        self.combo_scan_sort.currentTextChanged.connect(self._sort_scan_results)
+        # Größere Schaltfläche für bessere Bedienbarkeit
+        self.combo_scan_sort.setMinimumHeight(34)
+        sort_layout.addWidget(lbl_sort)
+        sort_layout.addWidget(self.combo_scan_sort, 1)
+        layout.addLayout(sort_layout)
+
+        # Schnell-Auswahl für Dateitypen
+        type_select_layout = QHBoxLayout()
+        # Schaltfläche: Nur Bilder
+        btn_only_images = QPushButton("Nur Bilder")
+        btn_only_images.setAccessibleName("Nur Bilder wählen")
+        btn_only_images.setAccessibleDescription(
+            "Markiert nur Bilddateien (JPEG, PNG, etc.) in der Trefferliste."
+        )
+        btn_only_images.setToolTip(
+            "Wählt nur die gefundenen Bilder aus und hebt alle anderen Auswahlmöglichkeiten auf"
+        )
+        btn_only_images.setMinimumHeight(38)
+        btn_only_images.clicked.connect(lambda: self._select_scan_by_type("images"))
+        # Schaltfläche: Nur Videos
+        btn_only_videos = QPushButton("Nur Videos")
+        btn_only_videos.setAccessibleName("Nur Videos wählen")
+        btn_only_videos.setAccessibleDescription(
+            "Markiert nur Videodateien (z. B. MP4) in der Trefferliste."
+        )
+        btn_only_videos.setToolTip(
+            "Wählt nur die gefundenen Videos aus und hebt alle anderen Auswahlmöglichkeiten auf"
+        )
+        btn_only_videos.setMinimumHeight(38)
+        btn_only_videos.clicked.connect(lambda: self._select_scan_by_type("videos"))
+        # Schaltfläche: Nur Archive
+        btn_only_archives = QPushButton("Nur Archive")
+        btn_only_archives.setAccessibleName("Nur Archive wählen")
+        btn_only_archives.setAccessibleDescription(
+            "Markiert nur Archivdateien (ZIP, RAR) in der Trefferliste."
+        )
+        btn_only_archives.setToolTip(
+            "Wählt nur die gefundenen Archive aus und hebt alle anderen Auswahlmöglichkeiten auf"
+        )
+        btn_only_archives.setMinimumHeight(38)
+        btn_only_archives.clicked.connect(lambda: self._select_scan_by_type("archives"))
+        # Schaltfläche: Nur Andere
+        btn_only_other = QPushButton("Nur Andere")
+        btn_only_other.setAccessibleName("Nur andere Dateien wählen")
+        btn_only_other.setAccessibleDescription(
+            "Markiert nur sonstige Dateitypen, die nicht als Bilder, Videos oder Archive erkannt wurden."
+        )
+        btn_only_other.setToolTip(
+            "Wählt nur die sonstigen gefundenen Dateien aus und hebt alle anderen Auswahlmöglichkeiten auf"
+        )
+        btn_only_other.setMinimumHeight(38)
+        btn_only_other.clicked.connect(lambda: self._select_scan_by_type("other"))
+        # Schaltfläche: Alle auswählen
+        btn_select_all_types = QPushButton("Alle")
+        btn_select_all_types.setAccessibleName("Alle Dateien wählen")
+        btn_select_all_types.setAccessibleDescription(
+            "Markiert alle gefundenen Dateien in der Trefferliste."
+        )
+        btn_select_all_types.setToolTip(
+            "Markiert die gesamte Trefferliste – alle Dateitypen werden berücksichtigt"
+        )
+        btn_select_all_types.setMinimumHeight(38)
+        btn_select_all_types.clicked.connect(lambda: self._select_scan_by_type("all"))
+
+        # Buttons zum Layout hinzufügen
+        for btn in (btn_only_images, btn_only_videos, btn_only_archives, btn_only_other, btn_select_all_types):
+            type_select_layout.addWidget(btn)
+        layout.addLayout(type_select_layout)
 
         self.list_scan_results = QListWidget()
         self.list_scan_results.setSelectionMode(QAbstractItemView.ExtendedSelection)
@@ -1929,21 +2298,7 @@ class MainWindow(QMainWindow):
         self.list_scan_results.setToolTip(
             "Mit Strg oder Umschalt mehrere Dateien markieren."
         )
-        self.list_scan_results.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.list_scan_results.customContextMenuRequested.connect(
-            self._show_scan_context_menu
-        )
         layout.addWidget(self.list_scan_results)
-
-        self.lbl_action_hint = QLabel(
-            self._text_json(
-                "menue.hinweis.datei",
-                "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
-            )
-        )
-        self.lbl_action_hint.setWordWrap(True)
-        self.lbl_action_hint.setAccessibleName("Aktionserklärung")
-        layout.addWidget(self.lbl_action_hint)
 
         self.lbl_scan_selection_status = QLabel(
             "Ausgewählt: 0 von 0 · Aktion: Bitte zuerst Analyse starten."
@@ -1988,42 +2343,6 @@ class MainWindow(QMainWindow):
         nav.addWidget(self.btn_next_plan)
         layout.addLayout(nav)
 
-    def _show_scan_context_menu(self, position) -> None:
-        """Zeigt ein kurzes deutsches Rechtsklick-Menü für Trefferlisten-Aktionen."""
-
-        menu = QMenu(self)
-        selected_rows = self.list_scan_results.selectedItems()
-        has_selection = len(selected_rows) > 0
-
-        action_oeffnen = menu.addAction(
-            self._text_json("menue.rechtsklick.oeffnen", "Öffnen")
-        )
-        action_ansehen = menu.addAction(
-            self._text_json("menue.rechtsklick.ansehen", "Ansehen")
-        )
-        action_zurueckholen = menu.addAction(
-            self._text_json("menue.rechtsklick.zurueckholen", "Zurückholen")
-        )
-        action_ignorieren = menu.addAction(
-            self._text_json("menue.rechtsklick.ignorieren", "Ignorieren")
-        )
-
-        for action in [
-            action_oeffnen,
-            action_ansehen,
-            action_zurueckholen,
-            action_ignorieren,
-        ]:
-            action.setEnabled(has_selection)
-
-        chosen = menu.exec(self.list_scan_results.mapToGlobal(position))
-        if chosen is None:
-            return
-        self._set_action_hint(
-            "status.rechtsklick.hinweis",
-            "Was passiert dann? Erst wird ein Plan gezeigt. Danach können Sie sicher ausführen.",
-        )
-
     def _start_scan(self) -> bool:
         perm_ok, perm_message, perm_steps = self._check_folder_permissions(
             require_write=False
@@ -2054,23 +2373,13 @@ class MainWindow(QMainWindow):
         self.lbl_scan_status.setText(
             f"{perm_message}<br/>Gefundene Dateien: {total_files}<br/>Duplikat-Gruppen: {dup_groups}<br/>Gesamtgröße: {size_mb:.2f} MB"
         )
+        # Ergebnisse speichern und Liste sortiert aufbauen
         self.list_scan_results.clear()
-        for hit in results:
-            hit_path = str(hit.path).strip()
-            if not hit_path:
-                raise ValueError(
-                    "Leerer Trefferpfad erkannt. Nächster Schritt: Scan erneut starten oder ungültige Datei prüfen."
-                )
-            row = QListWidgetItem(
-                self._format_scan_hit_row_text(hit_path, hit.size / (1024 * 1024))
-            )
-            row.setData(Qt.UserRole, hit_path)
-            row.setToolTip(hit_path)
-            self.list_scan_results.addItem(row)
-        if total_files > 0:
-            self.list_scan_results.selectAll()
-        # disable next if nothing to move
+        # sortierte Liste anhand der aktuellen Sortiereinstellung aufbauen
+        self._sort_scan_results()
+        # Button "Weiter" nur aktivieren, wenn Dateien vorhanden sind
         self.btn_next_plan.setEnabled(total_files > 0)
+        # Nach dem Sortieren die Auswahlanzeige aktualisieren
         self._update_scan_selection_status()
         return True
 
@@ -2097,6 +2406,67 @@ class MainWindow(QMainWindow):
             )
         return row_text
 
+    def _sort_scan_results(self) -> None:
+        """Sortiert die Scan-Ergebnisse nach Name oder Größe und aktualisiert die Liste.
+
+        Diese Methode liest die aktuelle Auswahl aus dem Sortierfeld (Name/Größe) und
+        ordnet die interne Liste `scan_results` entsprechend. Anschließend wird
+        die `list_scan_results` neu aufgebaut. Sie wird auch beim Scan-Aufruf
+        genutzt, um die anfängliche Sortierung zu übernehmen.
+
+        Die Sortierung erfolgt stabil, d. h. bei gleicher Größe bleibt die
+        alphabetische Reihenfolge erhalten. Größere Dateien erscheinen zuerst,
+        wenn "Größe" gewählt ist.
+        """
+        # Wenn noch keine Ergebnisse vorliegen, abbrechen
+        if not hasattr(self, "scan_results") or not isinstance(self.scan_results, list):
+            return
+        # Prüfen, ob das Sortierfeld vorhanden ist (kann im Test fehlen)
+        sort_field = getattr(self, "combo_scan_sort", None)
+        if sort_field is None:
+            return
+        criterion = sort_field.currentText().strip().lower()
+        # Erstelle sortierte Liste nach gewähltem Kriterium
+        if criterion == "größe":
+            # Nach Dateigröße (Bytes) absteigend, dann nach Pfad
+            sorted_results = sorted(
+                self.scan_results,
+                key=lambda r: (-r.size, str(r.path).lower()),
+            )
+        else:
+            # Standard: alphabetisch nach Pfad (case-insensitive)
+            sorted_results = sorted(
+                self.scan_results,
+                key=lambda r: str(r.path).lower(),
+            )
+        # Merke sortierte Liste für spätere Planung
+        self.scan_results = sorted_results
+        # Liste neu aufbauen
+        self.list_scan_results.clear()
+        # Farbzuordnung für unterschiedliche Dateitypen
+        color_map = {
+            "images": QColor("#eaf4fc"),  # hellblau für Bilder
+            "videos": QColor("#f5eafc"),  # helllila für Videos
+            "archives": QColor("#fff5e6"),  # hellorange für Archive
+            "other": QColor("#f0f0f0"),  # hellgrau für sonstige Dateien
+        }
+        for hit in sorted_results:
+            path_str = str(hit.path).strip()
+            size_mb = hit.size / (1024 * 1024)
+            # Formatierte Zeile: gekürzter Pfad mit Größe
+            row = QListWidgetItem(self._format_scan_hit_row_text(path_str, size_mb))
+            row.setData(Qt.UserRole, path_str)
+            row.setToolTip(path_str)
+            # Setze Hintergrundfarbe je nach Datei-Typ
+            file_type = getattr(hit, "file_type", "other")
+            bg_color = color_map.get(file_type, QColor("#ffffff"))
+            row.setBackground(bg_color)
+            self.list_scan_results.addItem(row)
+        # Nach Sortierung gesamte Liste markieren, um keine unabsichtliche Verwirrung zu erzeugen
+        if self.list_scan_results.count() > 0:
+            self.list_scan_results.selectAll()
+        self._update_scan_selection_status()
+
     def _copy_selected_scan_paths(self) -> None:
         selected_paths = [
             str(item.data(Qt.UserRole)).strip()
@@ -2120,6 +2490,36 @@ class MainWindow(QMainWindow):
         self.lbl_scan_selection_status.setText(
             f"Ausgewählt: {copied_count} von {self.list_scan_results.count()} · Aktion: Pfade in Zwischenablage kopiert."
         )
+
+    def _select_scan_by_type(self, file_type: str) -> None:
+        """Markiert Treffer in der Scan-Liste nach Dateityp.
+
+        Diese Methode ermöglicht es, schnell nur bestimmte Dateitypen auszuwählen.
+        Wird "images", "videos", "archives" oder "other" übergeben, werden nur
+        die entsprechenden Treffer markiert; bei "all" wird die gesamte Liste markiert.
+        Anschließend wird der Auswahlstatus aktualisiert.
+        """
+        # Abbrechen, wenn keine Ergebnisse vorhanden sind
+        if not hasattr(self, "scan_results") or not self.scan_results:
+            return
+        # Bei "all" einfach alle markieren
+        if file_type == "all":
+            self.list_scan_results.selectAll()
+            self._update_scan_selection_status()
+            return
+        # Zunächst Auswahl löschen
+        self.list_scan_results.clearSelection()
+        # Alle Treffer durchgehen und passende auswählen
+        for index in range(self.list_scan_results.count()):
+            # Sicherstellen, dass index auch in scan_results existiert
+            if index >= len(self.scan_results):
+                continue
+            hit = self.scan_results[index]
+            if getattr(hit, "file_type", "other") == file_type:
+                item = self.list_scan_results.item(index)
+                if item:
+                    item.setSelected(True)
+        self._update_scan_selection_status()
 
     def _update_scan_selection_status(self) -> None:
         total_count = self.list_scan_results.count()
@@ -2222,6 +2622,16 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.lbl_plan_summary)
         # List widget to show plan items
         self.list_plan = QListWidget()
+        # Plan-Liste mit Kontextmenü für Zielordner öffnen
+        self.list_plan.setAccessibleName("Planierte Aktionen")
+        self.list_plan.setAccessibleDescription(
+            "Liste der geplanten Dateiaktionen. Mit Rechtsklick öffnet sich ein Menü, um den Zielordner zu öffnen."
+        )
+        # Aktiviert das benutzerdefinierte Kontextmenü
+        self.list_plan.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list_plan.customContextMenuRequested.connect(
+            self._show_plan_context_menu
+        )
         layout.addWidget(self.list_plan)
         # Buttons
         btns = QHBoxLayout()
@@ -2252,8 +2662,14 @@ class MainWindow(QMainWindow):
         )
         self.list_plan.clear()
         for item in self.plan.items:
-            li = QListWidgetItem(f"{item.src}  →  {item.dest} ({item.reason})")
+            # Zeile mit Quelle, Ziel und Begründung anzeigen
+            text = f"{item.src}  →  {item.dest} ({item.reason})"
+            li = QListWidgetItem(text)
+            # Destinationspfad als UserRole speichern, damit Kontextmenü ihn nutzen kann
+            li.setData(Qt.UserRole, str(item.dest))
+            li.setToolTip(str(item.dest))
             self.list_plan.addItem(li)
+        # Ausführen-Knopf nur aktivieren, wenn Aktionen vorhanden sind
         self.btn_execute.setEnabled(count > 0)
 
     def _execute_plan(self) -> None:
@@ -2285,13 +2701,76 @@ class MainWindow(QMainWindow):
         ok, msg = execute_move_plan(self.plan)
         QMessageBox.information(self, "Ausführen", msg)
         if ok:
-            self._refresh_plan_page()
+            # Nach erfolgreicher Ausführung Verlaufsdaten speichern
+            try:
+                count_summary, total_bytes_summary = self.plan.summary()
+                total_mb_summary = total_bytes_summary / (1024 * 1024)
+                append_history(count_summary, total_mb_summary)
+            except Exception:
+                # Fehler beim Speichern des Verlaufs ignorieren – Verlauf ist optional
+                pass
+
+    def _create_standard_button(
+        self,
+        text: str,
+        tooltip: str,
+        callback,
+        *,
+        accessible_name: str | None = None,
+        accessible_description: str | None = None,
+    ) -> QPushButton:
+        """
+        Erstellt einen einheitlichen Button mit konsistenter Mindestgröße,
+        Tooltip, AccessibleName und AccessibleDescription.
+
+        Dies hilft, Barrierefreiheit und Lesbarkeit über die gesamte
+        Oberfläche hinweg zu vereinheitlichen. Der Parameter ``callback``
+        wird an das ``clicked``-Signal gebunden.
+        """
+        btn = QPushButton(text)
+        btn.setToolTip(tooltip)
+        if accessible_name:
+            btn.setAccessibleName(accessible_name)
+        if accessible_description:
+            btn.setAccessibleDescription(accessible_description)
+        # Einheitliche Mindesthöhe für Tastatur- und Touch‑Bedienung
+        btn.setMinimumHeight(40)
+        btn.clicked.connect(callback)
+        return btn
 
     def _undo_last(self) -> None:
         ok, msg = undo_last()
         QMessageBox.information(self, "Undo", msg)
         # After undo, update list maybe
         # Nothing else to do
+
+    def _show_plan_context_menu(self, pos) -> None:
+        """Zeigt das Kontextmenü für die Plan-Liste und öffnet bei Auswahl den Zielordner.
+
+        Bei Rechtsklick auf einen Eintrag wird ein kleines Menü mit der Option
+        "Zielordner öffnen" angezeigt. Wird diese Option gewählt, so wird der
+        entsprechende Zielordner im Dateimanager des Systems geöffnet. Enthält
+        der Eintrag keinen gültigen Zielpfad, passiert nichts.
+
+        Args:
+            pos: Die Position des Rechtsklicks relativ zur Plan-Liste.
+        """
+        # Finde das Element unter der Klickposition
+        item = self.list_plan.itemAt(pos)
+        if item is None:
+            return
+        dest_path = item.data(Qt.UserRole)
+        if not dest_path:
+            return
+        # Erstelle Menü mit einer Aktion
+        menu = QMenu(self)
+        action_open = menu.addAction("Zielordner öffnen")
+        # Menü an der korrekten Bildschirmposition anzeigen
+        selected_action = menu.exec_(self.list_plan.mapToGlobal(pos))
+        if selected_action == action_open:
+            # Öffne den Ordner im System-Dateimanager
+            url = QUrl.fromLocalFile(dest_path)
+            QDesktopServices.openUrl(url)
 
 
 def main() -> int:
