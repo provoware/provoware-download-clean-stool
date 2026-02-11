@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+venv/
+logs/
+exports/
+*.log
+data/quality_state.json

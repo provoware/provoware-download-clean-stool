@@ -1,3 +1,8 @@
+## 2026-02-12 – Release-Iteration: Modulcheck bereinigt + Doku finalisiert
+- **Was:** `start.sh` nutzt jetzt eine zentrale Funktion für die Prüfung fehlender Python-Module, und die Release-Dokumente wurden auf den aktuellen Stand (92%) angehoben.
+- **Warum:** Doppelter Prüfcode war unnötig und erschwerte Wartung; zusätzlich brauchte der Release-Stand klare, konsistente Leitlinien für Entwickler:innen und Laien.
+- **Wirkung:** Weniger Redundanz im Startcode, bessere Wartbarkeit und verständliche, synchronisierte Release-Dokumentation mit klaren nächsten Schritten.
+
 ## 2026-02-11 – UI-Iteration: Linux-Berechtigungen + Aufräumziel-Schnellwahl
 - **Was:** `app/main.py` prüft jetzt Linux-Rechte (Lesen/Öffnen/Schreiben) im Dashboard sowie vor Scan/Plan/Ausführung und ergänzt zusätzlich eine neue Schnellwahl „Aufräumziel“ mit vier üblichen Reinigungsprofilen.
 - **Warum:** Nutzer:innen wollten klare Sicherheit bei Berechtigungen und zugleich eine laienfreundliche, maximal konfigurierbare Führung für typische Aufräumaufgaben.

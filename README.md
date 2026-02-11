@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **90%**
-- **Abgeschlossene Punkte:** **29**
-- **Offene Punkte:** **3**
-- **Nächster Schritt:** Interaktive Hauptansicht mit linker Kategorienavigation aus dem Zielbild umsetzen, damit Workflow und Bereichsgruppen sofort visuell geführt werden.
+- **Entwicklungsfortschritt:** **92%**
+- **Abgeschlossene Punkte:** **31**
+- **Offene Punkte:** **2**
+- **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB je Lauf) umsetzen und den Hilfebereich „Implementiert vs. Geplant“ als eigene Seite ergänzen.
 
 **Abgeschlossen:**
 - `AGENTS.md` verlangt jetzt pro Iteration genau zwei vollständig abgeschlossene Punkte statt einem Einzelpunkt, inklusive angepasster DoD- und Planungsregeln.
@@ -22,6 +22,8 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Linux-Berechtigungsprüfung ist jetzt im Dashboard, vor Analyse und vor Ausführung integriert; bei fehlenden Rechten erscheinen klare Next Steps inklusive Terminal-Befehl.
 - Neue Live-Theme-Vorschau im ersten Schritt zeigt Farben, Fokus und Listenbeispiel sofort; Theme und großer Text werden direkt mit klarer Vorschauhilfe angewendet.
 - Startroutine prüft jetzt `sudo` vor System-Reparaturen und gibt bei fehlender Berechtigung klare Next Steps in einfacher Sprache statt still zu scheitern.
+- Startroutine nutzt jetzt einen zentralen Modul-Check statt doppeltem Inline-Code; dadurch ist die Prüflogik wartbarer und leichter testbar.
+- Entwicklerdoku enthält jetzt den finalen Release-Rahmen mit klaren technischen Schritten und laienverständlicher Begründung.
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
 - Neues Theme **„blau“** ergänzt und Theme-Auswahl jetzt strikt validiert; bei ungültiger Auswahl erscheint ein klarer Fehlerdialog mit Next Steps.
 - Ausführung und Undo im `core/executor.py` nutzen jetzt zentrale Input-/Output-Validierung inklusive robuster Undo-Datenprüfung mit klaren Next Steps.
@@ -208,4 +210,4 @@ ldconfig -p | rg "libGL.so.1|libEGL.so.1|libxkbcommon.so.0"
 
 ---
 
-Stand dieser Informationsdatei: 2026-02-11
+Stand dieser Informationsdatei: 2026-02-12

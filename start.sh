@@ -162,17 +162,24 @@ echo "[STATUS] $OVERALL_MESSAGE"
 
 # 3) Kritische Imports prüfen (ohne Crash)
 echo "[CHECK] Prüfe kritische Module"
-MISSING="$("$VENV_PY" - <<'PY'
+check_missing_python_modules() {
+  "$VENV_PY" - <<'PY'
 import importlib
-missing=[]
-for mod in ("PySide6","PIL"):
+
+required_modules = ("PySide6", "PIL")
+missing_modules = []
+
+for module_name in required_modules:
     try:
-        importlib.import_module(mod)
+        importlib.import_module(module_name)
     except Exception:
-        missing.append(mod)
-print(",".join(missing))
+        missing_modules.append(module_name)
+
+print(",".join(missing_modules))
 PY
-)"
+}
+
+MISSING="$(check_missing_python_modules)"
 if [ -n "$MISSING" ]; then
   echo "[CHECK] Fehlende Module erkannt: $MISSING"
   echo "[SETUP] Versuche automatische Reparatur über apt (Ubuntu/Kubuntu)"
@@ -183,17 +190,7 @@ if [ -n "$MISSING" ]; then
   if command -v apt-get >/dev/null 2>&1 && [ "${#APT_PACKAGES[@]}" -gt 0 ]; then
     echo "[SETUP] Installiere Systempakete: ${APT_PACKAGES[*]}"
     if run_with_sudo "apt-get update" apt-get update >>"$SETUP_LOG" 2>&1 && run_with_sudo "apt-get install ${APT_PACKAGES[*]}" apt-get install -y "${APT_PACKAGES[@]}" >>"$SETUP_LOG" 2>&1; then
-      MISSING="$("$VENV_PY" - <<'PY'
-import importlib
-missing=[]
-for mod in ("PySide6","PIL"):
-    try:
-        importlib.import_module(mod)
-    except Exception:
-        missing.append(mod)
-print(",".join(missing))
-PY
-)"
+      MISSING="$(check_missing_python_modules)"
     else
       echo "[WARN] apt-Autoreparatur fehlgeschlagen" >>"$SETUP_LOG"
     fi
