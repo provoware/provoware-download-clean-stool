@@ -1,3 +1,8 @@
+## 2026-02-11 – UI-Iteration: Linux-Berechtigungen + Aufräumziel-Schnellwahl
+- **Was:** `app/main.py` prüft jetzt Linux-Rechte (Lesen/Öffnen/Schreiben) im Dashboard sowie vor Scan/Plan/Ausführung und ergänzt zusätzlich eine neue Schnellwahl „Aufräumziel“ mit vier üblichen Reinigungsprofilen.
+- **Warum:** Nutzer:innen wollten klare Sicherheit bei Berechtigungen und zugleich eine laienfreundliche, maximal konfigurierbare Führung für typische Aufräumaufgaben.
+- **Wirkung:** Weniger Abbrüche durch Rechteprobleme, verständliche Next Steps inklusive `chmod`-Hinweis und schnellerer Einstieg über farbig erklärte Reinigungsoptionen.
+
 ## 2026-02-11 – UI-Iteration: Live-Theme-Vorschau im Startschritt
 - **Was:** `app/main.py` ergänzt jetzt eine echte Live-Vorschaukarte (Hinweistext + Beispiel-Button + Beispiel-Liste) und aktualisiert sie bei Theme-/Textgrößen-Änderung sofort mit Input-/Output-Validierung.
 - **Warum:** Nutzer:innen sollten Farben, Fokus und Lesbarkeit vor dem Speichern direkt sehen, statt erst nach dem nächsten Schritt.

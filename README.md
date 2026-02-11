@@ -11,13 +11,15 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **87%**
-- **Abgeschlossene Punkte:** **27**
-- **Offene Punkte:** **4**
-- **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB pro Lauf) ergänzen, damit der Nutzen jeder Ausführung direkt sichtbar wird.
+- **Entwicklungsfortschritt:** **90%**
+- **Abgeschlossene Punkte:** **29**
+- **Offene Punkte:** **3**
+- **Nächster Schritt:** Interaktive Hauptansicht mit linker Kategorienavigation aus dem Zielbild umsetzen, damit Workflow und Bereichsgruppen sofort visuell geführt werden.
 
 **Abgeschlossen:**
 - `AGENTS.md` verlangt jetzt pro Iteration genau zwei vollständig abgeschlossene Punkte statt einem Einzelpunkt, inklusive angepasster DoD- und Planungsregeln.
+- Neue Schnellwahl „Aufräumziel“ steuert typische Reinigungen (ausgewogen, große Dateien, alte Dateien, Duplikate zuerst) mit farbiger Hilfe in einfacher Sprache.
+- Linux-Berechtigungsprüfung ist jetzt im Dashboard, vor Analyse und vor Ausführung integriert; bei fehlenden Rechten erscheinen klare Next Steps inklusive Terminal-Befehl.
 - Neue Live-Theme-Vorschau im ersten Schritt zeigt Farben, Fokus und Listenbeispiel sofort; Theme und großer Text werden direkt mit klarer Vorschauhilfe angewendet.
 - Startroutine prüft jetzt `sudo` vor System-Reparaturen und gibt bei fehlender Berechtigung klare Next Steps in einfacher Sprache statt still zu scheitern.
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
@@ -40,7 +42,6 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Interaktive Hauptansicht aus dem Zielbild fehlt noch (linke Kategorie-Navigation + zentrale Aktionskarten).
 - Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
 - Dashboard-Statistik mit Verlauf (z. B. Dateien/MB pro Lauf) fehlt noch.
-- Erweiterte Ordnerverwaltung (mehrere Zielordner inkl. Vorlagen pro Dateityp) fehlt noch.
 - Endnutzer-Transparenz „Implementiert vs. Geplant“ im Tool fehlt noch als eigener Hilfebereich.
 
 Kurz erklärt: Der Kernpfad ist stabil (Scannen, Planen, Verschieben, Undo, Validierung), aber die große, voll-interaktive Komfortoberfläche aus dem Zielbild ist noch nicht vollständig umgesetzt.
@@ -207,4 +208,4 @@ ldconfig -p | rg "libGL.so.1|libEGL.so.1|libxkbcommon.so.0"
 
 ---
 
-Stand dieser Informationsdatei: 2026-02-10
+Stand dieser Informationsdatei: 2026-02-11
