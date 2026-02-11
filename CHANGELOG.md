@@ -1,3 +1,8 @@
+## 2026-02-11 – UI-Iteration: auswählbare Trefferliste + Workflow-Beispiele
+- **Was:** `app/main.py` ergänzt im Analyse-Schritt eine auswählbare Trefferliste mit Mehrfachauswahl sowie die Aktionstasten „Alle markieren“ und „Auswahl löschen“; zusätzlich wurden im Options-Schritt zwei kurze Workflow-Beispiele in einfacher Sprache ergänzt.
+- **Warum:** Bisher konnten gefundene Dateien nicht gezielt ausgewählt werden, und der Ablauf war für zwei typische Alltagsszenarien noch nicht klar genug erklärt.
+- **Wirkung:** Nutzer:innen können Treffer präzise steuern, erkennen vorhandene Aktionstasten leichter und verstehen den Gesamtworkflow schneller und sicherer.
+
 ## 2026-02-12 – UI-Iteration: Kategorie-Leiste + Aktionskarten (visuelle Vorschau)
 - **Was:** `app/main.py` ergänzt in der Startansicht eine linke Kategorie-Leiste und zentrale Aktionskarten als reine Vorschau ohne Logikwechsel.
 - **Warum:** Die gewünschte Hauptansicht sollte in zwei kleinen, sicheren Schritten vorbereitet werden, ohne bestehende Abläufe zu riskieren.

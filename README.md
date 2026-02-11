@@ -11,12 +11,15 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99%**
-- **Abgeschlossene Punkte:** **41**
-- **Offene Punkte:** **2**
-- **Nächster Schritt:** Interaktive Hauptansicht aus dem Zielbild (linke Kategorie-Navigation + zentrale Aktionskarten) als nächste zwei Mini-Punkte umsetzen.
+- **Entwicklungsfortschritt:** **99.5%**
+- **Abgeschlossene Punkte:** **43**
+- **Offene Punkte:** **1**
+- **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB pro Lauf) als zwei kleine, messbare Mini-Punkte ergänzen.
 
 **Abgeschlossen:**
+
+- Analyse-Schritt enthält jetzt eine auswählbare Trefferliste (Mehrfachauswahl) inklusive Aktionstasten "Alle markieren" und "Auswahl löschen"; nur markierte Dateien gehen in den Plan.
+- Optionen enthalten jetzt zwei klare Workflow-Beispiele in einfacher Sprache (Laptop frei machen / externe Platte prüfen) und bestätigen, dass Haupt-Aktionstasten in jedem Schritt vorhanden sind.
 - Startansicht enthält jetzt eine linke Kategorie-Leiste als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) mit klaren, barrierearmen Kategorien.
 - Startansicht enthält jetzt zentrale Aktionskarten als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) mit leicht verständlichen Kurztexten.
 - Dashboard zeigt jetzt einen eigenen Persistenz-Status (✅/⚠️), der nach jedem Speichern klar meldet, ob Einstellungen beim Neustart verfügbar sind.
@@ -51,7 +54,6 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - Basis-Barrierefreiheit dokumentiert (Themes inkl. High-Contrast, einfache Sprache).
 
 **Offen (für „perfekte“ Release-Version):**
-- Interaktive Hauptansicht aus dem Zielbild fehlt noch (linke Kategorie-Navigation + zentrale Aktionskarten).
 - Vollständiger Button-Only-Modus ohne freie Texteingaben fehlt noch in allen Dialogen.
 - Dashboard-Statistik mit Verlauf (z. B. Dateien/MB pro Lauf) fehlt noch.
 - Endnutzer-Transparenz „Implementiert vs. Geplant“ im Tool fehlt noch als eigener Hilfebereich.

@@ -1,2 +1,2 @@
-DONE: Linke Kategorie-Leiste und zentrale Aktionskarten als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) umgesetzt. (2026-02-12)
-NEXT: In einer Folgeiteration die Kategorie-Leiste schrittweise mit echten Bereichen verbinden, ohne den sicheren Kernpfad zu ändern. (2026-02-12)
+DONE: Analyse-Trefferliste mit Mehrfachauswahl plus Aktionstasten „Alle markieren/Auswahl löschen“ umgesetzt. (2026-02-11)
+NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit klarer Mini-Hilfe und Exportoption in zwei Mini-Punkten umsetzen. (2026-02-11)

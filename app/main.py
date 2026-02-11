@@ -8,11 +8,11 @@ from html import escape
 from pathlib import Path
 
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (QApplication, QBoxLayout, QCheckBox, QComboBox,
-                               QFileDialog, QHBoxLayout, QLabel, QListWidget,
-                               QListWidgetItem, QMainWindow, QMessageBox,
-                               QPushButton, QStackedWidget, QVBoxLayout,
-                               QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
+                               QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
+                               QLabel, QListWidget, QListWidgetItem,
+                               QMainWindow, QMessageBox, QPushButton,
+                               QStackedWidget, QVBoxLayout, QWidget)
 
 from core.executor import execute_move_plan, undo_last
 from core.logger import setup_logger
@@ -1197,6 +1197,21 @@ class MainWindow(QMainWindow):
         footer_hint.setWordWrap(True)
         layout.addWidget(footer_hint)
 
+        self.lbl_workflow_examples = QLabel(
+            "<b>Anwendungsbeispiele (Workflow):</b><br/>"
+            "• <b>Beispiel 1: Laptop schnell frei machen</b> – Preset Standard, danach in Schritt 3 nur "
+            "wichtige Treffer auswählen und in Schritt 4 ausführen.<br/>"
+            "• <b>Beispiel 2: Externe Platte prüfen</b> – Preset Power, Duplikate auf safe, Trefferliste "
+            "kontrollieren und nur passende Dateien markieren.<br/>"
+            "Alle Hauptschritte haben Aktionstasten: Zurück, Weiter, Ausführen, Undo und Fertig."
+        )
+        self.lbl_workflow_examples.setWordWrap(True)
+        self.lbl_workflow_examples.setAccessibleName("Workflow-Beispiele")
+        self.lbl_workflow_examples.setAccessibleDescription(
+            "Zwei kurze Beispiele in einfacher Sprache, damit der Ablauf klar wird"
+        )
+        layout.addWidget(self.lbl_workflow_examples)
+
         nav = QHBoxLayout()
         btn_prev = QPushButton("← Zurück")
         btn_prev.clicked.connect(lambda: self.stack.setCurrentWidget(self.page_welcome))
@@ -1301,6 +1316,35 @@ class MainWindow(QMainWindow):
         self.lbl_scan_status = QLabel("Noch nicht gestartet.")
         self.lbl_scan_status.setWordWrap(True)
         layout.addWidget(self.lbl_scan_status)
+
+        self.lbl_scan_help = QLabel(
+            "<b>Trefferliste:</b> Wählen Sie die gefundenen Dateien aus, die in den Plan übernommen "
+            "werden sollen. Ohne Auswahl werden alle Treffer verwendet."
+        )
+        self.lbl_scan_help.setWordWrap(True)
+        layout.addWidget(self.lbl_scan_help)
+
+        self.list_scan_results = QListWidget()
+        self.list_scan_results.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self.list_scan_results.setAccessibleName("Gefundene Dateien")
+        self.list_scan_results.setAccessibleDescription(
+            "Mehrfachauswahl der gefundenen Dateien für den nächsten Planungsschritt"
+        )
+        self.list_scan_results.setToolTip(
+            "Mit Strg oder Umschalt mehrere Dateien markieren."
+        )
+        layout.addWidget(self.list_scan_results)
+
+        selection_buttons = QHBoxLayout()
+        self.btn_select_all_scan = QPushButton("Alle markieren")
+        self.btn_select_all_scan.clicked.connect(self.list_scan_results.selectAll)
+        self.btn_select_none_scan = QPushButton("Auswahl löschen")
+        self.btn_select_none_scan.clicked.connect(self.list_scan_results.clearSelection)
+        for button in (self.btn_select_all_scan, self.btn_select_none_scan):
+            button.setMinimumHeight(38)
+            selection_buttons.addWidget(button)
+        layout.addLayout(selection_buttons)
+
         # Navigation
         nav = QHBoxLayout()
         btn_prev = QPushButton("← Zurück")
@@ -1341,6 +1385,13 @@ class MainWindow(QMainWindow):
         self.lbl_scan_status.setText(
             f"{perm_message}<br/>Gefundene Dateien: {total_files}<br/>Duplikat-Gruppen: {dup_groups}<br/>Gesamtgröße: {size_mb:.2f} MB"
         )
+        self.list_scan_results.clear()
+        for hit in results:
+            row = QListWidgetItem(f"{hit.path} · {hit.size / (1024 * 1024):.2f} MB")
+            row.setData(Qt.UserRole, hit.path)
+            self.list_scan_results.addItem(row)
+        if total_files > 0:
+            self.list_scan_results.selectAll()
         # disable next if nothing to move
         self.btn_next_plan.setEnabled(total_files > 0)
         return True
@@ -1362,8 +1413,46 @@ class MainWindow(QMainWindow):
         assert self.root_path, "root_path sollte gesetzt sein"
         trash_dir = self.root_path / ".downloads_organizer_trash"
         trash_dir.mkdir(parents=True, exist_ok=True)
+        selected_paths = {
+            str(item.data(Qt.UserRole)).strip()
+            for item in self.list_scan_results.selectedItems()
+            if str(item.data(Qt.UserRole)).strip()
+        }
+        selected_scan_results = [
+            hit for hit in self.scan_results if str(hit.path) in selected_paths
+        ]
+        if not selected_scan_results:
+            self._show_error_with_mini_help(
+                title="Keine Dateien markiert",
+                happened_text=(
+                    "Bitte markieren Sie mindestens eine gefundene Datei für den Plan."
+                ),
+                next_clicks=[
+                    "Erneut versuchen: In Schritt 3 mindestens eine Zeile in der Trefferliste auswählen.",
+                    "Reparatur: Optional zuerst auf 'Alle markieren' klicken.",
+                ],
+            )
+            return
+
+        selected_duplicates_map = {
+            checksum: [
+                candidate
+                for candidate in candidates
+                if str(candidate.path) in selected_paths
+            ]
+            for checksum, candidates in self.duplicates_map.items()
+        }
+        selected_duplicates_map = {
+            checksum: candidates
+            for checksum, candidates in selected_duplicates_map.items()
+            if len(candidates) > 1
+        }
+
         self.plan = build_plan(
-            self.scan_results, self.duplicates_map, self.root_path, trash_dir
+            selected_scan_results,
+            selected_duplicates_map,
+            self.root_path,
+            trash_dir,
         )
         if self.plan is None:
             raise RuntimeError(
