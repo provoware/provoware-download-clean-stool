@@ -5,8 +5,11 @@ import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional
 
+from .validation import (require_condition, require_existing_dir,
+                         require_non_negative_number, require_sequence_of_type,
+                         require_type)
 
 IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff"}
 VIDEO_EXTS = {".mp4", ".mkv", ".avi", ".mov", ".flv", ".wmv", ".webm"}
@@ -100,9 +103,17 @@ def scan_directory(
     List[ScanResult]
         A list of files matching the criteria.
     """
+    validated_root = require_existing_dir(root, "root")
+    validated_types = set(require_sequence_of_type(types, str, "types"))
+    validated_size_threshold = int(
+        require_non_negative_number(size_threshold, "size_threshold")
+    )
+    validated_age_threshold = require_non_negative_number(
+        age_threshold, "age_threshold"
+    )
     results: List[ScanResult] = []
     now = time.time()
-    for dirpath, dirnames, filenames in os.walk(root):
+    for dirpath, _dirnames, filenames in os.walk(validated_root):
         for name in filenames:
             path = Path(dirpath) / name
             try:
@@ -110,15 +121,29 @@ def scan_directory(
             except Exception:
                 continue
             file_type = _classify_file(path)
-            if file_type not in types:
+            if file_type not in validated_types:
                 continue
-            if size_threshold and stat.st_size < size_threshold:
+            if validated_size_threshold and stat.st_size < validated_size_threshold:
                 continue
-            if age_threshold:
+            if validated_age_threshold:
                 age = now - stat.st_mtime
-                if age < age_threshold:
+                if age < validated_age_threshold:
                     continue
-            results.append(ScanResult(path=path, size=stat.st_size, mtime=stat.st_mtime, file_type=file_type))
+            results.append(
+                ScanResult(
+                    path=path,
+                    size=stat.st_size,
+                    mtime=stat.st_mtime,
+                    file_type=file_type,
+                )
+            )
+    require_condition(
+        all(item.file_type in validated_types for item in results),
+        (
+            "Interner Scanner-Fehler: Ergebnis enthält einen Dateityp außerhalb des Filters. "
+            "Nächster Schritt: Protokoll prüfen und Scan erneut starten."
+        ),
+    )
     return results
 
 
@@ -140,16 +165,18 @@ def detect_duplicates(
     Dict[int, List[ScanResult]]
         A dictionary mapping group identifiers to lists of duplicates. Each group contains two or more items.
     """
-    if mode not in {"none", "quick", "safe"}:
+    validated_files = require_sequence_of_type(files, ScanResult, "files")
+    validated_mode = require_type(mode, str, "mode").strip().lower()
+    if validated_mode not in {"none", "quick", "safe"}:
         return {}
     groups: Dict[str, List[ScanResult]] = {}
-    if mode == "none":
+    if validated_mode == "none":
         return {}
-    for f in files:
+    for f in validated_files:
         key = (f.path.name, f.size)
         groups.setdefault(str(key), []).append(f)
     # For safe mode, refine by comparing hashes
-    if mode == "safe":
+    if validated_mode == "safe":
         refined: Dict[str, List[ScanResult]] = {}
         for group_files in groups.values():
             if len(group_files) < 2:
@@ -168,6 +195,13 @@ def detect_duplicates(
         for g in refined.values():
             out[group_id] = g
             group_id += 1
+        require_condition(
+            all(len(group) > 1 for group in out.values()),
+            (
+                "Interner Duplikat-Fehler: Eine Duplikatgruppe ist zu klein. "
+                "Nächster Schritt: Protokoll prüfen und Duplikatmodus auf 'quick' testen."
+            ),
+        )
         return out
     else:
         out: Dict[int, List[ScanResult]] = {}
@@ -176,6 +210,13 @@ def detect_duplicates(
             if len(g) > 1:
                 out[group_id] = g
                 group_id += 1
+        require_condition(
+            all(len(group) > 1 for group in out.values()),
+            (
+                "Interner Duplikat-Fehler: Ergebnis enthält eine Gruppe mit weniger als 2 Dateien. "
+                "Nächster Schritt: Protokoll prüfen und Duplikaterkennung erneut ausführen."
+            ),
+        )
         return out
 
 

@@ -1,3 +1,8 @@
+## 2026-02-11 – Scanner-Iteration: Zentrale Validierung in Scan- und Duplikatpfad integriert
+- **Was:** `core/scanner.py` validiert jetzt Eingaben (Root-Verzeichnis, Typfilter, Schwellenwerte, Modus) und prüft Ausgaben mit klaren Next-Step-Fehlern.
+- **Warum:** Der Scanner sollte denselben robusten Input-/Output-Standard wie der Planner nutzen, damit Fehler früh und verständlich auffallen.
+- **Wirkung:** Stabilerer Kernpfad mit einheitlichem Validierungsverhalten und laienfreundlicher Fehlerführung für Scan und Duplikaterkennung.
+
 ## 2026-02-11 – Core-Iteration: Zentrale Input-/Output-Validierung im Planner erzwungen
 - **Was:** Neues Modul `core/validation.py` ergänzt und `core/planner.py` nutzt diese Helper jetzt verbindlich für Eingabetypen, Verzeichnisprüfung und Output-Konsistenzprüfung.
 - **Warum:** Der offene Release-Punkt verlangte einen zentralen, technisch erzwungenen Validierungsstandard statt verteilter Einzelprüfungen.
