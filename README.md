@@ -11,16 +11,55 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **77**
- - **Offene Punkte:** **0**
- - **Nächster Schritt:** Weitere Schnellstart-Buttons (7–10), das Web‑API‑Gerüst mit echter Scan‑/Planlogik erweitern und den Button‑Only‑Modus (Einsteiger‑Modus) zum vollwertigen Workflow ausbauen; verbleibende Umbenennungen abschließen und die Versions‑Registry nachführen.
+ - **Entwicklungsfortschritt:** **89%**
+ - **Abgeschlossene Punkte:** **80**
+ - **Offene Punkte:** **3**
+ - **Nächster Schritt:** Die drei priorisierten Optimierungen aus Abschnitt **0.2** nacheinander umsetzen (Accessibility-Hilfe, Start-Autoreparatur, Quality-Automation).
 
 ### Schnellüberblick (laienfreundlich)
 
-- **Was wurde automatisch geprüft?** Abhängigkeiten, Qualitätsregeln, Smoke-Test und Startbedingungen.
-- **Was ist neu für bessere Übersicht?** Die Startroutine zeigt jetzt am Ende eine kompakte Ergebnisbox mit klaren nächsten Schritten.
+- **Was wurde analysiert?** Alle aktuell offenen Punkte wurden in drei kleine, direkt umsetzbare Pakete zerlegt.
+- **Was ist jetzt klarer?** Es gibt eine feste Reihenfolge mit messbaren Kriterien und kopierbaren Befehlen.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
+
+## 0.2) Vollständige Analyse: nächste offene Punkte und Optimierungen
+
+### Offen
+
+1. **Accessibility-Hilfe im Hauptfluss erweitern**  
+   Im Analyse- und Plan-Schritt fehlt noch eine kurze, feste Hilfezeile mit Tastaturweg, Kontrast-Hinweis und klarer nächster Aktion.
+
+2. **Start-Routine mit sicherer Auto-Reparatur härten**  
+   Die Startroutine soll bei fehlenden Modulen zuerst verständlich erklären, dann automatisch reparieren und den Erfolg sofort prüfen (Input-/Output-Validierung).
+
+3. **Qualität + Formatierung vollständig automatisieren**  
+   Quality-Check soll Formatierung und Lint (Regelprüfung) als Standard ausführen und bei Fehlern einfache Next Steps zeigen.
+
+### Optimierungsreihenfolge (kleinster sinnvoller Weg)
+
+1. **Paket A – Hilfe & Barrierefreiheit**  
+   Kurztexte pro betroffenem Schritt ergänzen (maximal 2 Sätze), Fokus-Reihenfolge prüfen, Kontrast-Hinweis sichtbar machen.
+
+2. **Paket B – Start-Autorepair**  
+   Modulprüfungen zentralisieren, fehlende Abhängigkeiten automatisch nachinstallieren, Reparaturergebnis eindeutig als „erfolgreich/nicht möglich“ melden.
+
+3. **Paket C – Quality-Automation**  
+   Format- und Qualitätscheck in `tools/run_quality_checks.sh` verpflichtend bündeln und bei Problemen laienfreundliche Lösungsvorschläge ausgeben.
+
+### Vollständige Befehle für die nächste Umsetzungsiteration
+
+```bash
+python -m compileall -q .
+bash tools/run_quality_checks.sh
+python tools/smoke_test.py
+bash start.sh
+```
+
+### Abnahmekriterien (Definition von „fertig“)
+
+- Jede der drei Optimierungen ist als eigener, abgeschlossener Punkt dokumentiert.
+- Mindestens eine Änderung verbessert Hilfe, Texte oder Barrierefreiheit direkt im betroffenen Bereich.
+- Alle vier Prüf-Befehle laufen mit Exitcode 0 oder sind mit klarer Next-Iteration-Begründung dokumentiert.
 
 **Abgeschlossen:**
 

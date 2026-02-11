@@ -1,5 +1,5 @@
 {
-  "global_version": "2026.02.11.3",
+  "global_version": "2026.02.11.4",
   "files": {
     "app/main.py": "2026.02.11.3",
     "core/settings.py": "2026.02.11",
@@ -12,8 +12,8 @@
     "app/web_api.py": "2026.02.11.1",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.11.1",
-    "README.md": "2026.02.11.3",
-    "CHANGELOG.md": "2026.02.11.3",
-    "todo.txt": "2026.02.11.3"
+    "README.md": "2026.02.11.4",
+    "CHANGELOG.md": "2026.02.11.4",
+    "todo.txt": "2026.02.11.4"
   }
 }
