@@ -9,6 +9,28 @@ SETUP_LOG="exports/setup_log.txt"
 ERR_LOG="exports/last_start_error.txt"
 QUALITY_LOG="exports/quality_report.txt"
 
+run_with_sudo() {
+  # Führt einen Befehl mit sudo aus, wenn möglich.
+  # Gibt bei Fehlern klare Next Steps in einfacher Sprache aus.
+  local context_label="$1"
+  shift
+
+  if ! command -v sudo >/dev/null 2>&1; then
+    echo "[WARN] sudo fehlt. $context_label konnte nicht automatisch ausgeführt werden." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: sudo installieren und danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if sudo -n true >/dev/null 2>&1; then
+    sudo "$@"
+    return $?
+  fi
+
+  echo "[WARN] sudo benötigt ein Passwort oder ist nicht freigegeben. $context_label konnte nicht automatisch ausgeführt werden." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: Terminal öffnen und den Befehl manuell ausführen. Danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+  return 1
+}
+
 echo "[START] Downloads Organizer – Auto-Setup"
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
 
@@ -160,7 +182,7 @@ if [ -n "$MISSING" ]; then
 
   if command -v apt-get >/dev/null 2>&1 && [ "${#APT_PACKAGES[@]}" -gt 0 ]; then
     echo "[SETUP] Installiere Systempakete: ${APT_PACKAGES[*]}"
-    if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y "${APT_PACKAGES[@]}" >>"$SETUP_LOG" 2>&1; then
+    if run_with_sudo "apt-get update" apt-get update >>"$SETUP_LOG" 2>&1 && run_with_sudo "apt-get install ${APT_PACKAGES[*]}" apt-get install -y "${APT_PACKAGES[@]}" >>"$SETUP_LOG" 2>&1; then
       MISSING="$("$VENV_PY" - <<'PY'
 import importlib
 missing=[]
@@ -277,9 +299,9 @@ Klicken Sie auf 'Jetzt installieren'. Danach das Programm neu starten."
   if [ "$install_now" -eq 1 ]; then
     if command -v apt-get >/dev/null 2>&1; then
       echo "[SETUP] Installiere Systempaket ($apt_package)"
-      if sudo apt-get update >>"$SETUP_LOG" 2>&1 && sudo apt-get install -y "$apt_package" >>"$SETUP_LOG" 2>&1; then
+      if run_with_sudo "apt-get update" apt-get update >>"$SETUP_LOG" 2>&1 && run_with_sudo "apt-get install $apt_package" apt-get install -y "$apt_package" >>"$SETUP_LOG" 2>&1; then
         echo "[OK] $apt_package wurde installiert."
-        sudo ldconfig >>"$SETUP_LOG" 2>&1 || true
+        run_with_sudo "ldconfig" ldconfig >>"$SETUP_LOG" 2>&1 || true
       else
         echo "[WARN] Automatische Installation von $apt_package fehlgeschlagen." >>"$SETUP_LOG"
       fi

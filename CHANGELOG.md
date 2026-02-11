@@ -1,3 +1,8 @@
+## 2026-02-11 – Start-Iteration: sudo-Fallback mit klaren Next Steps ergänzt
+- **Was:** `start.sh` nutzt jetzt eine zentrale Funktion `run_with_sudo`, die vor System-Reparaturen `sudo`-Verfügbarkeit und Berechtigung prüft und verständliche Hilfe ausgibt.
+- **Warum:** In eingeschränkten Umgebungen schlugen apt-Reparaturen bisher ohne klare Ursache fehl oder endeten nur mit technischen Fehltexten.
+- **Wirkung:** Nutzer:innen sehen sofort, warum eine Auto-Reparatur nicht lief, und erhalten direkt den nächsten einfachen Schritt inklusive Log-Hinweis.
+
 ## 2026-02-11 – Doku-Iteration: Transparente Lückenliste zum Zielbild ergänzt
 - **Was:** `README.md` zeigt den Status jetzt ehrlich mit offenen UX-Funktionen (Zielbild, Button-only, Dashboard-Statistik, Ordnervorlagen) und erklärt den Unterschied zwischen stabilem Kernpfad und geplanter Komfortoberfläche.
 - **Warum:** Die Rückfrage „Warum fehlt das alles noch?“ sollte direkt im Projekt verständlich beantwortet werden, statt implizit „fertig“ zu signalisieren.
