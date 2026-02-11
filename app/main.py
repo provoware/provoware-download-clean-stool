@@ -538,12 +538,14 @@ class MainWindow(QMainWindow):
         "senior": "senior",
     }
     PREVIEW_SCALE_LABELS = {
+        "Auto (Fensterbreite)": 0.0,
         "100 %": 1.0,
         "115 %": 1.15,
         "130 %": 1.3,
         "150 %": 1.5,
     }
     PREVIEW_POSITION_MODES = {
+        "Auto (Fensterbreite)": "auto",
         "Aktion links · Liste rechts": "action_left",
         "Liste links · Aktion rechts": "list_left",
         "Untereinander": "stacked",
@@ -652,21 +654,32 @@ class MainWindow(QMainWindow):
         self.apply_theme(resolved_theme, large_text_enabled)
 
         selected_scale = self.combo_preview_scale.currentText().strip()
-        scale_factor = self._resolve_preview_scale_factor(selected_scale)
+        selected_position = self.combo_preview_position.currentText().strip()
+        (
+            resolved_scale_label,
+            resolved_position_label,
+            auto_layout_hint,
+        ) = self._resolve_auto_preview_profile(
+            selected_scale=selected_scale,
+            selected_position=selected_position,
+            window_width=self.width(),
+        )
+
+        scale_factor = self._resolve_preview_scale_factor(resolved_scale_label)
         self._apply_preview_scale(scale_factor)
 
-        selected_position = self.combo_preview_position.currentText().strip()
-        position_mode = self._resolve_preview_position_mode(selected_position)
+        position_mode = self._resolve_preview_position_mode(resolved_position_label)
         self._apply_preview_layout(position_mode)
 
         preview_title = self.THEME_KEY_TO_DISPLAY.get(resolved_theme, "kontrast")
-        position_title = selected_position.lower()
+        position_title = resolved_position_label.lower()
         a11y_hint = self._build_theme_a11y_hint(resolved_theme, large_text_enabled)
         preview_text = (
             "<b>Live-Vorschau aktiv</b><br/>"
             f"Theme: <b>{preview_title}</b> · Großer Text: "
             f"<b>{'an' if large_text_enabled else 'aus'}</b><br/>"
-            f"Bereichsskalierung: <b>{selected_scale}</b> · Position: <b>{position_title}</b><br/>"
+            f"Bereichsskalierung: <b>{resolved_scale_label}</b> · Position: <b>{position_title}</b><br/>"
+            f"Auto-Anpassung: {auto_layout_hint}<br/>"
             f"A11y-Hinweis (Zugänglichkeit): {a11y_hint}<br/>"
             "Beispiel unten zeigt Button, Liste und Kontrast in Echtzeit."
         )
@@ -675,6 +688,55 @@ class MainWindow(QMainWindow):
                 "Vorschauausgabe fehlt. Nächster Schritt: Bitte Theme-Auswahl erneut öffnen."
             )
         self.lbl_theme_preview_info.setText(preview_text)
+
+    def _resolve_auto_preview_profile(
+        self, *, selected_scale: str, selected_position: str, window_width: int
+    ) -> tuple[str, str, str]:
+        """Löst automatische Vorschau-Anpassungen robust auf Basis der Fensterbreite auf."""
+
+        clean_scale = selected_scale.strip()
+        clean_position = selected_position.strip()
+        if not clean_scale or not clean_position:
+            raise ValueError(
+                "Auto-Profil kann nicht berechnet werden. Nächster Schritt: Bitte Skalierung und Position sichtbar auswählen."
+            )
+        if window_width <= 0:
+            raise ValueError(
+                "Fensterbreite ist ungültig. Nächster Schritt: Fenster erneut öffnen und Auto-Modus neu wählen."
+            )
+
+        auto_scale_requested = clean_scale == "Auto (Fensterbreite)"
+        auto_position_requested = clean_position == "Auto (Fensterbreite)"
+        if not auto_scale_requested and not auto_position_requested:
+            return clean_scale, clean_position, "aus"
+
+        if window_width < 980:
+            auto_scale_label = "130 %"
+            auto_position_label = "Untereinander"
+            auto_hint = "aktiv – kompakte Breite erkannt, Elemente werden größer und untereinander angeordnet."
+        elif window_width < 1280:
+            auto_scale_label = "115 %"
+            auto_position_label = "Aktion links · Liste rechts"
+            auto_hint = "aktiv – mittlere Breite erkannt, ausgewogenes Standardlayout verwendet."
+        else:
+            auto_scale_label = "100 %"
+            auto_position_label = "Liste links · Aktion rechts"
+            auto_hint = "aktiv – breite Ansicht erkannt, mehr Platz für Listenorientierung genutzt."
+
+        resolved_scale = auto_scale_label if auto_scale_requested else clean_scale
+        resolved_position = (
+            auto_position_label if auto_position_requested else clean_position
+        )
+        if resolved_scale not in self.PREVIEW_SCALE_LABELS:
+            raise RuntimeError(
+                "Auto-Skalierung konnte nicht aufgelöst werden. Nächster Schritt: Bitte festen Skalierungswert wählen."
+            )
+        if resolved_position not in self.PREVIEW_POSITION_MODES:
+            raise RuntimeError(
+                "Auto-Position konnte nicht aufgelöst werden. Nächster Schritt: Bitte feste Position wählen."
+            )
+
+        return resolved_scale, resolved_position, auto_hint
 
     def _resolve_preview_scale_factor(self, selected_scale: str) -> float:
         """Validiert die Bereichsskalierung der Vorschau."""
@@ -772,6 +834,24 @@ class MainWindow(QMainWindow):
         self.page_plan = QWidget()
         self._setup_plan_page()
         self.stack.addWidget(self.page_plan)
+
+    def resizeEvent(self, event) -> None:  # noqa: N802 - Qt API
+        """Aktualisiert die Vorschau bei Größenänderung, wenn Auto-Modi aktiv sind."""
+
+        super().resizeEvent(event)
+        if not hasattr(self, "combo_preview_scale") or not hasattr(
+            self, "combo_preview_position"
+        ):
+            return
+
+        auto_scale_active = (
+            self.combo_preview_scale.currentText().strip() == "Auto (Fensterbreite)"
+        )
+        auto_position_active = (
+            self.combo_preview_position.currentText().strip() == "Auto (Fensterbreite)"
+        )
+        if auto_scale_active or auto_position_active:
+            self._sync_theme_preview()
 
     # ---------------------------
     # Page 1: Welcome & Folder/Theme
@@ -920,9 +1000,9 @@ class MainWindow(QMainWindow):
         lbl_preview_scale = QLabel("Bereichsskalierung:")
         self.combo_preview_scale = QComboBox()
         self.combo_preview_scale.addItems(list(self.PREVIEW_SCALE_LABELS.keys()))
-        self.combo_preview_scale.setCurrentText("115 %")
+        self.combo_preview_scale.setCurrentText("Auto (Fensterbreite)")
         self.combo_preview_scale.setToolTip(
-            "Steuert die Größe der Vorschau-Fläche für bessere Lesbarkeit"
+            "Steuert die Größe der Vorschau-Fläche: fester Wert oder automatische Fensteranpassung"
         )
         self.combo_preview_scale.setAccessibleName("Bereichsskalierung Vorschau")
         self.combo_preview_scale.setAccessibleDescription(
@@ -936,9 +1016,9 @@ class MainWindow(QMainWindow):
         lbl_preview_position = QLabel("Vorschau-Position:")
         self.combo_preview_position = QComboBox()
         self.combo_preview_position.addItems(list(self.PREVIEW_POSITION_MODES.keys()))
-        self.combo_preview_position.setCurrentText("Aktion links · Liste rechts")
+        self.combo_preview_position.setCurrentText("Auto (Fensterbreite)")
         self.combo_preview_position.setToolTip(
-            "Legt fest, ob Aktion und Liste links, rechts oder untereinander liegen"
+            "Legt fest, ob Aktion und Liste links, rechts, untereinander oder automatisch angeordnet sind"
         )
         self.combo_preview_position.setAccessibleName("Vorschau-Position wählen")
         self.combo_preview_position.setAccessibleDescription(
@@ -1028,6 +1108,7 @@ class MainWindow(QMainWindow):
             "• Schnellhilfe Lesbarkeit: <b>Alt+K</b> maximiert Kontrast, <b>Alt+L</b> lädt die ausgewogene Ansicht.<br/>"
             "• Bei Unsicherheit starten Sie mit dem Schema <b>kontrast</b>.<br/>"
             "• Für ruhige, helle Farben wählen Sie <b>blau</b>.<br/>"
+            "• Auto (Fensterbreite) passt Vorschaugröße und Position bei Fensteränderungen automatisch an.<br/>"
             "• Bereichsskalierung und Vorschau-Position helfen bei eigener Bildschirmgröße.<br/>"
             "• Sie können Einstellungen später jederzeit ändern."
         )
