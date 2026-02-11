@@ -2,3 +2,5 @@ DONE: Optional-Startprüfung für Web-Frontend und AppImage mit klaren Next Step
 NEXT: Minimales app/web_api.py mit 2 sicheren Endpunkten (Status + Trockenlauf-Analyse) und Input-/Output-Validierung umsetzen. (2026-02-11)
 DONE: Globale A11y-Styles und zentrale Combo-Validierung mit klaren Next Steps umgesetzt. (2026-02-12)
 NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit Exportoption und kurzer Verlaufshilfe in zwei Mini-Punkten ergänzen. (2026-02-12)
+DONE: Auto-Modus für Vorschau-Skalierung/Position mit dynamischer Fensteranpassung und Resize-Update umgesetzt. (2026-02-11)
+NEXT: Hilfebereich „Implementiert vs. Geplant“ mit klaren Kategorien und zwei Filter-Buttons (Alle/Nur offen) in zwei Mini-Punkten ergänzen. (2026-02-11)
