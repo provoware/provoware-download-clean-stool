@@ -1,21 +1,21 @@
 # AGENTS.md
-# AGENTS.md – Single-Task-Completion Iteration (Merge-Ready by Default)
-Version: 2.0
-Ziel: Jede Iteration schließt **genau die kleinste sinnvolle Aufgabe vollständig** ab, ist merge-ready und erhöht den Release-Reifegrad.
-Leitmotiv: Kleinstes vollständiges Inkrement, harte Qualitäts-Gates, sofort integrierbar.
+# AGENTS.md – Two-Point-Completion Iteration (Merge-Ready by Default)
+Version: 2.1
+Ziel: Jede Iteration schließt **genau zwei klar abgegrenzte Punkte vollständig** ab, ist merge-ready und erhöht den Release-Reifegrad.
+Leitmotiv: Zwei kleinste vollständige Punkte pro Iteration, harte Qualitäts-Gates, sofort integrierbar.
 
 ────────────────────────────────────────────────────────────
 
 ## 0) Grundregel (Atomare Iteration)
 Jede Iteration muss:
-- genau **1 klar abgegrenzte Aufgabe** vollständig abschließen (nicht nur „anarbeiten“)
-- so klein wie möglich sein (smallest shippable change)
+- genau **2 klar abgegrenzte Punkte** vollständig abschließen (nicht nur „anarbeiten“)
+- beide Punkte so klein wie möglich halten (smallest shippable change)
 - merge-ready sein (Code + Doku + Checks erledigt)
 - den Release-Fortschritt messbar erhöhen
 
 Maximal:
 - 1 Problemklasse
-- 1–3 Dateien
+- 1–4 Dateien
 - 1 zusammenhängender Patch-Block pro Datei
 
 Wenn mehr nötig ist: STOP → neue Iteration planen.
@@ -33,13 +33,13 @@ Vor dem Patch festhalten:
 Verboten:
 - Nebenbei-Refactorings außerhalb des Patch-Blocks
 - Umbenennen/Umstrukturieren ohne zwingenden Grund
-- Mehrere Aufgaben in einer Iteration
+- Mehr als 2 Punkte in einer Iteration
 - Teilergebnisse ohne klare Fertigstellung
 
 ────────────────────────────────────────────────────────────
 
 ## 2) Patch-Methodik (vollständig, klein, robust)
-- Nur notwendige Änderungen für die konkrete Aufgabe.
+- Nur notwendige Änderungen für die zwei konkreten Punkte.
 - Keine neuen Abhängigkeiten ohne zwingenden Bedarf.
 - Jede betroffene Funktion validiert Eingaben (input) und bestätigt Ergebnis (output).
 - Fehlerpfade enthalten klare Next Steps in einfacher Sprache.
@@ -117,7 +117,7 @@ Ganz oben in README immer aktualisieren:
 
 ## 7) Definition of Done (nur dann DONE)
 Eine Iteration ist nur DONE, wenn:
-- kleinste Aufgabe vollständig abgeschlossen
+- zwei klar definierte Punkte vollständig abgeschlossen
 - merge-ready (kein offener Pflichtpunkt)
 - Change-Scope eingehalten
 - Gates grün ODER sauber als NEXT ITERATION dokumentiert
@@ -131,7 +131,7 @@ Eine Iteration ist nur DONE, wenn:
 ## 8) Merge- und Release-Flow (Standard)
 Nach jeder DONE-Iteration:
 - zeitnah mergen (kein unnötiges Warten)
-- direkt nächste kleinste vollständige Aufgabe planen
+- direkt nächste zwei kleinste vollständige Punkte planen
 - immer auf vollständig release-fertig hinarbeiten
 
 Release-Doku bei Release-bezogenen Iterationen zusätzlich:
@@ -160,8 +160,8 @@ Minimalformat:
 - Abnahmekriterium:
 
 ### C) Patch (kurz)
-- Änderung 1:
-- Änderung 2: (optional)
+- Punkt 1 – Änderung:
+- Punkt 2 – Änderung:
 
 ### D) Gates
 - G1:
@@ -171,7 +171,7 @@ Minimalformat:
 - G5:
 
 ### E) Ergebnis
-- Status: DONE / NEXT ITERATION
+- Status: DONE / NEXT ITERATION (wenn einer der 2 Punkte offen bleibt)
 - Doku: README + CHANGELOG + todo aktualisiert
 - Laienvorschläge: 2 kurze Empfehlungen
 - Nächster Schritt: 1 detaillierter Vorschlag in einfacher Sprache

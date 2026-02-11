@@ -11,12 +11,13 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **86%**
-- **Abgeschlossene Punkte:** **26**
+- **Entwicklungsfortschritt:** **87%**
+- **Abgeschlossene Punkte:** **27**
 - **Offene Punkte:** **4**
 - **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB pro Lauf) ergänzen, damit der Nutzen jeder Ausführung direkt sichtbar wird.
 
 **Abgeschlossen:**
+- `AGENTS.md` verlangt jetzt pro Iteration genau zwei vollständig abgeschlossene Punkte statt einem Einzelpunkt, inklusive angepasster DoD- und Planungsregeln.
 - Neue Live-Theme-Vorschau im ersten Schritt zeigt Farben, Fokus und Listenbeispiel sofort; Theme und großer Text werden direkt mit klarer Vorschauhilfe angewendet.
 - Startroutine prüft jetzt `sudo` vor System-Reparaturen und gibt bei fehlender Berechtigung klare Next Steps in einfacher Sprache statt still zu scheitern.
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.

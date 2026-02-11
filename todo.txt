@@ -1,2 +1,2 @@
-DONE: Live-Theme-Vorschaukarte im ersten Schritt ergänzt (Hinweistext, Beispiel-Button, Beispiel-Liste) mit sofortiger Aktualisierung bei Theme/Textgröße. (2026-02-11)
-NEXT: Dashboard-Statistik mit Verlauf (Dateien und MB pro Lauf) als klare Verlaufskarte ergänzen. (2026-02-11)
+DONE: AGENTS.md auf Zwei-Punkte-Iteration (genau 2 vollständige Punkte pro Iteration) inklusive DoD-/Template-Anpassung umgestellt. (2026-02-11)
+NEXT: Zwei konkrete nächste Iterationspunkte vorab festlegen (Punkt 1 + Punkt 2) und danach beide in einem Merge vollständig abschließen. (2026-02-11)
