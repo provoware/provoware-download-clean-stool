@@ -1,2 +1,2 @@
-DONE: Analyse-Trefferliste mit Mehrfachauswahl plus Aktionstasten „Alle markieren/Auswahl löschen“ umgesetzt. (2026-02-11)
-NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit klarer Mini-Hilfe und Exportoption in zwei Mini-Punkten umsetzen. (2026-02-11)
+DONE: Globale A11y-Styles und zentrale Combo-Validierung mit klaren Next Steps umgesetzt. (2026-02-12)
+NEXT: Dashboard-Verlauf (Dateien/MB pro Lauf) mit Exportoption und kurzer Verlaufshilfe in zwei Mini-Punkten ergänzen. (2026-02-12)

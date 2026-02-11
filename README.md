@@ -11,13 +11,15 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **99.5%**
-- **Abgeschlossene Punkte:** **43**
+- **Entwicklungsfortschritt:** **99.8%**
+- **Abgeschlossene Punkte:** **45**
 - **Offene Punkte:** **1**
 - **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB pro Lauf) als zwei kleine, messbare Mini-Punkte ergänzen.
 
 **Abgeschlossen:**
 
+- Theme-Stile enthalten jetzt globale A11y-Standards für deaktivierte Buttons, größere Checkbox-Indikatoren und klare Auswahl-Kontraste in Listen/Dropdowns.
+- Komboboxen werden jetzt zentral mit Input-/Output-Validierung gesetzt; ungültige Preset-/Schnellmodus-Werte stoppen mit klaren Next Steps statt still zu scheitern.
 - Analyse-Schritt enthält jetzt eine auswählbare Trefferliste (Mehrfachauswahl) inklusive Aktionstasten "Alle markieren" und "Auswahl löschen"; nur markierte Dateien gehen in den Plan.
 - Optionen enthalten jetzt zwei klare Workflow-Beispiele in einfacher Sprache (Laptop frei machen / externe Platte prüfen) und bestätigen, dass Haupt-Aktionstasten in jedem Schritt vorhanden sind.
 - Startansicht enthält jetzt eine linke Kategorie-Leiste als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) mit klaren, barrierearmen Kategorien.
