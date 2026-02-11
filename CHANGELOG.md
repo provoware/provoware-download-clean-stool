@@ -1,3 +1,8 @@
+## 2026-02-11 – UI-Iteration: Neues Theme „blau“ + sichere Theme-Validierung
+- **Was:** `app/main.py` bietet jetzt zusätzlich das Farbschema „blau“, validiert die Theme-Auswahl strikt und zeigt bei ungültiger Auswahl einen klaren Fehlerdialog mit Next Steps.
+- **Warum:** Die Oberfläche sollte näher an die gewünschte Farbvielfalt aus dem Zielbild kommen, ohne instabile oder ungültige Theme-Zustände zu speichern.
+- **Wirkung:** Mehr Theme-Auswahl mit gutem Kontrast, robustere Eingabeprüfung und verständlichere Hilfe bei falscher Auswahl.
+
 ## 2026-02-11 – Start-Iteration: sudo-Fallback mit klaren Next Steps ergänzt
 - **Was:** `start.sh` nutzt jetzt eine zentrale Funktion `run_with_sudo`, die vor System-Reparaturen `sudo`-Verfügbarkeit und Berechtigung prüft und verständliche Hilfe ausgibt.
 - **Warum:** In eingeschränkten Umgebungen schlugen apt-Reparaturen bisher ohne klare Ursache fehl oder endeten nur mit technischen Fehltexten.

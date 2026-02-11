@@ -246,6 +246,41 @@ class MainWindow(QMainWindow):
                 padding: 6px;
             }
         """,
+        "blau": """
+            QWidget {
+                background-color: #eaf4ff;
+                color: #0a1f44;
+                selection-background-color: #003a8c;
+                selection-color: #ffffff;
+            }
+            QMainWindow, QStackedWidget {
+                background-color: #d9ebff;
+            }
+            QPushButton {
+                background-color: #ffffff;
+                color: #0a1f44;
+                border: 2px solid #0b4fb3;
+                border-radius: 10px;
+                padding: 10px 14px;
+                min-height: 38px;
+                font-weight: 600;
+            }
+            QPushButton:hover {
+                background-color: #dcecff;
+                border-color: #003a8c;
+            }
+            QPushButton:focus, QCheckBox:focus, QComboBox:focus, QListWidget:focus {
+                border: 3px solid #ff8c00;
+                outline: none;
+            }
+            QComboBox, QListWidget {
+                background-color: #ffffff;
+                color: #0a1f44;
+                border: 1px solid #0b4fb3;
+                border-radius: 8px;
+                padding: 8px;
+            }
+        """,
         "senior": """
             QWidget {
                 background-color: #ffffff;
@@ -273,8 +308,46 @@ class MainWindow(QMainWindow):
         """,
     }
 
+    THEME_DISPLAY_TO_KEY = {
+        "hell": "light",
+        "dunkel": "dark",
+        "kontrast": "kontrast",
+        "blau": "blau",
+        "senior": "senior",
+    }
+    THEME_KEY_TO_DISPLAY = {
+        "light": "hell",
+        "dark": "dunkel",
+        "kontrast": "kontrast",
+        "blau": "blau",
+        "senior": "senior",
+    }
+
+    def _resolve_theme_key(self, selected_theme: str) -> str:
+        """Validiert die Theme-Auswahl und gibt den internen Theme-Key zurück."""
+
+        clean_selected_theme = selected_theme.strip().lower()
+        if not clean_selected_theme:
+            raise ValueError(
+                "Farbschema fehlt. Nächster Schritt: Bitte ein Theme auswählen."
+            )
+
+        resolved_theme = self.THEME_DISPLAY_TO_KEY.get(clean_selected_theme)
+        if resolved_theme is None or resolved_theme not in self.STYLES:
+            raise ValueError(
+                "Farbschema ist ungültig. Nächster Schritt: Bitte eines der sichtbaren Themes auswählen."
+            )
+
+        return resolved_theme
+
     def apply_theme(self, theme: str, large_text: bool) -> None:
-        style = self.STYLES.get(theme, "")
+        resolved_theme = theme if theme in self.STYLES else "kontrast"
+        if theme not in self.STYLES:
+            LOGGER.warning(
+                "Unbekanntes Theme '%s'. Nächster Schritt: In den Einstellungen ein gültiges Theme wählen.",
+                theme,
+            )
+        style = self.STYLES[resolved_theme]
         if large_text and theme != "senior":
             # Increase base font size
             style += " QWidget { font-size: 14pt; }"
@@ -345,12 +418,10 @@ class MainWindow(QMainWindow):
         lbl_theme = QLabel("Farbschema:")
         hl_theme.addWidget(lbl_theme)
         self.combo_theme = QComboBox()
-        self.combo_theme.addItems(["hell", "dunkel", "kontrast", "senior"])
+        self.combo_theme.addItems(["hell", "dunkel", "kontrast", "blau", "senior"])
         self.combo_theme.setToolTip("Wählen Sie ein Farbschema mit guter Lesbarkeit")
         self.combo_theme.setAccessibleName("Farbschema")
-        theme_display = {"light": "hell", "dark": "dunkel"}.get(
-            self.settings.theme, self.settings.theme
-        )
+        theme_display = self.THEME_KEY_TO_DISPLAY.get(self.settings.theme, "kontrast")
         self.combo_theme.setCurrentText(theme_display)
         lbl_theme.setBuddy(self.combo_theme)
         hl_theme.addWidget(self.combo_theme)
@@ -364,6 +435,7 @@ class MainWindow(QMainWindow):
             "<b>Hilfe:</b><br/>"
             "• Tastatur: Mit <b>Tab</b> wechseln Sie zwischen Feldern.<br/>"
             "• Bei Unsicherheit starten Sie mit dem Schema <b>kontrast</b>.<br/>"
+            "• Für ruhige, helle Farben wählen Sie <b>blau</b>.<br/>"
             "• Sie können Einstellungen später jederzeit ändern."
         )
         help_box.setWordWrap(True)
@@ -415,9 +487,19 @@ class MainWindow(QMainWindow):
     def _welcome_next(self) -> None:
         # Save theme settings
         selected_theme = self.combo_theme.currentText()
-        self.settings.theme = {"hell": "light", "dunkel": "dark"}.get(
-            selected_theme, selected_theme
-        )
+        try:
+            self.settings.theme = self._resolve_theme_key(selected_theme)
+        except ValueError as exc:
+            self._show_error_with_mini_help(
+                title="Farbschema prüfen",
+                happened_text=str(exc),
+                next_clicks=[
+                    "Erneut versuchen: Bitte ein Theme aus der Liste auswählen.",
+                    "Reparatur: Bei Anzeigeproblemen 'kontrast' verwenden.",
+                    "Protokoll: Log-Datei öffnen und Fehlermeldung teilen.",
+                ],
+            )
+            return
         self.settings.large_text = self.cb_large.isChecked()
         if self.root_path:
             self.settings.download_dir = str(self.root_path)

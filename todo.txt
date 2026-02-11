@@ -1,2 +1,2 @@
-DONE: Startroutine um robusten sudo-Fallback mit klaren Next Steps in einfacher Sprache erweitert. (2026-02-11)
-NEXT: Interaktive Hauptansicht wie im Zielbild (linke Kategorien + Aktionskarten ohne Texteingabe) als nächste kleinste UI-Iteration umsetzen. (2026-02-11)
+DONE: Neues Farbschema „blau“ ergänzt und Theme-Auswahl mit klarer Validierung + Next-Step-Fehlerhilfe abgesichert. (2026-02-11)
+NEXT: Live-Theme-Vorschaukarte im ersten Schritt bauen, damit Farben und Kontrast vor dem Speichern direkt sichtbar sind. (2026-02-11)
