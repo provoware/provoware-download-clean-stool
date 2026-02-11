@@ -6,15 +6,16 @@ Zeigt eine laienverständliche Meldung und öffnet optional den Report.
 """
 
 from __future__ import annotations
+
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 APP_DIR = Path(__file__).resolve().parents[1]
 REPORT = APP_DIR / "exports" / "quality_report.txt"
 EXPORTS = APP_DIR / "exports"
 EXPORTS.mkdir(exist_ok=True)
+
 
 def main() -> int:
     msg = (
@@ -26,7 +27,18 @@ def main() -> int:
         "3) Report öffnen und ggf. 'Reparatur' nutzen\n"
     )
     if shutil.which("zenity"):
-        subprocess.run(["zenity","--warning","--title","Qualitätsprüfung","--width=700","--text",msg], check=False)
+        subprocess.run(
+            [
+                "zenity",
+                "--warning",
+                "--title",
+                "Qualitätsprüfung",
+                "--width=700",
+                "--text",
+                msg,
+            ],
+            check=False,
+        )
         if shutil.which("xdg-open") and REPORT.exists():
             subprocess.run(["xdg-open", str(REPORT)], check=False)
     else:
@@ -38,6 +50,7 @@ def main() -> int:
             except Exception:
                 pass
     return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -59,14 +59,8 @@ def main() -> int:
             print(message)
         return 1
 
-    from PySide6.QtWidgets import (
-        QApplication,
-        QLabel,
-        QMessageBox,
-        QPushButton,
-        QVBoxLayout,
-        QWidget,
-    )
+    from PySide6.QtWidgets import (QApplication, QLabel, QMessageBox,
+                                   QPushButton, QVBoxLayout, QWidget)
 
     app = QApplication([])
     win = QWidget()
@@ -93,7 +87,9 @@ def main() -> int:
         if install_deps_with_feedback():
             QMessageBox.information(win, "Fertig", "Abhängigkeiten wurden installiert.")
         else:
-            QMessageBox.warning(win, "Fehler", "Python oder requirements.txt wurde nicht gefunden.")
+            QMessageBox.warning(
+                win, "Fehler", "Python oder requirements.txt wurde nicht gefunden."
+            )
 
     def restart():
         start_script = project_root / "start.sh"

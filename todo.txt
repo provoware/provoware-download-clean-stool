@@ -1,2 +1,2 @@
-DONE: Neues Farbschema „blau“ ergänzt und Theme-Auswahl mit klarer Validierung + Next-Step-Fehlerhilfe abgesichert. (2026-02-11)
-NEXT: Live-Theme-Vorschaukarte im ersten Schritt bauen, damit Farben und Kontrast vor dem Speichern direkt sichtbar sind. (2026-02-11)
+DONE: Live-Theme-Vorschaukarte im ersten Schritt ergänzt (Hinweistext, Beispiel-Button, Beispiel-Liste) mit sofortiger Aktualisierung bei Theme/Textgröße. (2026-02-11)
+NEXT: Dashboard-Statistik mit Verlauf (Dateien und MB pro Lauf) als klare Verlaufskarte ergänzen. (2026-02-11)

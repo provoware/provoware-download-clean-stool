@@ -11,12 +11,13 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
-- **Entwicklungsfortschritt:** **84%**
-- **Abgeschlossene Punkte:** **25**
-- **Offene Punkte:** **5**
-- **Nächster Schritt:** Theme-Vorschau als echte Live-Vorschaukarte (mit Beispiel-Buttons/Listenelementen) ergänzen, damit Nutzer Farben vor dem Speichern direkt sehen.
+- **Entwicklungsfortschritt:** **86%**
+- **Abgeschlossene Punkte:** **26**
+- **Offene Punkte:** **4**
+- **Nächster Schritt:** Dashboard-Statistik mit Verlauf (Dateien/MB pro Lauf) ergänzen, damit der Nutzen jeder Ausführung direkt sichtbar wird.
 
 **Abgeschlossen:**
+- Neue Live-Theme-Vorschau im ersten Schritt zeigt Farben, Fokus und Listenbeispiel sofort; Theme und großer Text werden direkt mit klarer Vorschauhilfe angewendet.
 - Startroutine prüft jetzt `sudo` vor System-Reparaturen und gibt bei fehlender Berechtigung klare Next Steps in einfacher Sprache statt still zu scheitern.
 - Benutzereinstellungen bleiben jetzt zuverlässig zwischen Starts erhalten (Ordner + Anzeige), inklusive klarer Offline-Hinweise im Dashboard.
 - Neues Theme **„blau“** ergänzt und Theme-Auswahl jetzt strikt validiert; bei ungültiger Auswahl erscheint ein klarer Fehlerdialog mit Next Steps.

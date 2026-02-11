@@ -1,3 +1,8 @@
+## 2026-02-11 – UI-Iteration: Live-Theme-Vorschau im Startschritt
+- **Was:** `app/main.py` ergänzt jetzt eine echte Live-Vorschaukarte (Hinweistext + Beispiel-Button + Beispiel-Liste) und aktualisiert sie bei Theme-/Textgrößen-Änderung sofort mit Input-/Output-Validierung.
+- **Warum:** Nutzer:innen sollten Farben, Fokus und Lesbarkeit vor dem Speichern direkt sehen, statt erst nach dem nächsten Schritt.
+- **Wirkung:** Bessere Barrierefreiheit und klarere Entscheidungen, weil Kontrast und Bedienzustände sofort sichtbar sind.
+
 ## 2026-02-11 – UI-Iteration: Neues Theme „blau“ + sichere Theme-Validierung
 - **Was:** `app/main.py` bietet jetzt zusätzlich das Farbschema „blau“, validiert die Theme-Auswahl strikt und zeigt bei ungültiger Auswahl einen klaren Fehlerdialog mit Next Steps.
 - **Warum:** Die Oberfläche sollte näher an die gewünschte Farbvielfalt aus dem Zielbild kommen, ohne instabile oder ungültige Theme-Zustände zu speichern.

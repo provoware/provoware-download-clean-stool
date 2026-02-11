@@ -353,6 +353,37 @@ class MainWindow(QMainWindow):
             style += " QWidget { font-size: 14pt; }"
         self.setStyleSheet(style)
 
+    def _sync_theme_preview(self) -> None:
+        """Aktualisiert die Live-Vorschau des Themes mit klarer Validierung."""
+
+        selected_theme = self.combo_theme.currentText().strip().lower()
+        if not selected_theme:
+            raise ValueError(
+                "Farbschema fehlt in der Vorschau. Nächster Schritt: Bitte ein sichtbares Theme auswählen."
+            )
+
+        large_text_enabled = self.cb_large.isChecked()
+        if not isinstance(large_text_enabled, bool):
+            raise TypeError(
+                "Textmodus ist ungültig. Nächster Schritt: Bitte Auswahl erneut setzen."
+            )
+
+        resolved_theme = self._resolve_theme_key(selected_theme)
+        self.apply_theme(resolved_theme, large_text_enabled)
+
+        preview_title = self.THEME_KEY_TO_DISPLAY.get(resolved_theme, "kontrast")
+        preview_text = (
+            "<b>Live-Vorschau aktiv</b><br/>"
+            f"Theme: <b>{preview_title}</b> · Großer Text: "
+            f"<b>{'an' if large_text_enabled else 'aus'}</b><br/>"
+            "Beispiel unten zeigt Button, Liste und Kontrast in Echtzeit."
+        )
+        if not preview_text.strip():
+            raise RuntimeError(
+                "Vorschauausgabe fehlt. Nächster Schritt: Bitte Theme-Auswahl erneut öffnen."
+            )
+        self.lbl_theme_preview_info.setText(preview_text)
+
     def _create_pages(self) -> None:
         self.page_welcome = QWidget()
         self._setup_welcome_page()
@@ -431,6 +462,41 @@ class MainWindow(QMainWindow):
         self.cb_large.setAccessibleName("Großer Text aktivieren")
         hl_theme.addWidget(self.cb_large)
         layout.addLayout(hl_theme)
+
+        self.lbl_theme_preview_info = QLabel()
+        self.lbl_theme_preview_info.setWordWrap(True)
+        self.lbl_theme_preview_info.setAccessibleName("Theme Live-Vorschau Hinweis")
+        self.lbl_theme_preview_info.setAccessibleDescription(
+            "Zeigt den aktiven Vorschau-Status für Theme und großen Text"
+        )
+        layout.addWidget(self.lbl_theme_preview_info)
+
+        preview_row = QHBoxLayout()
+        self.preview_action_button = QPushButton("Beispiel: Primäraktion")
+        self.preview_action_button.setEnabled(False)
+        self.preview_action_button.setToolTip(
+            "Nur Vorschau: So sieht ein Aktionsbutton im gewählten Theme aus"
+        )
+        preview_row.addWidget(self.preview_action_button)
+        self.preview_list = QListWidget()
+        self.preview_list.setAccessibleName("Theme Vorschau-Liste")
+        self.preview_list.addItems(
+            [
+                "Beispiel-Liste: aktive Auswahl",
+                "Beispiel-Liste: neutraler Eintrag",
+            ]
+        )
+        self.preview_list.setCurrentRow(0)
+        self.preview_list.setMaximumHeight(90)
+        preview_row.addWidget(self.preview_list)
+        layout.addLayout(preview_row)
+
+        self.combo_theme.currentTextChanged.connect(
+            lambda _: self._sync_theme_preview()
+        )
+        self.cb_large.toggled.connect(lambda _: self._sync_theme_preview())
+        self._sync_theme_preview()
+
         help_box = QLabel(
             "<b>Hilfe:</b><br/>"
             "• Tastatur: Mit <b>Tab</b> wechseln Sie zwischen Feldern.<br/>"
