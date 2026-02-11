@@ -12,7 +12,7 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 - **Entwicklungsfortschritt:** **100%**
-- **Abgeschlossene Punkte:** **60**
+- **Abgeschlossene Punkte:** **62**
 - **Offene Punkte:** **0**
 - **Nächster Schritt:** Analysebereich weiter verschlanken: nächste zwei Mini-Punkte für Sortierung und Zielordner-Schnellaktionen pro Treffer planen.
 
@@ -23,6 +23,9 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
 **Abgeschlossen:**
+
+- Neue Menüleiste ist jetzt senior-sicher auf genau vier Punkte begrenzt: Datei, Ansicht, Hilfe, Einstellungen.
+- Neues deutsches Rechtsklick-Menü in der Trefferliste bietet nur kurze Aktionen (Öffnen, Ansehen, Zurückholen, Ignorieren) plus 1-Zeilen-Hinweis „Was passiert dann?“ aus Text-JSON.
 
 - Entwicklerbereich zeigt jetzt eine klare Status-Legende (✅ abgeschlossen / 🟡 offen) mit barrierearmer Kurz-Erklärung in einfacher Sprache.
 - Filter-Buttons im Entwicklerbereich haben jetzt größere Klickflächen und eigene Accessibility-Namen für bessere Tastatur- und Screenreader-Bedienung.

@@ -4,9 +4,36 @@
   "download_dir": "",
   "presets": "standard",
   "filters": {
-    "types": ["images", "videos", "archives", "other"],
+    "types": [
+      "images",
+      "videos",
+      "archives",
+      "other"
+    ],
     "size": "any",
     "age": "any"
   },
-  "duplicates_mode": "none"
+  "duplicates_mode": "none",
+  "ui_texts": {
+    "menue.ansicht": "Ansicht",
+    "menue.ansicht.theme_hell": "Theme hell",
+    "menue.ansicht.theme_kontrast": "Theme Kontrast",
+    "menue.datei": "Datei",
+    "menue.datei.beenden": "Beenden",
+    "menue.datei.ordner_waehlen": "Ordner wählen",
+    "menue.einstellungen": "Einstellungen",
+    "menue.einstellungen.speichern": "Einstellungen speichern",
+    "menue.hilfe": "Hilfe",
+    "menue.hilfe.kurz": "Kurzhilfe anzeigen",
+    "menue.hinweis.ansicht": "Was passiert dann? Die Anzeige wird besser lesbar umgestellt.",
+    "menue.hinweis.datei": "Was passiert dann? Sie wählen einen Ordner oder beenden das Programm.",
+    "menue.hinweis.einstellungen": "Was passiert dann? Ihre Auswahl wird sicher gespeichert.",
+    "menue.hinweis.hilfe": "Was passiert dann? Eine kurze Hilfe mit klaren Schritten wird gezeigt.",
+    "menue.rechtsklick.ansehen": "Ansehen",
+    "menue.rechtsklick.ignorieren": "Ignorieren",
+    "menue.rechtsklick.oeffnen": "Öffnen",
+    "menue.rechtsklick.zurueckholen": "Zurückholen",
+    "status.app_titel": "Downloads Organizer",
+    "status.rechtsklick.hinweis": "Was passiert dann? Erst wird ein Plan gezeigt. Danach können Sie sicher ausführen."
+  }
 }
