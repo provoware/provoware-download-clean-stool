@@ -9,6 +9,61 @@ SETUP_LOG="exports/setup_log.txt"
 ERR_LOG="exports/last_start_error.txt"
 QUALITY_LOG="exports/quality_report.txt"
 
+normalize_status_value() {
+  # Validiert Statuswerte für die Abschluss-Zusammenfassung.
+  # Erlaubte Werte: OK, WARN, läuft, erfolgreich, nicht möglich, nicht nötig.
+  local raw_value="${1:-}"
+  case "$raw_value" in
+    OK|WARN|läuft|erfolgreich|"nicht möglich"|"nicht nötig")
+      printf '%s' "$raw_value"
+      ;;
+    *)
+      printf '%s' "WARN"
+      ;;
+  esac
+}
+
+print_start_summary_for_humans() {
+  # Zeigt eine laienfreundliche Abschluss-Übersicht mit klaren Next Steps.
+  local dep_status_input="${1:-WARN}"
+  local quality_status_input="${2:-WARN}"
+  local autorepair_status_input="${3:-nicht möglich}"
+  local web_status_input="${4:-WARN}"
+  local appimage_status_input="${5:-WARN}"
+
+  local dep_status
+  local quality_status
+  local autorepair_status
+  dep_status="$(normalize_status_value "$dep_status_input")"
+  quality_status="$(normalize_status_value "$quality_status_input")"
+  autorepair_status="$(normalize_status_value "$autorepair_status_input")"
+
+  case "$web_status_input" in
+    OK|WARN) ;;
+    *) web_status_input="WARN" ;;
+  esac
+  case "$appimage_status_input" in
+    OK|WARN) ;;
+    *) appimage_status_input="WARN" ;;
+  esac
+
+  echo "[ÜBERSICHT] ===== Startprüfung in einfacher Sprache ====="
+  echo "[ÜBERSICHT] Abhängigkeiten: $dep_status"
+  echo "[ÜBERSICHT] Qualitätsprüfung: $quality_status"
+  echo "[ÜBERSICHT] Auto-Reparatur: $autorepair_status"
+  echo "[ÜBERSICHT] Optional Web-Frontend: $web_status_input"
+  echo "[ÜBERSICHT] Optional AppImage: $appimage_status_input"
+
+  if [ "$dep_status" = "OK" ] && [ "$quality_status" = "OK" ]; then
+    echo "[HILFE] Alles Wichtige ist grün. Sie können normal weiterarbeiten."
+  else
+    echo "[HILFE] Es gibt mindestens eine Warnung. Bitte diese 3 Schritte nacheinander ausführen:"
+    echo "[HILFE] 1) Protokoll öffnen: cat exports/setup_log.txt"
+    echo "[HILFE] 2) Qualität prüfen: bash tools/run_quality_checks.sh"
+    echo "[HILFE] 3) Start erneut ausführen: bash start.sh"
+  fi
+}
+
 run_with_sudo() {
   # Führt einen Befehl mit sudo aus, wenn möglich.
   # Gibt bei Fehlern klare Next Steps in einfacher Sprache aus.
@@ -388,6 +443,8 @@ Lösung:
 Details: exports/setup_log.txt" "Smoke-Test"
   exit 1
 fi
+
+print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS"
 
 # 8) GUI starten
 echo "[RUN] Starte GUI"

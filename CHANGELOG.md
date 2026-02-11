@@ -1,3 +1,8 @@
+## 2026-02-12 – Start/README-Iteration: Laien-Übersicht + Schnellüberblick
+- **Was:** `start.sh` ergänzt eine validierte Abschluss-Zusammenfassung in einfacher Sprache mit klaren Next Steps; `README.md` ergänzt einen kompakten Schnellüberblick für den Warnfall.
+- **Warum:** Nutzer:innen sollten den Gesamtstatus ohne Fachwissen sofort verstehen und bei Warnungen direkt die richtigen Befehle sehen.
+- **Wirkung:** Bessere Übersichtlichkeit beim Start, weniger Unsicherheit im Fehlerfall und klarere Selbsthilfe für Nicht-Techniker.
+
 ## 2026-02-12 – UI-Iteration: Theme-Schnellwahl + Interaktivitätsstatus
 - **Was:** `app/main.py` ergänzt Theme-Schnellwahl-Tasten (`Alt+1` bis `Alt+5`) und erweitert die Live-Vorschau um einen klaren Interaktivitäts-/Kontraststatus mit nächstem Klick.
 - **Warum:** Der Theme-Wechsel sollte schneller und ohne Umwege nutzbar sein; zusätzlich fehlte eine laienfreundliche Rückmeldung zur aktuellen visuellen Qualität.
