@@ -1,10 +1,9 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, List
-
 
 DEFAULTS_PATH = Path(__file__).resolve().parent.parent / "data" / "settings.json"
 SCHEMA_VERSION = 2

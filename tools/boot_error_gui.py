@@ -13,7 +13,6 @@ Strategie:
 
 from __future__ import annotations
 
-import os
 import shutil
 import subprocess
 import sys
@@ -27,11 +26,14 @@ LOGS.mkdir(exist_ok=True)
 
 OUT_FILE = EXPORTS / "last_start_error.txt"
 
+
 def _write_report(title: str, details: str) -> None:
     OUT_FILE.write_text(f"{title}\n\n{details}\n", encoding="utf-8")
 
+
 def _zenity_available() -> bool:
     return shutil.which("zenity") is not None
+
 
 def _show_zenity(title: str, details: str) -> int:
     msg = (
@@ -44,9 +46,11 @@ def _show_zenity(title: str, details: str) -> int:
     cmd = [
         "zenity",
         "--question",
-        "--title", title,
+        "--title",
+        title,
         "--width=720",
-        "--text", msg[:4000],
+        "--text",
+        msg[:4000],
         "--ok-label=Erneut versuchen",
         "--cancel-label=Schließen",
         "--extra-button=Reparatur",
@@ -56,7 +60,10 @@ def _show_zenity(title: str, details: str) -> int:
     choice = (result.stdout or "").strip()
 
     if choice == "Reparatur":
-        subprocess.run([sys.executable, str(APP_DIR / "tools" / "repair_center_gui.py")], check=False)
+        subprocess.run(
+            [sys.executable, str(APP_DIR / "tools" / "repair_center_gui.py")],
+            check=False,
+        )
         return 0
     if choice == "Protokoll":
         if shutil.which("xdg-open"):
@@ -66,19 +73,21 @@ def _show_zenity(title: str, details: str) -> int:
         return 10
     return 0
 
+
 def _show_terminal(title: str, details: str) -> int:
-    print("\n" + "="*72)
+    print("\n" + "=" * 72)
     print(f"[FEHLER] {title}")
-    print("="*72)
+    print("=" * 72)
     print(details.strip())
     print("\n[INFO] Diagnose-Datei:", OUT_FILE)
     print("[INFO] Diagnose-Ordner:", EXPORTS)
-    print("="*72)
+    print("=" * 72)
     try:
         input("Drücke ENTER zum Beenden...")
     except EOFError:
         pass
     return 0
+
 
 def main() -> int:
     title = "Startproblem"
@@ -95,6 +104,7 @@ def main() -> int:
     if _zenity_available():
         return _show_zenity(title, details)
     return _show_terminal(title, details)
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
