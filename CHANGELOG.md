@@ -1,3 +1,13 @@
+## 2026-02-12 – UI-Iteration: Kategorie-Leiste + Aktionskarten (visuelle Vorschau)
+- **Was:** `app/main.py` ergänzt in der Startansicht eine linke Kategorie-Leiste und zentrale Aktionskarten als reine Vorschau ohne Logikwechsel.
+- **Warum:** Die gewünschte Hauptansicht sollte in zwei kleinen, sicheren Schritten vorbereitet werden, ohne bestehende Abläufe zu riskieren.
+- **Wirkung:** Nutzer:innen sehen den künftigen Aufbau früher, verstehen die Navigation besser und behalten stabile Funktionalität im aktuellen Assistenten.
+
+## 2026-02-12 – UI-Iteration: Persistenzstatus + verifiziertes Speichern
+- **Was:** `app/main.py` ergänzt `_save_settings_with_feedback`, verifiziert gespeicherte Werte per Reload und zeigt im Dashboard einen klaren Persistenzstatus mit ✅/⚠️.
+- **Warum:** Nutzer:innen sollten direkt sehen, ob Einstellungen wirklich dauerhaft gespeichert wurden, statt dies erst nach einem Neustart zu bemerken.
+- **Wirkung:** Mehr Transparenz und Stabilität bei Theme-, Ordner- und Filtereinstellungen mit verständlichen Next Steps im Fehlerfall.
+
 ## 2026-02-11 – UI-Iteration: A11y-Schnellmodi + Live-A11y-Hinweis
 - **Was:** `app/main.py` ergänzt zwei neue Schnellaktionen „Lesbarkeit sofort maximieren“ (`Alt+K`) und „Ausgewogene Ansicht laden“ (`Alt+L`) für Theme, Textgröße, Vorschau-Skalierung und Position; zusätzlich zeigt die Live-Vorschau jetzt einen laienfreundlichen A11y-Hinweis pro Theme.
 - **Warum:** Für den Einstieg fehlte ein sofort nutzbarer Barrierefreiheits-Kurzweg und eine klare Erklärung, welches Theme in welcher Situation hilft.

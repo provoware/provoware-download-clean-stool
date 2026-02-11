@@ -1,2 +1,2 @@
-DONE: A11y-Schnellmodi (Alt+K/Alt+L) und Live-A11y-Hinweis pro Theme in der Startansicht umgesetzt. (2026-02-11)
-NEXT: Interaktive Hauptansicht mit linker Kategorie-Navigation und zentralen Aktionskarten in zwei kleinen, abgeschlossenen Mini-Punkten umsetzen. (2026-02-11)
+DONE: Linke Kategorie-Leiste und zentrale Aktionskarten als visuelle Hauptansicht-Vorschau (ohne Logikwechsel) umgesetzt. (2026-02-12)
+NEXT: In einer Folgeiteration die Kategorie-Leiste schrittweise mit echten Bereichen verbinden, ohne den sicheren Kernpfad zu ändern. (2026-02-12)

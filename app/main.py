@@ -110,6 +110,10 @@ class MainWindow(QMainWindow):
             raise SystemExit(msg)
         self.settings = Settings.load()
         self.root_path = self._load_persistent_download_dir()
+        self.persistence_status_icon = "✅"
+        self.persistence_status_text = (
+            "Einstellungen gespeichert und beim Neustart verfügbar."
+        )
         self.plan: ActionPlan | None = None
         self.scan_results = []
         self.duplicates_map = {}
@@ -192,6 +196,42 @@ class MainWindow(QMainWindow):
             info,
             ["Weiter: Sie können sicher mit dem nächsten Schritt fortfahren."],
         )
+
+    def _save_settings_with_feedback(self, reason: str) -> tuple[bool, str]:
+        """Speichert Einstellungen und prüft direkt, ob sie persistent verfügbar sind."""
+
+        clean_reason = reason.strip()
+        if not clean_reason:
+            raise ValueError(
+                "Speichergrund fehlt. Nächster Schritt: Bitte kurz angeben, was gespeichert wird."
+            )
+
+        self.settings.save()
+        reloaded = Settings.load()
+        persisted_ok = (
+            reloaded.theme == self.settings.theme
+            and reloaded.large_text == self.settings.large_text
+            and reloaded.download_dir == self.settings.download_dir
+            and reloaded.duplicates_mode == self.settings.duplicates_mode
+        )
+
+        if not persisted_ok:
+            warning = (
+                f"Speichern nach '{clean_reason}' konnte nicht bestätigt werden. "
+                "Nächster Schritt: 'bash start.sh' ausführen und danach erneut speichern."
+            )
+            LOGGER.warning(warning)
+            self.persistence_status_icon = "⚠️"
+            self.persistence_status_text = warning
+            return (False, warning)
+
+        info = f"Speichern nach '{clean_reason}' erfolgreich bestätigt."
+        LOGGER.info(info)
+        self.persistence_status_icon = "✅"
+        self.persistence_status_text = (
+            "Einstellungen gespeichert und beim Neustart verfügbar."
+        )
+        return (True, info)
 
     def _apply_cleanup_goal(self, goal: str) -> None:
         """Setzt häufige Aufräumziele als laienfreundliche Schnellkonfiguration."""
@@ -680,6 +720,80 @@ class MainWindow(QMainWindow):
         intro.setAccessibleName("Einstiegshilfe")
         intro.setAccessibleDescription("Kurze Hilfe in einfacher Sprache für den Start")
         layout.addWidget(intro)
+
+        mainview_hint = QLabel(
+            "<b>Vorschau Hauptansicht:</b> Links sehen Sie die neue Kategorie-Leiste, "
+            "in der Mitte die neuen Aktionskarten."
+        )
+        mainview_hint.setWordWrap(True)
+        mainview_hint.setAccessibleName("Hauptansicht Vorschauhinweis")
+        mainview_hint.setAccessibleDescription(
+            "Erklärt in einfacher Sprache den Aufbau der neuen Hauptansicht"
+        )
+        layout.addWidget(mainview_hint)
+
+        preview_shell = QHBoxLayout()
+        preview_shell.setSpacing(12)
+
+        self.list_category_nav = QListWidget()
+        self.list_category_nav.setAccessibleName("Kategorie-Leiste")
+        self.list_category_nav.setAccessibleDescription(
+            "Linke Navigation mit Kategorien für die Hauptansicht"
+        )
+        self.list_category_nav.setToolTip(
+            "Vorschau: Diese Kategorien steuern später die Hauptansicht"
+        )
+        self.list_category_nav.setMinimumWidth(220)
+        self.list_category_nav.setMaximumWidth(260)
+        self.list_category_nav.addItems(
+            [
+                "📂 Übersicht",
+                "🧹 Schnell aufräumen",
+                "🧪 Analyse",
+                "🛡️ Sicherheit",
+                "⚙️ Einstellungen",
+            ]
+        )
+        self.list_category_nav.setCurrentRow(0)
+        preview_shell.addWidget(self.list_category_nav)
+
+        cards_wrap = QVBoxLayout()
+        cards_wrap.setSpacing(10)
+
+        card_specs = [
+            "<b>Karte 1: Schnellstart</b><br/>Direkter Einstieg für einen sicheren Standardlauf.",
+            "<b>Karte 2: Speicher freimachen</b><br/>Fokus auf große und alte Dateien mit klaren Schritten.",
+            "<b>Karte 3: Duplikate prüfen</b><br/>Findet doppelte Dateien mit verständlicher Ergebnisliste.",
+        ]
+        if len(card_specs) != 3:
+            raise ValueError(
+                "Karten-Vorschau unvollständig. Nächster Schritt: Genau drei Aktionskarten bereitstellen."
+            )
+
+        self.preview_action_cards: list[QLabel] = []
+        for card_text in card_specs:
+            clean_text = card_text.strip()
+            if not clean_text:
+                raise ValueError(
+                    "Leerer Kartentext erkannt. Nächster Schritt: Kartenhinweis ergänzen."
+                )
+            card = QLabel(clean_text)
+            card.setWordWrap(True)
+            card.setTextFormat(Qt.RichText)
+            card.setMinimumHeight(68)
+            card.setStyleSheet(
+                "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+            )
+            card.setAccessibleName("Aktionskarte Vorschau")
+            card.setAccessibleDescription(
+                "Vorschau einer zentralen Aktionskarte in der neuen Hauptansicht"
+            )
+            self.preview_action_cards.append(card)
+            cards_wrap.addWidget(card)
+
+        preview_shell.addLayout(cards_wrap, stretch=1)
+        layout.addLayout(preview_shell)
+
         self.lbl_dashboard_info = QLabel()
         self.lbl_dashboard_info.setWordWrap(True)
         self.lbl_dashboard_info.setTextFormat(Qt.RichText)
@@ -870,6 +984,8 @@ class MainWindow(QMainWindow):
 
         safe_permission_status = escape(permission_status)
         system_text = escape(f"{platform.system()} {platform.release()}")
+        persistence_icon = escape(self.persistence_status_icon)
+        persistence_text = escape(self.persistence_status_text)
 
         self.lbl_dashboard_info.setText(
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
@@ -880,11 +996,12 @@ class MainWindow(QMainWindow):
             f"• Aktives Preset: {active_preset}<br/>"
             f"• Dateitypen-Filter: {active_types}<br/>"
             f"• Duplikat-Prüfung: {duplicates_mode}<br/><br/>"
+            f"• Einstellungen dauerhaft: {persistence_icon} {persistence_text}<br/><br/>"
             "<b>Hilfe in einfacher Sprache:</b><br/>"
             "1) Wählen Sie einen Ordner.<br/>"
             "2) Wählen Sie ein gut lesbares Farbschema.<br/>"
             "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten.<br/>"
-            "4) Ihre Einstellungen werden dauerhaft gespeichert."
+            "4) Prüfen Sie im Dashboard, ob der Speicherstatus auf ✅ steht."
         )
 
     def _choose_folder(self) -> None:
@@ -894,6 +1011,8 @@ class MainWindow(QMainWindow):
         if path:
             self.lbl_folder.setText(path)
             self.root_path = Path(path)
+            self.settings.download_dir = str(self.root_path)
+            self._save_settings_with_feedback("Ordnerauswahl")
             self._refresh_dashboard_info()
 
     def _welcome_next(self) -> None:
@@ -915,7 +1034,17 @@ class MainWindow(QMainWindow):
         self.settings.large_text = self.cb_large.isChecked()
         if self.root_path:
             self.settings.download_dir = str(self.root_path)
-        self.settings.save()
+        saved_ok, save_message = self._save_settings_with_feedback("Startseite")
+        if not saved_ok:
+            self._show_error_with_mini_help(
+                title="Einstellungen prüfen",
+                happened_text=save_message,
+                next_clicks=[
+                    "Erneut versuchen: Einstellungen ändern und erneut auf 'Weiter' klicken.",
+                    "Reparatur: Im Projektordner 'bash start.sh' ausführen.",
+                    "Protokoll: logs/app.log öffnen und Meldung prüfen.",
+                ],
+            )
         self.apply_theme(self.settings.theme, self.settings.large_text)
         self._refresh_dashboard_info()
         # Ensure folder selected
@@ -1127,7 +1256,7 @@ class MainWindow(QMainWindow):
             self.settings.confirm_threshold = int(raw.get("confirm_threshold", 10))
             self.settings.filters = Filters.from_dict(filters)
             self.settings.duplicates_mode = raw.get("duplicates_mode", "none")
-            self.settings.save()
+            self._save_settings_with_feedback("Preset laden")
             self.current_preset_label.setText("Aktuelles Preset: " + preset_name)
 
     def _options_next(self) -> None:
@@ -1157,7 +1286,7 @@ class MainWindow(QMainWindow):
             age=self.combo_age.currentText(),
         )
         self.settings.duplicates_mode = self.combo_dups.currentText()
-        self.settings.save()
+        self._save_settings_with_feedback("Optionen")
         # proceed to scan
         if not self._start_scan():
             return
