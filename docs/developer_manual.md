@@ -144,8 +144,8 @@ Pflichtkriterien:
 Verbindlicher Verweis: `RELEASE_CHECKLIST.md` ist die zentrale Statusdatei für den Release-Zustand.
 
 Aktueller Stand (Iteration):
-- **Fortschritt:** 95%
-- **Abgeschlossen:** 19 Punkte
+- **Fortschritt:** 99%
+- **Abgeschlossen:** 21 Punkte
 - **Offen:** 1 Punkt
 
 Nächste Release-Iteration (technisch sinnvoll):

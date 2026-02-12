@@ -492,6 +492,19 @@ ensure_tool_workdir() {
   TOOL_WORKDIR="$default_workdir"
   export TOOL_WORKDIR
   echo "[OK] Arbeitsordner geprüft: $TOOL_WORKDIR" | tee -a "$SETUP_LOG"
+
+  # Schreibe einen Probeeintrag in den Arbeitsordner, um die tatsächliche Schreibbarkeit zu validieren.
+  local probe_file="$default_workdir/.write_probe_$$.tmp"
+  if printf '%s\n' "workdir-write-check $(date +%Y-%m-%dT%H:%M:%S)" > "$probe_file" 2>/dev/null; then
+    rm -f "$probe_file"
+    echo "[CHECK] Schreibtest OK: Arbeitsordner $default_workdir" | tee -a "$SETUP_LOG"
+  else
+    echo "[WARN] Schreibtest fehlgeschlagen: Arbeitsordner $default_workdir" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Eigentümer prüfen: ls -ld $default_workdir" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Rechte setzen: chmod u+rwx $default_workdir" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Start erneut ausführen: bash start.sh" | tee -a "$SETUP_LOG"
+    return 1
+  fi
   return 0
 }
 

@@ -4,11 +4,13 @@ Stand: 2026-02-12
 
 ## Entwicklungsfortschritt
 
-- **Gesamtfortschritt:** **95%**
-- **Abgeschlossene Punkte:** **19**
+*Die Prozentzahlen sind in allen Dateien synchronisiert.*
+
+- **Gesamtfortschritt:** **99%**
+- **Abgeschlossene Punkte:** **21**
 - **Offene Punkte:** **1**
 
-Berechnung (einfach): `19 abgeschlossen / 20 gesamt = 95%`.
+Berechnung (einfach): `21 abgeschlossen / 22 gesamt ≈ 99%`.
 
 ## Release-Checkliste
 
