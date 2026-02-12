@@ -2468,6 +2468,20 @@ class MainWindow(QMainWindow):
         )
         self.lbl_scan_help.setWordWrap(True)
         layout.addWidget(self.lbl_scan_help)
+        self.lbl_scan_fixed_help = QLabel(
+            "<b>Feste Hilfe:</b> Tastaturweg: Tab/Shift+Tab zum Navigieren, Enter zum Bestätigen. "
+            "Kontrast-Hinweis: Bei schlechter Lesbarkeit Theme auf High-Contrast stellen. "
+            "Nächste Aktion: Analyse starten und dann Treffer für den Plan markieren."
+        )
+        self.lbl_scan_fixed_help.setWordWrap(True)
+        self.lbl_scan_fixed_help.setAccessibleName("Feste Hilfe Analyse")
+        self.lbl_scan_fixed_help.setAccessibleDescription(
+            "Kurze barrierearme Hilfe für Tastatur-Navigation, Kontrast und nächste Aktion im Analyseschritt"
+        )
+        self.lbl_scan_fixed_help.setToolTip(
+            "Kurze Hilfe zu Tastaturweg, Kontrast und nächster Aktion"
+        )
+        layout.addWidget(self.lbl_scan_fixed_help)
 
         # Sortierfeld für die Trefferliste: Name oder Größe
         sort_layout = QHBoxLayout()
@@ -2893,6 +2907,20 @@ class MainWindow(QMainWindow):
         self.lbl_plan_summary = QLabel("Plan ist noch nicht erstellt.")
         self.lbl_plan_summary.setWordWrap(True)
         layout.addWidget(self.lbl_plan_summary)
+        self.lbl_plan_fixed_help = QLabel(
+            "<b>Feste Hilfe:</b> Tastaturweg: Tab/Shift+Tab zwischen Liste und Buttons, Enter zum Ausführen. "
+            "Kontrast-Hinweis: Für klare Lesbarkeit bei Bedarf High-Contrast-Theme aktivieren. "
+            "Nächste Aktion: Plan prüfen und danach mit 'Ausführen' bestätigen."
+        )
+        self.lbl_plan_fixed_help.setWordWrap(True)
+        self.lbl_plan_fixed_help.setAccessibleName("Feste Hilfe Plan")
+        self.lbl_plan_fixed_help.setAccessibleDescription(
+            "Kurze barrierearme Hilfe für Tastatur-Navigation, Kontrast und nächste Aktion im Planschritt"
+        )
+        self.lbl_plan_fixed_help.setToolTip(
+            "Kurze Hilfe zu Tastaturweg, Kontrast und nächster Aktion"
+        )
+        layout.addWidget(self.lbl_plan_fixed_help)
         # List widget to show plan items
         self.list_plan = QListWidget()
         # Plan-Liste mit Kontextmenü für Zielordner öffnen

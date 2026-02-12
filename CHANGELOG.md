@@ -1,3 +1,8 @@
+## 2026-02-12 – UX/Start-Iteration: Feste Hilfezeilen + Modul-Autoreparatur
+- **Was:** `app/main.py` ergänzt feste Hilfezeilen in „Analyse“ und „Plan“ (Tastaturweg, Kontrast-Hinweis, nächste Aktion); `start.sh` erkennt zusätzlich fehlende Python-Module per Importtest und versucht eine automatische Reparatur mit klarer Erfolgs-/Fehlerausgabe.
+- **Warum:** Nutzer:innen sollen in beiden Arbeitsschritten sofort barrierearme Orientierung erhalten und Startprobleme durch fehlende Module automatisch, nachvollziehbar und robust gelöst bekommen.
+- **Wirkung:** Bessere A11y-Führung im UI, klarer Reparaturstatus („erfolgreich“/„nicht möglich“) und stabilerer Start ohne manuelle Fehlersuche.
+
 ## 2026-02-12 – Debug-Iteration: Optischer GUI-HTML-Snapshot
 - **Was:** `app/main.py` erzeugt jetzt automatisch `docs/debugging_gui_state.html`, ergänzt den Button „Debug-HTML öffnen“ und erweitert den Smoke-Test in `tools/smoke_test.py` um Snapshot-Prüfungen.
 - **Warum:** Der aktuelle GUI-Zustand soll jederzeit visuell nachvollziehbar und als einfache Testdatei nutzbar sein.
