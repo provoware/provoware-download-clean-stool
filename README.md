@@ -11,12 +11,29 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **99%**
- - **Abgeschlossene Punkte:** **28**
- - **Offene Punkte:** **1**
- - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
+ - **Entwicklungsfortschritt:** **100%**
+ - **Abgeschlossene Punkte:** **29**
+ - **Offene Punkte:** **0**
+ - **Nächster Schritt:** Responsive Verbesserungen auf den Scan- und Planseiten per UX-Test mit echten 1366x768- und 1920x1080-Profilen feinjustieren.
 
 
+
+
+## 0.15) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Alle Hauptseiten scrollen jetzt barrierearm und dynamisch**  
+   `app/main.py` rendert jede Seite in einem `QScrollArea`-Container, damit auf kleinen Bildschirmen keine unteren Inhalte abgeschnitten sind.
+2. **Responsive Startansicht passt sich automatisch an die Fensterbreite an**  
+   Die Start-Vorschau wechselt bei schmaler Breite automatisch von Nebeneinander auf Untereinander und hält die Navigation erreichbar.
+3. **A11y/Bedienhilfe erweitert: große Scrollleisten + große Skalier-Ecke**  
+   Scrollleisten sind deutlich breiter, kontraststark und mit großem Griff; zusätzlich wird die vergrößerte Fenster-Ecke aktiv unterstützt und als Hinweis angezeigt.
+
+### Zwei kurze Laienvorschläge
+- Wenn unten etwas fehlt: Fenster erst größer ziehen, dann mit den neuen breiten Scrollleisten nach unten gehen.
+- Für beste Lesbarkeit: `Alt+K` drücken, danach im selben Schritt die Ansicht auf „Auto (Fensterbreite)“ lassen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Teste jetzt nacheinander zwei Bildschirmgrößen (klein und groß), öffne jeweils Schritt 1 bis 4 und prüfe, ob jeder Button ohne „Abschneiden“ sichtbar bleibt. Falls etwas fehlt, notiere exakt die Stelle und passe nur dort den Mindestabstand oder die Mindesthöhe an.
 
 ### Neuer optischer Debug-Export (HTML-Live-Stand)
 

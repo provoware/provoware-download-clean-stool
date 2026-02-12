@@ -111,3 +111,5 @@ NEXT: Mini-UX-Gate als kleines automatisches Prüfskript technisch ausführen un
 
 DONE: UI hat jetzt Laien-/Entwickler-Modus, Tool-Bibel-Dialog und Gate-Übersicht im Dashboard (G1–G4). (2026-02-12)
 NEXT: Als nächste 3 Mini-Punkte Dateibaum-Ansicht, Vorher/Nachher-Tabelle und sichtbare Undo-Historie im Hauptfluss ergänzen. (2026-02-12)
+DONE: GUI-Seiten vollständig responsiv gemacht (ScrollArea pro Hauptseite), Start-Vorschau dynamisch umgestellt und große A11y-Scrollleisten mit großer Skalier-Ecke ergänzt. (2026-02-12)
+NEXT: Responsive Feinschliff für Scan-/Plan-Detailzeilen mit festen Testprofilen 1366x768 und 1920x1080 durchführen und pro Problemstelle genau einen UI-Fix setzen. (2026-02-12)

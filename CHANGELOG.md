@@ -1,3 +1,8 @@
+## 2026-02-12 – Responsive-UX-Iteration: Dynamische Seitenhöhe + große Scrollleisten
+- **Was:** `app/main.py` nutzt pro Hauptseite jetzt `QScrollArea`, schaltet die Startvorschau je Fensterbreite automatisch um und erweitert die A11y-Styles um breite, kontraststarke Scrollleisten plus größere Skalier-Ecke.
+- **Warum:** Auf kleineren Displays waren untere Inhalte, Auswahlfelder und Aktionen teils abgeschnitten und dadurch für Laien schwer erreichbar.
+- **Wirkung:** Alle Bereiche bleiben erreichbar, die Ansicht passt sich flexibler an den Bildschirm an und die Bedienung ist für sehschwächere Nutzer:innen deutlich einfacher.
+
 ## 2026-02-12 – Start/Release-Iteration: AppImage-Auto-Fix für Laien
 - **Was:** `tools/release_gap_report.py` bietet jetzt `--auto-fix-appimage` für automatische Basis-Reparatur (Werkzeug + AppDir), und `start.sh` nutzt diesen Pfad als direkten Optional-Check-Hinweis.
 - **Warum:** AppImage-Vorbereitung sollte ohne manuelle Einzelrecherche reproduzierbar und laienfreundlich ablaufen.
