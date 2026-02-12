@@ -1,7 +1,7 @@
 {
   "global_version": "2026.02.12",
   "files": {
-    "app/main.py": "2026.02.12.17",
+    "app/main.py": "2026.02.12.18",
     "core/settings.py": "2026.02.12.1",
     "start.sh": "2026.02.12.25",
     "AGENTS.md": "2.4",
@@ -12,10 +12,10 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.4",
-    "README.md": "2026.02.12.50",
-    "CHANGELOG.md": "2026.02.12.47",
-    "todo.txt": "2026.02.12.48",
-    "data/version_registry.json": "2026.02.12.53",
+    "README.md": "2026.02.12.51",
+    "CHANGELOG.md": "2026.02.12.48",
+    "todo.txt": "2026.02.12.49",
+    "data/version_registry.json": "2026.02.12.54",
     "tools/run_quality_checks.sh": "2026.02.12.15",
     "RELEASE_CHECKLIST.md": "2026.02.12.11",
     "core/history.py": "2026.02.12.5",

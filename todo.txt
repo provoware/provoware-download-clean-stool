@@ -1,3 +1,7 @@
+DONE: Dashboard-Entwurf auf One-Screen-Struktur (Sidebar + Raster + Hilfepanel) für Download-Bereinigung geschärft. (2026-02-12)
+DONE: Soft-Neon-Mockup in app/main.py auf konkrete Clean-Tool-Karten umgestellt statt generischer KPI-Karten. (2026-02-12)
+DONE: Neue Dashboard-Aktionsleiste ergänzt (Ordner im Dateimanager öffnen, Hilfe-Center, Direkt zu Schritt 2) inkl. validierter Fehlerhinweise. (2026-02-12)
+NEXT: Rechte Statuskarte „Letzte Bereinigung“ ergänzen und mit Verlaufseintrag + freigemachtem Speicher auf dem Dashboard verbinden. (2026-02-12)
 DONE: Start-Zusammenfassung zeigt jetzt Qualitätslaufzeit und den Schreibtest-Status für ~/.local/share klar an. (2026-02-12)
 NEXT: Qualitätslaufzeit mit letztem Wert vergleichen und als einfachen Trend (schneller/langsamer) im Start-Block ausgeben. (2026-02-12)
 DONE: start.sh robust gemacht (Quality-Logpfad validiert, Zielpfad sichtbar geloggt, A11y-Theme-Hilfe bei Blendung ergänzt). (2026-02-12)
