@@ -333,21 +333,21 @@ fi
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
-say "[QUALITY] 1/8 Syntaxprüfung (compileall)"
+say "[QUALITY] 1/9 Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
   "$ROOT_DIR/core" \
   "$ROOT_DIR/tools" \
   "$ROOT_DIR/start.sh"
 
-say "[QUALITY] 2/8 Formatprüfung"
+say "[QUALITY] 2/9 Formatprüfung"
 run_optional "black" "black --check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "black \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 run_optional "isort" "isort --check-only \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "isort \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 3/8 Lintprüfung"
+say "[QUALITY] 3/9 Lintprüfung"
 run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "ruff check --fix \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 4/8 Smoke-Test"
+say "[QUALITY] 4/9 Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
     say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
@@ -359,7 +359,7 @@ else
 fi
 
 
-say "[QUALITY] 5/8 A11y-Theme-Check"
+say "[QUALITY] 5/9 A11y-Theme-Check"
 if [ -f "$ROOT_DIR/tools/a11y_theme_check.py" ]; then
   if ! python3 "$ROOT_DIR/tools/a11y_theme_check.py"; then
     say "[QUALITY][WARN] A11y-Theme-Check meldet Probleme bei Kontrast oder Fokusregeln."
@@ -372,7 +372,7 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 6/8 JSON-Struktur-Check"
+say "[QUALITY] 6/9 JSON-Struktur-Check"
 validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
 validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
 validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
@@ -380,7 +380,7 @@ validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,fil
 validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
 
 
-say "[QUALITY] 7/8 Validierungsstandard-Check"
+say "[QUALITY] 7/9 Validierungsstandard-Check"
 if ! python3 - "$ROOT_DIR/core/validation.py" <<'PY'
 import ast
 import sys
@@ -402,8 +402,21 @@ then
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 8/8 Versions-Registry-Check"
+say "[QUALITY] 8/9 Versions-Registry-Check"
 validate_version_registry
+
+say "[QUALITY] 9/9 Release-Lücken-Report"
+if [ -f "$ROOT_DIR/tools/release_gap_report.py" ]; then
+  if ! python3 "$ROOT_DIR/tools/release_gap_report.py"; then
+    say "[QUALITY][WARN] Release-Lücken-Report zeigt noch offene oder widersprüchliche Punkte."
+    say "[QUALITY][HILFE] Nächster Schritt: zuerst den ersten Report-Punkt lösen, dann den Check erneut starten."
+    WARNINGS=$((WARNINGS + 1))
+  fi
+else
+  say "[QUALITY][WARN] Release-Lücken-Report fehlt (tools/release_gap_report.py)."
+  say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Versionsverwaltung holen."
+  WARNINGS=$((WARNINGS + 1))
+fi
 
 if [ "$WARNINGS" -eq 0 ]; then
   write_state "ok" "$CURRENT_SIGNATURE"

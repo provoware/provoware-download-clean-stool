@@ -16,6 +16,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
  - **Offene Punkte:** **0**
  - **Nächster Schritt:** README-Bild mit echter Live-Screenshot-Datei aus der GUI ergänzen und bei UI-Änderungen automatisch aktualisieren.
 
+### Neuer Release-Lücken-Report (schnelle Antwort auf „Was fehlt noch?“)
+
+Ab jetzt gibt es den Befehl `python3 tools/release_gap_report.py`.
+Der Report vergleicht `README.md`, `RELEASE_CHECKLIST.md` und `docs/developer_manual.md` automatisch und zeigt in einfacher Sprache:
+
+- ob Fortschritt und offene Punkte konsistent sind
+- welche Pflichtpunkte für den Release noch fehlen
+- welcher erste nächste Schritt jetzt sinnvoll ist
+
+Beispiel-Befehl:
+
+```bash
+python3 tools/release_gap_report.py
+```
+
+
 ### Standards-Check (Info-Dateien, kurz und verbindlich)
 
 | Standardbereich | Datei | Status |
