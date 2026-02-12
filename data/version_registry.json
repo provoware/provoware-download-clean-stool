@@ -1,7 +1,7 @@
 {
   "global_version": "2026.02.12",
   "files": {
-    "app/main.py": "2026.02.12.18",
+    "app/main.py": "2026.02.12.19",
     "core/settings.py": "2026.02.12.1",
     "start.sh": "2026.02.12.25",
     "AGENTS.md": "2.4",
@@ -12,10 +12,10 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.4",
-    "README.md": "2026.02.12.51",
-    "CHANGELOG.md": "2026.02.12.48",
-    "todo.txt": "2026.02.12.49",
-    "data/version_registry.json": "2026.02.12.54",
+    "README.md": "2026.02.12.52",
+    "CHANGELOG.md": "2026.02.12.49",
+    "todo.txt": "2026.02.12.50",
+    "data/version_registry.json": "2026.02.12.55",
     "tools/run_quality_checks.sh": "2026.02.12.15",
     "RELEASE_CHECKLIST.md": "2026.02.12.11",
     "core/history.py": "2026.02.12.5",
@@ -25,7 +25,7 @@
     "tools/quality_gate_gui.py": "2026.02.12.3",
     "tools/release_gap_report.py": "2026.02.12.4",
     "data/standards_manifest.json": "2026.02.12.3",
-    "docs/developer_manual.md": "2026.02.12.6",
+    "docs/developer_manual.md": "2026.02.12.7",
     "docs/debugging_gui_state.html": "2026.02.12.1",
     "core/selfcheck.py": "2026.02.12.1",
     "tools/exit_path_audit.py": "2026.02.12.1",
@@ -37,6 +37,8 @@
     "core/plugins.py": "2026.02.12.1",
     "plugins/__init__.py": "2026.02.12.1",
     "docs/user_manual.md": "2026.02.12.1",
-    ".gitignore": "2026.02.12.1"
+    ".gitignore": "2026.02.12.1",
+    "docs/projektbeschreibung_einfache_sprache.md": "2026.02.12.1",
+    "docs/iterationstagebuch.md": "2026.02.12.1"
   }
 }
