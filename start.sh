@@ -617,6 +617,13 @@ if [ -f "tools/release_gap_report.py" ]; then
   else
     echo "[STATUS] ✅ Release-Report: OK"
   fi
+
+  if python3 tools/release_gap_report.py --appimage-only >>"$QUALITY_LOG" 2>&1; then
+    echo "[STATUS] ✅ AppImage-Releasecheck: JA (Mindestpunkte erfüllt)"
+  else
+    echo "[WARN] AppImage-Releasecheck: NEIN"
+    echo "[HILFE] Nächster Schritt: python3 tools/release_gap_report.py --appimage-only"
+  fi
 fi
 
 # 6) Linux-Systembibliotheken prüfen (vor Smoke-Test)
