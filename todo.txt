@@ -1,3 +1,6 @@
+DONE: Start-Routine erweitert: automatischer A11y-Theme-Check, ein einmaliger Auto-Fix-Qualitätslauf mit Kontrolllauf und klarere A11y-Hilfe mit Theme-Auswahl/Prüfbefehl. (2026-02-12)
+NEXT: Mini-UX-Gate als eigenes Skript (`tools/mini_ux_gate.py`) automatisieren und Ergebnis im Qualitätsbericht als festen Block anzeigen. (2026-02-12)
+
 DONE: Qualitätscheck prüft jetzt Zahlenbereiche (Min/Max) für Preset-Schwellen und zeigt bei Verstoß ein direktes Korrekturbeispiel in einfacher Sprache. (2026-02-12)
 NEXT: Zahlenbereichs-Checks als nächsten Mini-Schritt auch für weitere numerische Einstellungen (z. B. Größenlimits) ergänzen. (2026-02-12)
 DONE: AppImage-Readiness-Prüfung liefert jetzt eine klare JA/NEIN-Antwort und direkte Next-Step-Befehle (`python3 tools/release_gap_report.py --appimage-only`). (2026-02-12)
