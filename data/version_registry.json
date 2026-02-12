@@ -12,10 +12,10 @@
     "app/web_api.py": "2026.02.11.1",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.11.1",
-    "README.md": "2026.02.12.2",
-    "CHANGELOG.md": "2026.02.12.2",
-    "todo.txt": "2026.02.12.2",
-    "data/version_registry.json": "2026.02.12.2",
-    "tools/run_quality_checks.sh": "2026.02.12.1"
+    "README.md": "2026.02.12.3",
+    "CHANGELOG.md": "2026.02.12.3",
+    "todo.txt": "2026.02.12.3",
+    "data/version_registry.json": "2026.02.12.3",
+    "tools/run_quality_checks.sh": "2026.02.12.2"
   }
 }

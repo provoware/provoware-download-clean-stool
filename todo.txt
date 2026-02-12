@@ -1,3 +1,5 @@
+DONE: Quality-Checks zählen Schritte jetzt konsistent (1/6–6/6), prüfen JSON-Typen mit und geben bei Typfehlern klare Next Steps in einfacher Sprache. (2026-02-12)
+NEXT: Typvalidierung im Quality-Check um Zahlenbereichsprüfungen (Min/Max) erweitern und bei Verstoß direkte Korrekturbeispiele ausgeben. (2026-02-12)
 DONE: Entwicklerbereich hat jetzt eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe in einfacher Sprache. (2026-02-11)
 DONE: Trefferliste lässt sich jetzt nach Name oder Größe sortieren, und im Plan-Schritt öffnet ein Rechtsklick-Menü den Zielordner direkt im Dateimanager. (2026-02-11)
 DONE: Filter-Buttons im Entwicklerbereich sind jetzt größer und haben Accessibility-Namen für bessere Tastatur-/Screenreader-Bedienung. (2026-02-11)

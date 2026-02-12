@@ -1,3 +1,8 @@
+## 2026-02-12 – Quality-Iteration: Schrittzählung + Typvalidierung + klarere Hilfe
+- **Was:** `tools/run_quality_checks.sh` nutzt jetzt eine konsistente 6/6-Schrittanzeige, prüft bei JSON-Dateien zusätzlich zentrale Datentypen und gibt bei Typfehlern verständlichere Next Steps aus.
+- **Warum:** Pflichtfelder allein reichen nicht aus; falsche Werttypen führen sonst erst später zu schwerer verständlichen Laufzeitproblemen.
+- **Wirkung:** Frühere Fehlererkennung, klarere Nutzerführung und robustere Qualitäts-Gates für Konfigurationen.
+
 ## 2026-02-12 – Start-Iteration: Arbeitsordner-Autoprüfung + Rechtecheck + Hilfe
 - **Was:** `start.sh` prüft beim Start den Arbeitsordner im Linux-Nutzerpfad (`~/.local/share/provoware-clean-tool-2026`), legt ihn bei Bedarf an und synchronisiert ihn in `data/settings.json`.
 - **Warum:** Das Tool soll ohne manuelle Vorarbeit mit einem sicheren Projektstandard-Ordner starten und Rechteprobleme früh, verständlich und reproduzierbar melden.
