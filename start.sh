@@ -909,8 +909,9 @@ print_accessibility_next_steps() {
   echo "[A11Y] 1) Tastatur: Mit Tab navigieren, Shift+Tab zurück, Enter zum Ausführen."
   echo "[A11Y] 2) Lesbarkeit: Bei zu wenig Kontrast Theme wechseln (Dark/Light/High-Contrast)."
   echo "[A11Y] 3) Schnelltest: python3 tools/a11y_theme_check.py"
-  echo "[A11Y] 4) Klarer Ablauf: Scan starten → Vorschau prüfen → Aufräumen ausführen."
-  echo "[A11Y] 5) Bei Unsicherheit: DEBUG_LOG_MODE=1 bash start.sh für detaillierte Hilfe starten."
+  echo "[A11Y] 4) Theme-Wahl: Bei Blendung sofort auf 'kontrast' oder 'senior' wechseln."
+  echo "[A11Y] 5) Klarer Ablauf: Scan starten → Vorschau prüfen → Aufräumen ausführen."
+  echo "[A11Y] 6) Bei Unsicherheit: DEBUG_LOG_MODE=1 bash start.sh für detaillierte Hilfe starten."
 }
 
 extract_quality_count() {
@@ -927,6 +928,36 @@ extract_quality_count() {
 
   raw_count="$(rg -c "$pattern" "$quality_log_path" 2>/dev/null | head -n 1 || echo "0")"
   validate_non_negative_int "$raw_count"
+}
+
+prepare_quality_log_path() {
+  # Validiert den Qualitäts-Logpfad und prüft schreibbaren Zielordner.
+  # Input: relativer Dateipfad. Output: sicherer Logpfad oder leer bei Fehlern.
+  local raw_path="${1:-exports/quality_report.txt}"
+  local log_dir
+
+  if [ -z "$raw_path" ]; then
+    echo "[WARN] Qualitäts-Logpfad ist leer. Fallback: exports/quality_report.txt" | tee -a "$SETUP_LOG"
+    raw_path="exports/quality_report.txt"
+  fi
+
+  if [[ "$raw_path" = /* ]]; then
+    echo "[WARN] Absoluter Qualitäts-Logpfad ist nicht erlaubt: $raw_path" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Relativen Pfad verwenden (z. B. exports/quality_report.txt)." | tee -a "$SETUP_LOG"
+    printf '%s' ""
+    return 1
+  fi
+
+  log_dir="$(dirname "$raw_path")"
+  mkdir -p "$log_dir" 2>/dev/null || true
+  if [ ! -d "$log_dir" ] || [ ! -w "$log_dir" ]; then
+    echo "[WARN] Qualitäts-Logordner ist nicht schreibbar: $log_dir" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Rechte mit 'chmod u+rwx $log_dir' prüfen und bash start.sh erneut ausführen." | tee -a "$SETUP_LOG"
+    printf '%s' ""
+    return 1
+  fi
+
+  printf '%s' "$raw_path"
 }
 
 
@@ -960,6 +991,15 @@ run_quality_with_autofix() {
   # Führt den Qualitätslauf robust aus: Erst Prüfung, bei Warnungen ein Auto-Fix, danach Kontrolllauf.
   # Output: 0 wenn Abschluss ohne Warn-Exitcode möglich, 1 bei weiterhin rotem Ergebnis.
   local quality_log_path="${1:-exports/quality_report.txt}"
+  local prepared_quality_log_path
+
+  prepared_quality_log_path="$(prepare_quality_log_path "$quality_log_path")"
+  if [ -z "$prepared_quality_log_path" ]; then
+    echo "[WARN] Qualitätslauf abgebrochen: Logpfad konnte nicht sicher vorbereitet werden." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+  quality_log_path="$prepared_quality_log_path"
+  echo "[CHECK] Qualitätslauf protokolliert nach: $quality_log_path" | tee -a "$SETUP_LOG"
 
   if bash tools/run_quality_checks.sh > "$quality_log_path" 2>&1; then
     echo "[OK] Qualitätsprüfung ohne Warn-Exitcode abgeschlossen."

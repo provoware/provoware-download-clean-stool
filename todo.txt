@@ -1,3 +1,5 @@
+DONE: start.sh robust gemacht (Quality-Logpfad validiert, Zielpfad sichtbar geloggt, A11y-Theme-Hilfe bei Blendung ergänzt). (2026-02-12)
+NEXT: Laufzeitmessung je Quality-Lauf ergänzen und als kurze Nutzerinfo in der Start-Zusammenfassung anzeigen. (2026-02-12)
 DONE: start.sh prüft jetzt Schreibrechte für logs/exports per Probe, versucht Auto-Reparatur und zeigt klare Next Steps bei Rechtefehlern. (2026-02-12)
 NEXT: Schreibrechte-Selbsttest als nächsten Mini-Schritt auch für den Arbeitsordner unter ~/.local/share erweitern und im Startbericht separat anzeigen. (2026-02-12)
 
