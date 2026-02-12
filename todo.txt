@@ -1,3 +1,5 @@
+DONE: Qualitätsdialog kann jetzt Folgeaktionen direkt ausführen (Auto-Fix, Qualitätslauf, Start), validiert DEBUG_LOG_MODE robust und zeigt Tastatur-Hilfe für bessere Barrierefreiheit. (2026-02-12)
+NEXT: Mini-UX-Gate-Skript um einen automatischen Dialog-Interaktionscheck für `tools/quality_gate_gui.py` erweitern, damit die neuen Aktionen auch im CI-Smokelauf abgesichert sind. (2026-02-12)
 DONE: Feste Hilfezeile in Analyse und Plan ergänzt (Tastaturweg, Kontrast-Hinweis, klare nächste Aktion) inklusive Accessibility-Texten. (2026-02-12)
 DONE: Startroutine erkennt fehlende Python-Module per Importtest und versucht automatische Reparatur mit eindeutigem Endstatus. (2026-02-12)
 NEXT: Im Start-Log einen kompakten Reparatur-Block mit Liste der betroffenen Module und je Modul „Import jetzt OK/Fehler“ anzeigen. (2026-02-12)

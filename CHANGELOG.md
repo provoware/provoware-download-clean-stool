@@ -1,3 +1,8 @@
+## 2026-02-12 (Quality-Dialog Folgeaktionen)
+- Was: `tools/quality_gate_gui.py` unterstützt jetzt direkte Aktionen (`auto_fix`, `quality`, `restart`) plus sicheren `report`-Fallback.
+- Warum: Nach einem fehlgeschlagenen Qualitätslauf sollen Nutzende ohne Umweg den nächsten sinnvollen Schritt starten können.
+- Wirkung: Klarere Hilfe, robustere Debug-Flag-Validierung (`DEBUG_LOG_MODE`) und bessere Tastatur-/A11y-Hinweise im Dialog.
+
 ## 2026-02-12 – UX/Start-Iteration: Feste Hilfezeilen + Modul-Autoreparatur
 - **Was:** `app/main.py` ergänzt feste Hilfezeilen in „Analyse“ und „Plan“ (Tastaturweg, Kontrast-Hinweis, nächste Aktion); `start.sh` erkennt zusätzlich fehlende Python-Module per Importtest und versucht eine automatische Reparatur mit klarer Erfolgs-/Fehlerausgabe.
 - **Warum:** Nutzer:innen sollen in beiden Arbeitsschritten sofort barrierearme Orientierung erhalten und Startprobleme durch fehlende Module automatisch, nachvollziehbar und robust gelöst bekommen.
