@@ -165,3 +165,18 @@ bash start.sh
 ```
 
 Laienhinweis: Wenn ein Schritt fehlschlägt, zuerst die angezeigte Hilfe im Dialog lesen und genau den ersten vorgeschlagenen Schritt ausführen.
+
+## 13) Standard → konkrete Prüfroutine (feste Zuordnungstabelle)
+
+Diese Tabelle ist absichtlich separat, damit beim Refactoring jeder Standard direkt auf eine konkrete Prüfroutine zeigt.
+
+| Standard (kurz) | Konkrete Prüfroutine | Automatisch in `start.sh` | Nutzerfeedback (einfache Sprache) |
+|---|---|---|---|
+| Syntax fehlerfrei | `python -m compileall -q .` | Ja, als Gate 1 | „Syntax ist in Ordnung“ oder „Bitte Fehler in Datei X beheben und erneut starten“. |
+| Codequalität + Formatierung | `bash tools/run_quality_checks.sh` | Ja, als Gate 2 | „Qualitätsprüfung lief durch“ oder klare 3-Schritt-Hilfe mit Auto-Fix-Befehl. |
+| Smoke-Test Kernablauf | `python tools/smoke_test.py` | Ja, als Gate 3 | „Schnelltest erfolgreich“ oder Hinweis auf betroffenen Modulbereich mit Next Step. |
+| End-to-End-Start | `bash start.sh` | Ja, als Gate 4 | „Start vollständig“ oder Dialog mit „Erneut versuchen / Reparatur / Protokoll“. |
+| Mini-UX-Check (A11y = Barrierefreiheit) | `python tools/a11y_theme_check.py` + Dialogprüfung gemäß AGENTS | Teilweise (technischer Check automatisch, Dialogprüfung manuell 2 Minuten) | Kurze deutsche Meldung mit Fokus auf Kontrast, Tastaturweg und klaren nächsten Klick. |
+| Release-Lückenprüfung | `python3 tools/release_gap_report.py` | Ja, als unterstützender Pflichtcheck | „Was fehlt noch?“ mit einer direkten nächsten Aktion in Alltagssprache. |
+
+Regel für neue Standards: Ohne feste Prüfroutine wird ein Standard nicht als „fertig umgesetzt“ gewertet.

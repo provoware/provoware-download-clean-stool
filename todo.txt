@@ -1,3 +1,5 @@
+DONE: Entwicklerhandbuch ergänzt: separate feste Tabelle „Standard → konkrete Prüfroutine" mit Auto-Status und verständlichem Nutzerfeedback. (2026-02-12)
+NEXT: Mini-UX-Dialogprüfung (2 Minuten) als kleines Script teilautomatisieren und Ergebnis im Quality-Report ausgeben. (2026-02-12)
 DONE: GUI-Qualitätsdialog zeigt jetzt denselben Kompaktblock wie start.sh (Warnungen/Hinweise + klare 3-Schritt-Hilfe mit Auto-Fix-Befehl). (2026-02-12)
 NEXT: Im GUI-Qualitätsdialog zusätzlich direkte Buttons für 'Auto-Fix starten' und 'Start erneut ausführen' ergänzen. (2026-02-12)
 DONE: AGENTS-Regeln für README-Zyklus + Aufgaben-Zählung präzisiert, Projektdetailbeschreibung mit Migrationsplan angelegt. (2026-02-12)

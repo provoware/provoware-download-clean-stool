@@ -1,3 +1,8 @@
+## 2026-02-12 – Doku-Iteration: Feste Standard-Prüfroutinen-Tabelle im Entwicklerhandbuch
+- **Was:** In `docs/developer_manual.md` wurde eine separate Tabelle „Standard → konkrete Prüfroutine" ergänzt, inklusive Automatisierungsstatus und Nutzerfeedback in einfacher Sprache.
+- **Warum:** Für das letzte kleine Refactoring-Teilstück fehlte eine feste, schnell prüfbare Zuordnung von Standards zu konkreten Checks.
+- **Wirkung:** Entwickler:innen sehen jetzt sofort, welcher Standard durch welchen Befehl abgesichert ist und ob die Startroutine das automatisch übernimmt.
+
 ## 2026-02-12 – Manifest-Iteration: Vorgabenabdeckung ergänzt und Lücken geschlossen
 - **Was:** `data/standards_manifest.json` auf v1.1 erweitert (G5 Mini-UX-Gate, Doku-Pflichten, Auto-Qualität/Formatierung, Hilfeelement- und Next-Step-Pflichten) und README-Abschnitt zur Manifest-Abdeckung ergänzt.
 - **Warum:** Die Frage „Sind alle Vorgaben im Manifest?“ sollte direkt mit klarer, prüfbarer Struktur beantwortbar sein.

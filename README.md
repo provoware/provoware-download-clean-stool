@@ -41,7 +41,7 @@ python3 tools/release_gap_report.py
 | Entwickler-Details für nächsten Technikschritt | `docs/developer_manual.md` | ✅ Festgehalten |
 | Versionsnachweis aller Änderungen | `data/version_registry.json` | ✅ Festgehalten |
 
-**Kurzfazit (Refactoring):** Die globalen Standards sind in den zentralen Info-Dateien dokumentiert. Für „optimales Refactoring“ fehlt als nächster kleiner Schritt nur noch eine feste Zuordnung „Standard → konkrete Prüfroutine“ als separate Tabelle im Entwicklerhandbuch.
+**Kurzfazit (Refactoring):** Die globale Standardbasis ist dokumentiert und die feste Zuordnung „Standard → konkrete Prüfroutine“ steht jetzt als separate Tabelle im Entwicklerhandbuch (`docs/developer_manual.md`, Abschnitt 13).
 
 
 ### Manifest-Abdeckung (Standards-Manifest 1.1)
