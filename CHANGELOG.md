@@ -1,3 +1,7 @@
+- Was: `start.sh` prüft nun Schreibrechte für `logs/` und `exports/`, repariert sie bei Bedarf automatisch und gibt klare Rechte-Next-Steps aus. (2026-02-12)
+- Warum: Fehlende Schreibrechte führten zu schwer verständlichen Startabbrüchen ohne klaren Selbsttest.
+- Wirkung: Die Startroutine erkennt Rechteprobleme früh, versucht eine sichere Korrektur und erklärt laienverständlich den nächsten manuellen Schritt.
+
 - Was: Abhängigkeits-Manifest erweitert, Start-Dependency-Report erzeugt und Design-Thumbnail-Check ergänzt. (2026-02-12)
 - Warum: Alle genutzten Abhängigkeiten/Befehle sollen vollständig gegenprüfbar und die Design-Näherung dauerhaft kontrollierbar sein.
 - Wirkung: Start liefert jetzt ein detailliertes Manifest-Protokoll; UI-Karten wirken näher am Referenzbild; Design-Check erkennt fehlendes Thumbnail sofort.

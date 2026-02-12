@@ -11,7 +11,7 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **98%**
+ - **Entwicklungsfortschritt:** **99%**
  - **Abgeschlossene Punkte:** **21**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
@@ -28,6 +28,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+
+## 0.30) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Schreibrechte-Selbsttest für Laufzeitordner ergänzt**  
+   `start.sh` prüft jetzt `logs/` und `exports/` aktiv per Schreibprobe und dokumentiert den Status klar im Setup-Log.
+2. **Gezielte Auto-Reparatur für Schreibrechte eingebaut**  
+   Wenn ein Schreibtest fehlschlägt, versucht die Startroutine automatisch `chmod u+rwx` und prüft danach erneut.
+3. **Neue Hilfe-Dialoge mit klaren Next Steps bei Rechtefehlern (A11y/Text)**  
+   Bei weiterhin fehlenden Rechten zeigt `start.sh` jetzt einfache Schritt-für-Schritt-Hinweise (`ls -ld`, `chmod`, Neustart).
+
+### Zwei kurze Laienvorschläge
+- Starten Sie nach Rechte-Änderungen immer direkt `bash start.sh`, damit alle Prüfungen automatisch erneut laufen.
+- Öffnen Sie bei Warnungen zuerst `exports/setup_log.txt`, dort steht der nächste konkrete Schritt in einfacher Sprache.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitern Sie im nächsten Mini-Schritt den Schreibtest um eine kurze Prüfung, ob im Arbeitsordner (`$HOME/.local/share/provoware-clean-tool-2026`) ebenfalls geschrieben werden kann. So sehen Nutzer:innen schon vor dem GUI-Start, ob auch dort alle Rechte korrekt sind.
 
 ## 0.29) Aktuelle Iteration (3 Punkte, DONE)
 
