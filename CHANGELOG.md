@@ -461,3 +461,8 @@
 - **Was:** Neue Validierungen für Auswahlwerte und Verzeichnispfade ergänzt, Settings-Normalisierung daran gekoppelt und Start-Reparaturblock mit Modul-Importstatus erweitert.
 - **Warum:** Damit Laien Fehler früher verstehen und Startprobleme schrittweise ohne Abbruch beheben können.
 - **Wirkung:** Robustere Eingaben, klarere Rückmeldungen und weniger unklare Reparaturabbrüche.
+
+## 2026-02-12 – Start/Quality-Iteration: Mini-UX-Gate fest integriert
+- **Was:** `start.sh` protokolliert den Modul-Reparaturstatus jetzt auch im Fall „keine fehlenden Module“ mit Kompaktblock; neues Skript `tools/mini_ux_gate.py`; `tools/run_quality_checks.sh` ergänzt festen Schritt 10/11 für das Mini-UX-Gate.
+- **Warum:** Der Mini-UX-Gate aus den Standards sollte technisch verbindlich automatisiert laufen und bei allen Startzuständen nachvollziehbar protokolliert sein.
+- **Wirkung:** Bessere Nachvollziehbarkeit im Setup-Log, frühere UX-/A11y-Hinweise und klarere Next Steps im Qualitätslauf.

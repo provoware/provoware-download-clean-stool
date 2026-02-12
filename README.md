@@ -12,12 +12,30 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
  - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **29**
+ - **Abgeschlossene Punkte:** **30**
  - **Offene Punkte:** **0**
- - **Nächster Schritt:** Responsive Verbesserungen auf den Scan- und Planseiten per UX-Test mit echten 1366x768- und 1920x1080-Profilen feinjustieren.
+ - **Nächster Schritt:** Mini-UX-Gate im nächsten Schritt von statischer auf interaktive Dialog-Prüfung (Playwright) erweitern, damit echte Klickpfade automatisch geprüft werden.
 
 
 
+
+
+
+## 0.17) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Modul-Reparatur meldet auch den „nicht nötig“-Fall jetzt vollständig im Setup-Log**  
+   `start.sh` schreibt bei fehlenden Modulproblemen jetzt zusätzlich einen kompakten Statusblock in `exports/setup_log.txt`, damit der Zustand immer eindeutig dokumentiert ist.
+2. **Mini-UX-Gate als eigenes Skript umgesetzt (Text/Hilfe/A11y)**  
+   Neues Skript `tools/mini_ux_gate.py` prüft zentral deutsche Hilfehinweise, „Nächster Schritt“-Texte und Basis-Hinweise zu Fokus/Kontrast in den wichtigsten Bereichen.
+3. **Qualitätslauf um festes G5-Gate erweitert**  
+   `tools/run_quality_checks.sh` enthält jetzt einen festen Schritt **10/11 Mini-UX-Gate** mit klaren Warnungen und einfachen Next Steps.
+
+### Zwei kurze Laienvorschläge
+- Wenn etwas unklar wirkt, starte zuerst: `python3 tools/mini_ux_gate.py` und behebe nur die **erste** Warnung.
+- Danach immer in dieser Reihenfolge weiter: `bash tools/run_quality_checks.sh` und anschließend `bash start.sh`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitere das Mini-UX-Gate als nächsten Schritt um einen kleinen interaktiven Dialogtest (echte Klickfolge), damit nicht nur Texte vorhanden sind, sondern auch die Bedienwege in der Praxis stabil funktionieren.
 
 ## 0.16) Aktuelle Iteration (3 Punkte, DONE)
 
