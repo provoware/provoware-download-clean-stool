@@ -143,7 +143,9 @@ print_module_repair_status_block() {
   normalized_csv="$(printf '%s' "$missing_csv" | tr -d '[:space:]')"
 
   if [ -z "$normalized_csv" ]; then
-    echo "[SETUP] Modul-Reparatur: Keine fehlenden Module erkannt."
+    echo "[SETUP] Modul-Reparatur: Keine fehlenden Module erkannt." | tee -a "$SETUP_LOG"
+    echo "[SETUP] Modul-Reparatur kompakt (Priorität):" | tee -a "$SETUP_LOG"
+    echo "[SETUP] - keine Einträge (nicht nötig)" | tee -a "$SETUP_LOG"
     return 0
   fi
 

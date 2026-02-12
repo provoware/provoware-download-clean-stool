@@ -1,3 +1,5 @@
+DONE: Mini-UX-Gate als eigenes Skript ergänzt, in Quality-Check als fester Schritt integriert und Modul-Reparatur-Log auch für den Fall „nicht nötig“ vervollständigt. (2026-02-12)
+NEXT: Mini-UX-Gate um interaktive Dialog-Klickpfade erweitern (z. B. Buttonfolge in Quality-Dialog), damit neben Texten auch Bedienfluss automatisch geprüft wird. (2026-02-12)
 DONE: Start-Routine ergänzt priorisierten Modul-Reparatur-Kompaktblock (kritisch/mittel), robuste Qualitätszähler-Funktion und klar strukturierte A11y-Start-Hilfe (1–5). (2026-02-12)
 NEXT: Prioritätsregeln für Modul-Reparatur im nächsten Schritt aus settings/manifest ableiten statt fest im Skript zu pflegen. (2026-02-12)
 DONE: Validierungen erweitert (Auswahl/Pfad), Start-Routine zeigt Modul-Reparaturstatus je Import und gibt klare 2-Schritt-Laienhilfe bei offenen Modulen. (2026-02-12)

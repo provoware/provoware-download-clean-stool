@@ -456,7 +456,20 @@ else
   say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Versionsverwaltung holen."
   WARNINGS=$((WARNINGS + 1))
 fi
-say "[QUALITY] 10/10 Release-Lücken-Report"
+say "[QUALITY] 10/11 Mini-UX-Gate"
+if [ -f "$ROOT_DIR/tools/mini_ux_gate.py" ]; then
+  if ! python3 "$ROOT_DIR/tools/mini_ux_gate.py"; then
+    say "[QUALITY][WARN] Mini-UX-Gate meldet fehlende Hilfe-/A11y-Hinweise."
+    say "[QUALITY][HILFE] Nächster Schritt: Erste gemeldete Stelle mit kurzer Hilfe in einfacher Sprache ergänzen."
+    WARNINGS=$((WARNINGS + 1))
+  fi
+else
+  say "[QUALITY][WARN] Mini-UX-Gate fehlt (tools/mini_ux_gate.py)."
+  say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Versionsverwaltung holen."
+  WARNINGS=$((WARNINGS + 1))
+fi
+
+say "[QUALITY] 11/11 Release-Lücken-Report"
 if [ -f "$ROOT_DIR/tools/release_gap_report.py" ]; then
   if ! python3 "$ROOT_DIR/tools/release_gap_report.py"; then
     say "[QUALITY][WARN] Release-Lücken-Report zeigt noch offene oder widersprüchliche Punkte."
