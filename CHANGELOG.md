@@ -1,3 +1,8 @@
+## 2026-02-12 – Quality-Iteration: robuste Smoke-Vorprüfung für Headless und Desktop
+- **Was:** `tools/run_quality_checks.sh` prüft vor dem Smoke-Test jetzt Display/Wayland und zentrale GUI-Linux-Bibliotheken (`libGL`, `libEGL`, `libxkbcommon`), ergänzt `STRICT_SMOKE` und klare Next-Step-Befehle.
+- **Warum:** In Headless-Umgebungen führte der GUI-nahe Smoke-Test zu irreführenden Warnungen statt zu klarer, steuerbarer Rückmeldung.
+- **Wirkung:** Stabilere Qualitätsläufe in CI/Headless, optional strenger Modus für Desktop-Gates und verständlichere Fehlerhilfe in einfacher Sprache.
+
 ## 2026-02-12 (Iteration 0.21)
 - Was: Qualitätslauf-Schrittzählung vereinheitlicht, GATE-1-Syntaxprüfung in start.sh ergänzt und Qualitätsdialog um die Alias-Aktionen repair/retry/protokoll erweitert.
 - Warum: Die Startdiagnose sollte klarer und robuster sein, während laienfreundliche Bedienwörter direkte Folgeaktionen ohne Umweg ermöglichen.

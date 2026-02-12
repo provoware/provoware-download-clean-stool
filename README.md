@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **30**
- - **Offene Punkte:** **0**
- - **Nächster Schritt:** Mini-UX-Gate im nächsten Schritt von statischer auf interaktive Dialog-Prüfung (Playwright) erweitern, damit echte Klickpfade automatisch geprüft werden.
+ - **Entwicklungsfortschritt:** **95%**
+ - **Abgeschlossene Punkte:** **19**
+ - **Offene Punkte:** **1**
+ - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
 
 
 
@@ -23,6 +23,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+
+## 0.22) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Smoke-Test-Vorprüfung erkennt fehlende GUI-Bausteine vorab**  
+   `tools/run_quality_checks.sh` prüft jetzt Display/Wayland sowie `libGL`, `libEGL` und `libxkbcommon`, bevor der GUI-nahe Smoke-Test startet.
+2. **Neues Flag `STRICT_SMOKE` steuert die Strenge der Smoke-Prüfung**  
+   Standard bleibt lauffähig in Headless-Umgebungen (`STRICT_SMOKE=0`), optional kann mit `STRICT_SMOKE=1` derselbe Fall als harte Qualitätswarnung markiert werden.
+3. **Hilfetexte für Smoke-Fehler wurden laienfreundlich erweitert (A11y/Text)**  
+   Der Qualitätslauf zeigt jetzt vollständige Next-Step-Befehle in einfacher Sprache für Linux-Bibliotheken und Einzeldiagnose.
+
+### Zwei kurze Laienvorschläge
+- Wenn der Smoke-Test übersprungen wird, zuerst im Desktop-Terminal mit Bildschirm starten und dann `bash tools/run_quality_checks.sh` erneut ausführen.
+- Für eine strenge CI-Prüfung nutzen Sie `STRICT_SMOKE=1 bash tools/run_quality_checks.sh`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führen Sie auf einem Linux-Desktop zuerst `sudo apt update && sudo apt install -y libgl1 libegl1 libxkbcommon0` aus. Starten Sie danach `STRICT_SMOKE=1 bash tools/run_quality_checks.sh`. So sehen Sie sofort, ob die GUI-abhängige Schnellprüfung auch unter strengen Bedingungen vollständig grün ist.
 
 ## 0.21) Aktuelle Iteration (3 Punkte, DONE)
 
