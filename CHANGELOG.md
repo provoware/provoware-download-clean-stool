@@ -1,4 +1,9 @@
 ## 2026-02-12 – UI-Layout: One-Screen-Dashboard für Download-Bereinigung
+## 2026-02-12 – Iteration 0.39
+- **Was:** Dashboard-Infos erweitert (Systemgesundheit + Rollenpfade), Entwicklerdoku detailliert ausgebaut, neue Laien-Infodatei und Iterationstagebuch ergänzt.
+- **Warum:** Nutzer und Entwickler brauchten klarere Next Steps, konsistente Standards und besser verständliche Projekterklärung.
+- **Wirkung:** Bessere Orientierung im Dashboard, weniger Rückfragen im Team und niedrigere Einstiegshürde für Nicht-Techniker.
+
 - **Was:** `app/main.py` erweitert Dashboard-Text, Soft-Neon-Mockup und Start-Aktionsleiste um Sidebar/Raster/Help-Panel plus Button „Ordner im Dateimanager öffnen“.
 - **Warum:** Das Zielbild „alles auf einem Bildschirm“ sollte für Laien direkt sichtbar und ohne Umwege bedienbar sein.
 - **Wirkung:** Klarere Orientierung, schnellerer Startfluss und bessere Hilfe-/A11y-Führung direkt im Haupttool.

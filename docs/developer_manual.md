@@ -180,3 +180,54 @@ Diese Tabelle ist absichtlich separat, damit beim Refactoring jeder Standard dir
 | Release-Lückenprüfung | `python3 tools/release_gap_report.py` | Ja, als unterstützender Pflichtcheck | „Was fehlt noch?“ mit einer direkten nächsten Aktion in Alltagssprache. |
 
 Regel für neue Standards: Ohne feste Prüfroutine wird ein Standard nicht als „fertig umgesetzt“ gewertet.
+
+## 14) Entwickler-Playbook (verbindliche Reihenfolge pro Änderung)
+
+Diese Kurzroutine soll vor jedem Merge gleich durchgeführt werden:
+
+1. **Scope in 1 Minute festziehen**
+   - Problem in einem Satz.
+   - Ziel in einem Satz.
+   - Exakte Dateien notieren.
+2. **Patch klein halten**
+   - Nur benötigte Blöcke ändern.
+   - Keine Neben-Refactorings.
+3. **A11y + Hilfe immer mitliefern**
+   - Mindestens ein Hilfeelement verbessern.
+   - Kontrast/Fokus im betroffenen Bereich prüfen.
+4. **Gates in fixer Reihenfolge laufen lassen**
+   - `compileall` → `quality` → `smoke` → `start`.
+5. **Dokumentation und Registry nachziehen**
+   - README, CHANGELOG, todo, Registry aktualisieren.
+
+Ergebnis: Kleine, merge-fähige Änderungen ohne offene Pflichtpunkte.
+
+## 15) Debugging-Standard in einfacher Sprache
+
+Wenn ein Fehler auftritt, sollen Meldungen immer diese Struktur haben:
+
+1. **Was ist passiert?**
+2. **Warum wahrscheinlich?**
+3. **Was soll ich jetzt klicken/tippen?**
+
+Beispiel für gute Meldung:
+- „Ordner konnte nicht geöffnet werden. Wahrscheinlich fehlen Rechte. Klicken Sie auf Reparatur oder wählen Sie einen anderen Ordner.“
+
+Beispiel für schlechte Meldung:
+- „Unhandled exception in module executor" (zu technisch, keine direkte Hilfe).
+
+## 16) Dashboard-Informationsstandard (neu)
+
+Damit Dashboard-Infos konsistent bleiben, gilt:
+
+1. **Live-Status muss immer sichtbar sein**
+   - Zielordner, Preset, Filter, Speicherstatus.
+2. **Systemgesundheit als Kurzblock**
+   - Auto-Prüfung, Einstellungen, A11y.
+3. **Rollen-Hinweis für beide Zielgruppen**
+   - Laienpfad (4 Schritte), Entwicklerpfad (Debug + Gates).
+4. **Jeder Warnhinweis hat einen Next Step**
+   - klare Handlung in einem Satz.
+
+Technischer Hinweis:
+Die GUI erzeugt diese Texte zentral in `app/main.py` über validierte Builder-Funktionen, damit keine leeren oder unvollständigen Hinweise angezeigt werden.

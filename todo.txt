@@ -182,3 +182,5 @@ NEXT: AppImage auf einem zweiten Linux-System manuell starten, 2-Minuten-Smoke d
 
 DONE: Binärdatei aus dem Repo entfernt, dist/*.AppImage in .gitignore aufgenommen und Versions-Registry bereinigt. (2026-02-12)
 NEXT: AppImage nur im Release-Job erzeugen (CI/Build-Host) und als Artefakt veröffentlichen statt im Git-Stand zu speichern. (2026-02-12)
+DONE: Dashboard-Systemgesundheit ergänzt, Entwicklerdoku mit Playbook/Debug-Standard erweitert und neue Laien-Infodatei + Iterationstagebuch angelegt. (2026-02-12)
+NEXT: Dashboard um Karte 'Letzter Lauf' erweitern (Datum, Dateianzahl, Speichergewinn) und dafür einen kleinen Anzeige-Selbsttest ergänzen. (2026-02-12)

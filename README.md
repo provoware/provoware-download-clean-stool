@@ -42,6 +42,23 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+## 0.39) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Dashboard-Informationen klarer und handlungsorientiert gemacht**  
+   `app/main.py` zeigt jetzt zusätzlich eine kompakte Systemgesundheit (Auto-Prüfung, Einstellungen, Barrierefreiheit) mit klaren Next Steps je Karte.
+2. **Entwicklerdokumentation detailliert erweitert**  
+   `docs/developer_manual.md` enthält jetzt ein verbindliches Entwickler-Playbook, einen einheitlichen Debugging-Standard und einen Dashboard-Informationsstandard.
+3. **Neue Laien-Infodatei + Iterationstagebuch ergänzt (Hilfe/Text/A11y)**  
+   Neue Dateien `docs/projektbeschreibung_einfache_sprache.md` und `docs/iterationstagebuch.md` erklären Projekt, Befehle und die umgesetzten Schritte in sehr einfacher Sprache.
+
+### Zwei kurze Laienvorschläge
+- Starten Sie bei Unsicherheit zuerst mit einem kleinen Testordner mit wenigen Dateien.
+- Wenn Texte anstrengend sind, stellen Sie direkt das Theme **senior** oder **kontrast** ein.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänzen Sie als nächsten kleinen Schritt im Dashboard eine Karte „Letzter Lauf" mit Datum, Anzahl verschobener Dateien und freigemachtem Speicher. So sehen Nutzer sofort den Nutzen der letzten Bereinigung ohne Zusatzklicks.
+
 ## 0.38) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Dashboard-Vorschau auf One-Screen-Layout geschärft**  

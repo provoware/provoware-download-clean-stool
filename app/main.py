@@ -216,6 +216,26 @@ class MainWindow(QMainWindow):
             "detail": "Aktionen wie 'In Bilder verschieben' sollen direkt neben Treffern erscheinen.",
         },
     ]
+    DASHBOARD_QUICK_HEALTH = [
+        {
+            "icon": "🧪",
+            "title": "Auto-Prüfung",
+            "value": "G1–G4 im Startlauf aktiv",
+            "next_step": "Bei Warnsymbol 'start.sh' erneut starten und Hilfezeile lesen.",
+        },
+        {
+            "icon": "💾",
+            "title": "Einstellungen",
+            "value": "Speichern mit Live-Status",
+            "next_step": "Wenn ❌ erscheint: Button 'Einstellungen speichern' erneut klicken.",
+        },
+        {
+            "icon": "♿",
+            "title": "Barrierefreiheit",
+            "value": "Themes mit Kontrast-Hinweis",
+            "next_step": "Bei schlechter Lesbarkeit auf 'kontrast' oder 'senior' umstellen.",
+        },
+    ]
 
     def _show_error_with_mini_help(
         self,
@@ -363,6 +383,43 @@ class MainWindow(QMainWindow):
                 "Bereichsüberschrift konnte nicht erstellt werden. Nächster Schritt: Eingaben prüfen und erneut öffnen."
             )
         return header
+
+    def _build_dashboard_health_cards(self) -> str:
+        """Erstellt validierte Karten für den Dashboard-Bereich 'Systemgesundheit'."""
+
+        cards: list[str] = []
+        for entry in self.DASHBOARD_QUICK_HEALTH:
+            icon = str(entry.get("icon", "")).strip()
+            title = str(entry.get("title", "")).strip()
+            value = str(entry.get("value", "")).strip()
+            next_step = str(entry.get("next_step", "")).strip()
+            if not icon or not title or not value or not next_step:
+                raise ValueError(
+                    "Dashboard-Karte unvollständig. Nächster Schritt: Symbol, Titel, Wert und Next Step ergänzen."
+                )
+            cards.append(
+                "<div style='background:#111d33;border:1px solid #38598f;border-radius:14px;padding:8px;margin:6px 0;'>"
+                f"<b>{escape(icon)} {escape(title)}</b><br/>"
+                f"<span style='color:#d7e5ff'>{escape(value)}</span><br/>"
+                f"<span style='color:#9fb2d8'>Nächster Klick: {escape(next_step)}</span></div>"
+            )
+        if len(cards) < 3:
+            raise RuntimeError(
+                "Zu wenige Dashboard-Karten. Nächster Schritt: Mindestens drei Gesundheitskarten definieren."
+            )
+        return "".join(cards)
+
+    def _build_dashboard_role_hint(self) -> str:
+        """Liefert zwei kurze Bedienpfade für Laien und Entwickler."""
+
+        beginner_text = "<b>Laienpfad:</b> Ordner wählen → Kachel drücken → Vorschau prüfen → mit 'Weiter' bestätigen."
+        developer_text = "<b>Entwicklerpfad:</b> Theme/Status prüfen → Debug-HTML öffnen → Gate-Ausgabe mit start.sh verifizieren."
+        hint_block = f"{beginner_text}<br/>{developer_text}"
+        if "→" not in hint_block:
+            raise RuntimeError(
+                "Rollen-Hinweis fehlerhaft. Nächster Schritt: Klare Schrittfolge mit Pfeilen ergänzen."
+            )
+        return hint_block
 
     def _build_quick_grid_keyboard_help(self) -> str:
         """Liefert eine kurze Tastaturhilfe für das Schnellstart-Raster."""
@@ -2259,6 +2316,8 @@ class MainWindow(QMainWindow):
         system_text = escape(f"{platform.system()} {platform.release()}")
         persistence_icon = escape(self.persistence_status_icon)
         persistence_text = escape(self.persistence_status_text)
+        dashboard_health_cards = self._build_dashboard_health_cards()
+        dashboard_role_hint = self._build_dashboard_role_hint()
 
         neon_mockup = self._build_soft_neon_dashboard_mockup()
 
@@ -2283,6 +2342,10 @@ class MainWindow(QMainWindow):
             "• <b>Bereich 1 – Start:</b> Ordner wählen, dann Theme prüfen.<br/>"
             "• <b>Bereich 2 – Aufräumen:</b> Eine Kachel klicken und Vorschlag bestätigen.<br/>"
             "• <b>Bereich 3 – Hilfe:</b> Bei Fehlern immer zuerst den Hilfe-Button nutzen.<br/><br/>"
+            "<b>Dashboard-Systemgesundheit:</b><br/>"
+            f"{dashboard_health_cards}<br/>"
+            "<b>Schnelle Bedienpfade:</b><br/>"
+            f"{dashboard_role_hint}<br/><br/>"
             "<b>Gate-Übersicht:</b><br/>"
             f"{self._build_gate_status_html()}"
         )
@@ -2349,7 +2412,8 @@ class MainWindow(QMainWindow):
             "<div style='background:#111d33;border-radius:24px;padding:12px;color:#f0f4ff;margin-bottom:10px;'>"
             "<b>Hilfe-Panel</b><br/>1) Ordner wählen<br/>2) Kachel drücken<br/>3) Vorschau prüfen</div>"
             "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;margin-bottom:10px;'>"
-            "Status: Kontrast, Rechte, Speicher und letzter Lauf mit ✅/⚠️.</div>"
+            "Status: Kontrast, Rechte, Speicher und letzter Lauf mit ✅/⚠️.<br/>"
+            "Soforthilfe: Bei ⚠️ zuerst 'Hilfe-Center' öffnen, dann 'Reparatur' klicken.</div>"
             "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;'>"
             "Fehlerhilfe: Erneut versuchen · Reparatur · Protokoll.</div>"
             "</td></tr></table>"
