@@ -10,7 +10,7 @@ from pathlib import Path
 # QtCore: erweitern um QUrl für Datei-URLs
 from PySide6.QtCore import Qt, QUrl
 # QtGui: QDesktopServices öffnet Ordner/Dateien im Dateimanager
-from PySide6.QtGui import QColor, QDesktopServices
+from PySide6.QtGui import QColor, QDesktopServices, QGuiApplication
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
                                QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
                                QLabel, QListWidget, QListWidgetItem,
@@ -621,11 +621,70 @@ class MainWindow(QMainWindow):
         self.stack = QStackedWidget(self)
         self.setCentralWidget(self.stack)
         self._create_pages()
+        self._fit_window_to_screen()
         self.apply_theme(self.settings.theme, self.settings.large_text)
         self.statusBar().showMessage(
             "Tipp: Nutzen Sie die große Ecke unten rechts oder die großen Scrollleisten für bessere Skalierung.",
             12000,
         )
+
+    def _fit_window_to_screen(self) -> None:
+        """Passt das Fenster an die aktuelle Bildschirmgröße an, damit Inhalte erreichbar bleiben."""
+
+        screen = QGuiApplication.primaryScreen()
+        if screen is None:
+            raise RuntimeError(
+                "Kein Bildschirm erkannt. Nächster Schritt: Monitor prüfen und Anwendung neu starten."
+            )
+
+        available = screen.availableGeometry()
+        if available.width() < 640 or available.height() < 480:
+            raise RuntimeError(
+                "Bildschirmauflösung ist zu klein. Nächster Schritt: Auflösung erhöhen oder externen Monitor nutzen."
+            )
+
+        target_width = max(960, min(available.width() - 24, 1440))
+        target_height = max(650, min(available.height() - 24, 980))
+        if target_width < 900 or target_height < 620:
+            raise RuntimeError(
+                "Fenstergröße konnte nicht sicher berechnet werden. Nächster Schritt: Auflösung prüfen und erneut starten."
+            )
+
+        self.resize(target_width, target_height)
+        self.move(available.left() + 12, available.top() + 12)
+        self.setMinimumSize(900, 620)
+        self._update_scrollbar_policies_by_window_height()
+
+    def _update_scrollbar_policies_by_window_height(self) -> None:
+        """Schaltet Scrollleisten je Fensterhöhe sichtbar, damit keine Felder verloren gehen."""
+
+        page_scrolls = [
+            getattr(self, "page_welcome", None),
+            getattr(self, "page_options", None),
+            getattr(self, "page_scan", None),
+            getattr(self, "page_plan", None),
+        ]
+        valid_scrolls = [
+            scroll for scroll in page_scrolls if isinstance(scroll, QScrollArea)
+        ]
+        if len(valid_scrolls) != 4:
+            raise RuntimeError(
+                "Scrollbereiche fehlen. Nächster Schritt: Startseite neu laden und Layout prüfen."
+            )
+
+        compact_height = self.height() < 860
+        for scroll in valid_scrolls:
+            horizontal_policy = (
+                Qt.ScrollBarAsNeeded if compact_height else Qt.ScrollBarAlwaysOff
+            )
+            vertical_policy = Qt.ScrollBarAsNeeded
+            scroll.setHorizontalScrollBarPolicy(horizontal_policy)
+            scroll.setVerticalScrollBarPolicy(vertical_policy)
+
+            if scroll.verticalScrollBarPolicy() != vertical_policy:
+                raise RuntimeError(
+                    "Scrollleisten konnten nicht gesetzt werden. Nächster Schritt: Anwendung neu starten."
+                )
 
     def _load_ui_texts(self) -> None:
         """
@@ -1404,6 +1463,7 @@ class MainWindow(QMainWindow):
         if auto_scale_active or auto_position_active:
             self._sync_theme_preview()
         self._apply_responsive_welcome_layout()
+        self._update_scrollbar_policies_by_window_height()
 
     # ---------------------------
     # Page 1: Welcome & Folder/Theme
@@ -1436,6 +1496,17 @@ class MainWindow(QMainWindow):
             "Erklärt in einfacher Sprache den Aufbau der neuen Hauptansicht"
         )
         layout.addWidget(mainview_hint)
+
+        screen_fit_hint = QLabel(
+            "<b>Bildschirm-Hilfe:</b> Wenn unten etwas fehlt, passt sich die Ansicht automatisch an. "
+            "Zusätzlich können Sie jederzeit mit der Scrollleiste weiter nach unten gehen."
+        )
+        screen_fit_hint.setWordWrap(True)
+        screen_fit_hint.setAccessibleName("Bildschirmhilfe")
+        screen_fit_hint.setAccessibleDescription(
+            "Erklärt in einfacher Sprache die automatische Anpassung und Scroll-Nutzung"
+        )
+        layout.addWidget(screen_fit_hint)
 
         # Hilfe-Schaltfläche: zeigt eine kurze Kurzanleitung für den Einstieg.
         btn_help = QPushButton("Hilfe")
