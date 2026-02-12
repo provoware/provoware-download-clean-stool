@@ -12,7 +12,7 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
  - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **19**
+ - **Abgeschlossene Punkte:** **22**
  - **Offene Punkte:** **0**
  - **Nächster Schritt:** Qualitätslauf mit AUTO_FIX in CI-ähnlicher Reihenfolge testen und den neuen Kurzbericht als Support-Standard nutzen.
 
@@ -51,6 +51,22 @@ bash start.sh
 
 
 
+
+## 0.10) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **A11y-Theme-Check prüft jetzt auch Auswahl- und Disabled-Kontrast**  
+   `tools/a11y_theme_check.py` validiert zusätzlich Kontrast in ausgewählten Listenfeldern und bei deaktivierten Buttons, damit Farbschemata in mehreren Zuständen lesbar bleiben.
+2. **Quality-Gate erweitert um Versions-Registry-Prüfung**  
+   `tools/run_quality_checks.sh` enthält jetzt einen festen 8/8-Schritt, der `data/version_registry.json` auf Format, Pflichtfelder und leere Einträge prüft.
+3. **Debug-Modus in der Startroutine klar abgesichert (Hilfe + Logging)**  
+   `start.sh` akzeptiert für `DEBUG_LOG_MODE` nur `0` oder `1`, protokolliert Zusatzinfos im Debug-Modus und zeigt eine klare Hilfe zum nächsten Schritt.
+
+### Zwei kurze Laienvorschläge
+- Wenn etwas unklar ist, starte mit `DEBUG_LOG_MODE=1 bash start.sh` und lies danach `cat exports/setup_log.txt`.
+- Führe nach jeder Änderung zuerst `bash tools/run_quality_checks.sh` aus, damit Versions- und A11y-Fehler früh sichtbar werden.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Teste die drei neuen Schutzpunkte einmal absichtlich: setze `DEBUG_LOG_MODE=ja`, ändere probeweise einen leeren Wert in `data/version_registry.json` und starte danach den Qualitätslauf erneut. So siehst du die neuen Fehlermeldungen mit klaren Next Steps in derselben Reihenfolge wie im Support.
 
 ## 0.9) Aktuelle Iteration (3 Punkte, DONE)
 

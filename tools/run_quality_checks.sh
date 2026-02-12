@@ -127,6 +127,63 @@ run_optional() {
   fi
 }
 
+validate_version_registry() {
+  local registry_file="$ROOT_DIR/data/version_registry.json"
+  if [ ! -f "$registry_file" ]; then
+    say "[QUALITY][WARN] Versions-Registry fehlt: data/version_registry.json"
+    say "[QUALITY][HILFE] Nächster Schritt: Datei anlegen und für jede geänderte Datei eine Versionsnummer eintragen."
+    WARNINGS=$((WARNINGS + 1))
+    return 0
+  fi
+
+  if ! python3 - "$registry_file" <<'PYREG'
+import json
+import re
+import sys
+from pathlib import Path
+
+registry_path = Path(sys.argv[1])
+pattern = re.compile(r"^\d{4}\.\d{2}\.\d{2}(?:\.\d+)?$")
+
+try:
+    payload = json.loads(registry_path.read_text(encoding="utf-8"))
+except Exception as exc:  # noqa: BLE001
+    print(f"[QUALITY][WARN] Versions-Registry ist kein gültiges JSON: {exc}")
+    print("[QUALITY][HILFE] Nächster Schritt: JSON-Syntax in data/version_registry.json korrigieren.")
+    raise SystemExit(1)
+
+global_version = payload.get("global_version")
+if not isinstance(global_version, str) or not pattern.fullmatch(global_version):
+    print("[QUALITY][WARN] global_version fehlt oder hat ein ungültiges Format (erwartet YYYY.MM.DD).")
+    print("[QUALITY][HILFE] Nächster Schritt: global_version auf das Iterationsdatum setzen, z. B. 2026.02.12.")
+    raise SystemExit(1)
+
+files = payload.get("files")
+if not isinstance(files, dict) or not files:
+    print("[QUALITY][WARN] 'files' fehlt oder ist leer in data/version_registry.json.")
+    print("[QUALITY][HILFE] Nächster Schritt: Für jede geänderte Datei einen Eintrag ergänzen.")
+    raise SystemExit(1)
+
+invalid = []
+for path, version in files.items():
+    if not isinstance(path, str) or not path.strip():
+        invalid.append("<leerer-pfad>")
+        continue
+    if not isinstance(version, str) or not version.strip():
+        invalid.append(path)
+
+if invalid:
+    print("[QUALITY][WARN] Versionseinträge unvollständig für: " + ", ".join(invalid))
+    print("[QUALITY][HILFE] Nächster Schritt: Leere Pfade/Versionen in der Registry korrigieren.")
+    raise SystemExit(1)
+
+print("[QUALITY][OK] Versions-Registry geprüft: Format und Pflichtfelder sind gültig.")
+PYREG
+  then
+    WARNINGS=$((WARNINGS + 1))
+  fi
+}
+
 validate_required_json() {
   local file_path="$1"
   local required_keys_csv="$2"
@@ -276,21 +333,21 @@ fi
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
-say "[QUALITY] 1/7 Syntaxprüfung (compileall)"
+say "[QUALITY] 1/8 Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
   "$ROOT_DIR/core" \
   "$ROOT_DIR/tools" \
   "$ROOT_DIR/start.sh"
 
-say "[QUALITY] 2/7 Formatprüfung"
+say "[QUALITY] 2/8 Formatprüfung"
 run_optional "black" "black --check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "black \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 run_optional "isort" "isort --check-only \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "isort \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 3/7 Lintprüfung"
+say "[QUALITY] 3/8 Lintprüfung"
 run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "ruff check --fix \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 4/7 Smoke-Test"
+say "[QUALITY] 4/8 Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
     say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
@@ -302,7 +359,7 @@ else
 fi
 
 
-say "[QUALITY] 5/7 A11y-Theme-Check"
+say "[QUALITY] 5/8 A11y-Theme-Check"
 if [ -f "$ROOT_DIR/tools/a11y_theme_check.py" ]; then
   if ! python3 "$ROOT_DIR/tools/a11y_theme_check.py"; then
     say "[QUALITY][WARN] A11y-Theme-Check meldet Probleme bei Kontrast oder Fokusregeln."
@@ -315,7 +372,7 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 6/7 JSON-Struktur-Check"
+say "[QUALITY] 6/8 JSON-Struktur-Check"
 validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
 validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
 validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
@@ -323,7 +380,7 @@ validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,fil
 validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
 
 
-say "[QUALITY] 7/7 Validierungsstandard-Check"
+say "[QUALITY] 7/8 Validierungsstandard-Check"
 if ! python3 - "$ROOT_DIR/core/validation.py" <<'PY'
 import ast
 import sys
@@ -344,6 +401,9 @@ PY
 then
   WARNINGS=$((WARNINGS + 1))
 fi
+
+say "[QUALITY] 8/8 Versions-Registry-Check"
+validate_version_registry
 
 if [ "$WARNINGS" -eq 0 ]; then
   write_state "ok" "$CURRENT_SIGNATURE"

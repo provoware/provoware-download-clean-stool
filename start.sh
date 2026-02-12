@@ -86,6 +86,28 @@ if configured != workdir:
 PY
 }
 
+normalize_binary_runtime_flag() {
+  # Akzeptiert nur 0 oder 1 für Laufzeit-Flags und zeigt bei Fehlern klare Next Steps.
+  local raw_value="${1:-0}"
+  local label="${2:-FLAG}"
+  if [ "$raw_value" = "0" ] || [ "$raw_value" = "1" ]; then
+    printf '%s' "$raw_value"
+    return 0
+  fi
+  echo "[WARN] $label hat einen ungültigen Wert '$raw_value'. Erlaubt sind nur 0 oder 1." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: $label=1 bash start.sh (Debug aktiv) oder $label=0 bash start.sh (Debug aus)." | tee -a "$SETUP_LOG"
+  printf '%s' "0"
+  return 1
+}
+
+log_debug() {
+  # Gibt zusätzliche Debug-Infos aus, wenn DEBUG_LOG_MODE=1 gesetzt ist.
+  local message="${1:-}"
+  if [ "${DEBUG_LOG_MODE:-0}" = "1" ] && [ -n "$message" ]; then
+    echo "[DEBUG] $message" | tee -a "$SETUP_LOG"
+  fi
+}
+
 normalize_status_value() {
   # Validiert Statuswerte für die Abschluss-Zusammenfassung.
   # Erlaubte Werte: OK, WARN, läuft, erfolgreich, nicht möglich, nicht nötig.
@@ -260,7 +282,11 @@ print_accessibility_next_steps() {
   echo "[A11Y] - Nächster Klick: Erst Scan starten, dann die Vorschau prüfen, danach Aufräumen ausführen."
 }
 
+DEBUG_LOG_MODE="$(normalize_binary_runtime_flag "${DEBUG_LOG_MODE:-0}" "DEBUG_LOG_MODE")"
+export DEBUG_LOG_MODE
+
 echo "[START] Provoware Clean Tool 2026 – Auto-Setup"
+log_debug "Debug-Modus aktiv. Zusätzliche Details werden in $SETUP_LOG protokolliert."
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
 
 if ! ensure_tool_workdir; then
@@ -311,6 +337,7 @@ echo "[SETUP] Aktualisiere pip (wenn möglich)"
 
 # 2) Abhängigkeiten robust installieren + Konflikte automatisch prüfen
 echo "[SETUP] Installiere Abhängigkeiten (vollautomatisch, mit Status und Konfliktprüfung)"
+log_debug "Verwendeter Python-Interpreter: $VENV_PY"
 OFFLINE_WHEELS_DIR="$PROJECT_DIR/offline_wheels"
 REQ_SANITIZED="$PROJECT_DIR/exports/requirements.sanitized.txt"
 > "$REQ_SANITIZED"
@@ -523,6 +550,7 @@ QUALITY_STATUS="OK"
 QUALITY_ICON="✅"
 QUALITY_HINT="Keine Aktion nötig."
 if ! bash tools/run_quality_checks.sh > "$QUALITY_LOG" 2>&1; then
+  log_debug "Qualitätsprüfung meldet Warnung. Öffne Details in $QUALITY_LOG."
   QUALITY_STATUS="WARN"
   QUALITY_ICON="⚠️"
   QUALITY_HINT="Bitte zuerst die Qualitäts-Hilfe öffnen und dann erneut starten."
@@ -643,6 +671,9 @@ fi
 
 print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS" "$QUALITY_WARN_COUNT" "$QUALITY_INFO_COUNT" "$QUALITY_LOG"
 print_accessibility_next_steps
+if [ "$DEBUG_LOG_MODE" = "1" ]; then
+  echo "[HILFE] Debug ist aktiv. Bei Problemen zuerst öffnen: cat exports/setup_log.txt"
+fi
 
 # 8) GUI starten
 echo "[RUN] Starte GUI"

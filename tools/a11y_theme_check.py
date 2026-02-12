@@ -23,6 +23,8 @@ class ThemeCheckResult:
 
     name: str
     contrast_ratio: float
+    selection_ratio: float
+    disabled_ratio: float
     has_focus_rule: bool
 
 
@@ -102,10 +104,34 @@ def _extract_property(stylesheet: str, selector: str, prop: str) -> str:
     return value
 
 
+def _extract_first_available_property(
+    stylesheet: str, selectors: tuple[str, ...], prop: str
+) -> str:
+    """Liest die erste verfügbare Eigenschaft aus einer Selektorliste."""
+    for selector in selectors:
+        try:
+            return _extract_property(stylesheet, selector, prop)
+        except ThemeCheckError:
+            continue
+    raise ThemeCheckError(
+        f"Eigenschaft '{prop}' wurde in keinem erwarteten Selektor gefunden: {', '.join(selectors)}"
+    )
+
+
+def _extract_optional_property(
+    stylesheet: str, selectors: tuple[str, ...], prop: str, fallback: str
+) -> str:
+    """Liest eine Eigenschaft oder nutzt einen validierten Fallback."""
+    try:
+        return _extract_first_available_property(stylesheet, selectors, prop)
+    except ThemeCheckError:
+        return _validate_hex_color(fallback)
+
+
 def run_theme_checks(
     styles: dict[str, str], minimum_ratio: float = 4.5
 ) -> list[ThemeCheckResult]:
-    """Prüft Themes auf Kontrast und Fokusregeln."""
+    """Prüft Themes auf Kontrast, Fokusregeln und Zustandsfarben."""
     if not isinstance(styles, dict) or not styles:
         raise ThemeCheckError("Es wurden keine Themes zum Prüfen übergeben.")
     if minimum_ratio < 1.0:
@@ -115,7 +141,34 @@ def run_theme_checks(
     for theme_name, stylesheet in styles.items():
         foreground = _extract_property(stylesheet, "QWidget", "color")
         background = _extract_property(stylesheet, "QWidget", "background-color")
+        selection_bg = _extract_optional_property(
+            stylesheet,
+            ("QListWidget::item:selected",),
+            "background-color",
+            fallback=background,
+        )
+        selection_fg = _extract_optional_property(
+            stylesheet,
+            ("QListWidget::item:selected",),
+            "color",
+            fallback=foreground,
+        )
+        disabled_bg = _extract_optional_property(
+            stylesheet,
+            ("QPushButton:disabled",),
+            "background-color",
+            fallback=background,
+        )
+        disabled_fg = _extract_optional_property(
+            stylesheet,
+            ("QPushButton:disabled",),
+            "color",
+            fallback=foreground,
+        )
+
         ratio = _contrast_ratio(foreground, background)
+        selection_ratio = _contrast_ratio(selection_fg, selection_bg)
+        disabled_ratio = _contrast_ratio(disabled_fg, disabled_bg)
         has_focus = ":focus" in stylesheet
         if not has_focus:
             raise ThemeCheckError(
@@ -123,13 +176,25 @@ def run_theme_checks(
             )
         if ratio < minimum_ratio:
             raise ThemeCheckError(
-                f"Theme '{theme_name}' hat zu wenig Kontrast ({ratio:.2f}:1). "
+                f"Theme '{theme_name}' hat zu wenig Standard-Kontrast ({ratio:.2f}:1). "
                 f"Benötigt sind mindestens {minimum_ratio:.1f}:1."
+            )
+        if selection_ratio < minimum_ratio:
+            raise ThemeCheckError(
+                f"Theme '{theme_name}' hat zu wenig Kontrast bei Auswahlfeldern ({selection_ratio:.2f}:1). "
+                f"Bitte Auswahlfarben klarer trennen (mindestens {minimum_ratio:.1f}:1)."
+            )
+        if disabled_ratio < 3.0:
+            raise ThemeCheckError(
+                f"Theme '{theme_name}' hat zu wenig Kontrast bei deaktivierten Buttons ({disabled_ratio:.2f}:1). "
+                "Bitte Lesbarkeit für den deaktivierten Zustand erhöhen (mindestens 3.0:1)."
             )
         results.append(
             ThemeCheckResult(
                 name=theme_name,
                 contrast_ratio=ratio,
+                selection_ratio=selection_ratio,
+                disabled_ratio=disabled_ratio,
                 has_focus_rule=has_focus,
             )
         )
@@ -202,7 +267,9 @@ def main() -> int:
     for result in results:
         print(
             "[A11Y][OK] "
-            f"Theme '{result.name}': Kontrast {result.contrast_ratio:.2f}:1, "
+            f"Theme '{result.name}': Standard-Kontrast {result.contrast_ratio:.2f}:1, "
+            f"Auswahl-Kontrast {result.selection_ratio:.2f}:1, "
+            f"Disabled-Kontrast {result.disabled_ratio:.2f}:1, "
             f"Fokusregel vorhanden={result.has_focus_rule}"
         )
     print("[A11Y][OK] Automatischer Theme-A11y-Check erfolgreich.")
