@@ -1,3 +1,8 @@
+## 2026-02-12 – Iteration
+- **Was:** AGENTS-Regeln präzisiert (README alle 2–3 Iterationen; 3-Punkte-Zählung nur für Funktionsaspekte außerhalb von Info-Dateien) und detaillierte Projektbeschreibung inkl. Dateinamen-Suffix-Strategie ergänzt.
+- **Warum:** Mehr Klarheit bei Scope, Wartbarkeit und sicherer Umstellung auf versionierte Dateinamen.
+- **Wirkung:** Iterationen sind besser steuerbar; Erweiterbarkeit und Migrationspfad sind dokumentiert und sofort nutzbar.
+
 ## 2026-02-12 – Doku-Iteration: Standards-Check + README-Oberflächenbild + klare Refactoring-Aussage
 - **Was:** README um einen kompakten Standards-Check (Info-Dateien), ein eingebettetes kleines Oberflächenbild (SVG, Alt-Text) und ein klares Refactoring-Kurzfazit ergänzt.
 - **Warum:** Die Fragen zu Globalstandards, Dokumentationsabdeckung und README-Bild sollten direkt, barrierearm und ohne Zusatzdateien beantwortet werden.

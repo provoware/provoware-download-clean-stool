@@ -4,7 +4,7 @@
     "app/main.py": "2026.02.12.5",
     "core/settings.py": "2026.02.11",
     "start.sh": "2026.02.12.5",
-    "AGENTS.md": "2.3",
+    "AGENTS.md": "2.4",
     "data/ui_texts.json": "2026.02.11.1",
     "data/presets/quick_docs.json": "2026.02.11.1",
     "data/presets/quick_music.json": "2026.02.11.1",
@@ -12,14 +12,15 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.2",
-    "README.md": "2026.02.12.10",
-    "CHANGELOG.md": "2026.02.12.10",
-    "todo.txt": "2026.02.12.10",
-    "data/version_registry.json": "2026.02.12.10",
+    "README.md": "2026.02.12.11",
+    "CHANGELOG.md": "2026.02.12.11",
+    "todo.txt": "2026.02.12.11",
+    "data/version_registry.json": "2026.02.12.11",
     "tools/run_quality_checks.sh": "2026.02.12.5",
     "RELEASE_CHECKLIST.md": "2026.02.12.6",
     "core/history.py": "2026.02.12.5",
     "core/validation.py": "2026.02.12.6",
-    "tools/a11y_theme_check.py": "2026.02.12.1"
+    "tools/a11y_theme_check.py": "2026.02.12.1",
+    "docs/projektdetailbeschreibung_v2026.02.12_status-done.md": "2026.02.12.1"
   }
 }
