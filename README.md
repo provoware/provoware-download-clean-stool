@@ -11,8 +11,8 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **98%**
- - **Abgeschlossene Punkte:** **27**
+ - **Entwicklungsfortschritt:** **99%**
+ - **Abgeschlossene Punkte:** **28**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
 
@@ -132,6 +132,23 @@ bash start.sh
 
 
 
+
+
+## 0.14) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Exit-Knoten-Audit als automatischer Qualitätscheck ergänzt**  
+   Neues Skript `tools/exit_path_audit.py` prüft zentrale Start-/Quality-Dateien auf Exit-Pfade ohne direkte Lösungshinweise in einfacher Sprache.
+2. **Quality-Gate erweitert um Exit-Knoten-Hilfeprüfung**  
+   `tools/run_quality_checks.sh` enthält jetzt einen festen Schritt 9/10, der den Exit-Audit automatisch ausführt und bei Bedarf klare Next Steps anzeigt.
+3. **Selfcheck-Fehlertexte mit konkreten Next Steps vereinheitlicht (A11y/Text)**  
+   `core/selfcheck.py` liefert bei Fehlern und Erfolg kurze, verständliche Anweisungen („Nächster Schritt …“), damit auch Laien direkt weiterarbeiten können.
+
+### Zwei kurze Laienvorschläge
+- Wenn der Start abbricht, zuerst `python3 tools/exit_path_audit.py` ausführen und die erste gemeldete Stelle beheben.
+- Danach `bash tools/run_quality_checks.sh` starten, damit alle automatischen Checks in derselben Reihenfolge laufen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Öffne bei einer Warnung die gemeldete Datei, ergänze direkt am Exit-Pfad einen Satz mit „Nächster Schritt …“, führe dann den Audit und den Quality-Check erneut aus. So ist jeder Abbruch für Nutzer:innen sofort lösbar.
 
 ## 0.13) Aktuelle Iteration (3 Punkte, DONE)
 
