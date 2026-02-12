@@ -21,6 +21,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+## 0.18) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Fenster startet jetzt automatisch bildschirmgerecht statt Inhalte abzuschneiden**  
+   `app/main.py` setzt beim Start eine sichere Fenstergröße innerhalb der verfügbaren Bildschirmfläche, damit alle Hauptbereiche erreichbar bleiben.
+2. **Dynamische Scroll-Strategie für kleine Höhen ergänzt**  
+   Alle vier Hauptseiten schalten bei kleiner Fensterhöhe auf bedarfsgesteuerte Scrollleisten und verhindern so, dass Felder unter den sichtbaren Bereich rutschen.
+3. **Neue Bildschirm-Hilfe in einfacher Sprache ergänzt (A11y/Text)**  
+   Im Schritt 1 erklärt ein zusätzlicher Hinweis klar, dass die Ansicht automatisch nachpasst und Scrollleisten jederzeit als Fallback nutzbar sind.
+
+### Zwei kurze Laienvorschläge
+- Wenn unten etwas fehlt: zuerst Fenster kurz größer ziehen, danach mit der Scrollleiste zum nächsten Feld gehen.
+- Lassen Sie „Auto (Fensterbreite)“ aktiv, damit sich Vorschau und Position selbst an Ihren Bildschirm anpassen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Teste die Oberfläche einmal gezielt auf 1366×768 und 1920×1080. Gehe in jedem Profil durch Schritt 1 bis 4 und notiere pro Schritt genau ein Element, das noch zu dicht wirkt. Passe im nächsten Durchlauf nur dieses eine Element an, damit Änderungen klein und stabil bleiben.
+
 ## 0.17) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Modul-Reparatur meldet auch den „nicht nötig“-Fall jetzt vollständig im Setup-Log**  

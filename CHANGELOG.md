@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Fit-Iteration: Bildschirmgerechter Start + dynamische Scroll-Absicherung
+- **Was:** `app/main.py` ergänzt eine automatische Fensteranpassung an die verfügbare Bildschirmfläche, höhenabhängige Scrollleisten-Regeln für alle Hauptseiten und eine neue Bildschirm-Hilfe in einfacher Sprache.
+- **Warum:** In der bisherigen Ansicht konnten untere Bedienelemente auf kleineren Displays unter den sichtbaren Bereich rutschen und waren schwer erreichbar.
+- **Wirkung:** Die Oberfläche bleibt auf einem Bildschirm besser nutzbar, mit klarer Fallback-Navigation per Scrollleisten und verständlicher A11y-Hilfe.
+
 ## 2026-02-12 – Start-Iteration: Priorisierter Modul-Reparaturblock + robuster Qualitätszähler + klare A11y-Startführung
 - **Was:** `start.sh` ergänzt einen priorisierten Modul-Reparaturblock (kritisch/mittel) im Setup-Log, kapselt Warn-/Info-Zähler in `extract_quality_count` und strukturiert die A11y-Start-Hilfe als 5 klare Schritte.
 - **Warum:** Startprobleme sollten schneller priorisiert lösbar sein, Qualitätszähler nicht durch ungültige Werte kippen und Hilfetexte für Einsteiger:innen klarer werden.
