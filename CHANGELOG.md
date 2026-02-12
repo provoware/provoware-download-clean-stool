@@ -1,3 +1,8 @@
+## 2026-02-12 (Iteration 0.20)
+- Was: start.sh repariert fehlende Info-Dateien automatisch und integriert das Mini-UX-Gate als festen Startschritt.
+- Warum: Der Start sollte bei fehlender Begleitdoku stabil bleiben und UX-/A11y-Hinweise direkt prüfen.
+- Wirkung: Weniger Startabbrüche, klarere Next-Steps bei UX-Warnungen und konsistente Qualitätsrückmeldung.
+
 ## 2026-02-12 – UI-Fit-Iteration: Bildschirmgerechter Start + dynamische Scroll-Absicherung
 - **Was:** `app/main.py` ergänzt eine automatische Fensteranpassung an die verfügbare Bildschirmfläche, höhenabhängige Scrollleisten-Regeln für alle Hauptseiten und eine neue Bildschirm-Hilfe in einfacher Sprache.
 - **Warum:** In der bisherigen Ansicht konnten untere Bedienelemente auf kleineren Displays unter den sichtbaren Bereich rutschen und waren schwer erreichbar.
