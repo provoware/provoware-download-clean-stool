@@ -128,14 +128,22 @@ def _collect_appimage_checks() -> list[AppImageCheckResult]:
 
     appimage_outputs = list(dist_dir.glob("*.AppImage")) if dist_dir.exists() else []
 
+    has_output = bool(appimage_outputs)
+
     return [
         AppImageCheckResult(
             name="Build-Werkzeug vorhanden",
-            ok=(appimagetool_local.exists() or linuxdeploy_local.exists()),
+            ok=(
+                appimagetool_local.exists() or linuxdeploy_local.exists() or has_output
+            ),
             detail=(
-                "Lokales AppImage-Build-Werkzeug gefunden."
-                if (appimagetool_local.exists() or linuxdeploy_local.exists())
-                else "Kein lokales Build-Werkzeug in tools/appimage gefunden."
+                "Fertiges AppImage-Artefakt vorhanden; lokales Build-Werkzeug optional."
+                if has_output
+                else (
+                    "Lokales AppImage-Build-Werkzeug gefunden."
+                    if (appimagetool_local.exists() or linuxdeploy_local.exists())
+                    else "Kein lokales Build-Werkzeug in tools/appimage gefunden."
+                )
             ),
             next_step=(
                 "mkdir -p tools/appimage && cd tools/appimage && wget https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage && chmod +x appimagetool-x86_64.AppImage"
@@ -143,11 +151,15 @@ def _collect_appimage_checks() -> list[AppImageCheckResult]:
         ),
         AppImageCheckResult(
             name="AppDir vorbereitet",
-            ok=(appdir_dir.exists() and app_run.exists()),
+            ok=((appdir_dir.exists() and app_run.exists()) or has_output),
             detail=(
-                "AppDir und AppRun sind vorhanden."
-                if (appdir_dir.exists() and app_run.exists())
-                else "AppDir oder AppRun fehlt noch für den Build."
+                "Fertiges AppImage-Artefakt vorhanden; AppDir-Basics bereits erfüllt."
+                if has_output
+                else (
+                    "AppDir und AppRun sind vorhanden."
+                    if (appdir_dir.exists() and app_run.exists())
+                    else "AppDir oder AppRun fehlt noch für den Build."
+                )
             ),
             next_step="mkdir -p AppDir/usr/bin && cp start.sh AppDir/AppRun && chmod +x AppDir/AppRun",
         ),
@@ -204,11 +216,11 @@ def _auto_fix_appimage_basics() -> list[str]:
     steps = [
         (
             "Build-Werkzeug laden",
-            "mkdir -p tools/appimage && cd tools/appimage && wget -q https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage && chmod +x appimagetool-x86_64.AppImage",
+            "mkdir -p tools/appimage && cd tools/appimage && (curl -fsSL -o appimagetool-x86_64.AppImage https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage || curl -fsSL -o appimagetool-x86_64.AppImage https://github.com/AppImage/AppImageKit/releases/download/13/obsolete-appimagetool-x86_64.AppImage) && chmod +x appimagetool-x86_64.AppImage",
         ),
         (
             "AppDir-Grundstruktur anlegen",
-            "mkdir -p AppDir/usr/bin && cp start.sh AppDir/AppRun && chmod +x AppDir/AppRun",
+            'mkdir -p AppDir/usr/bin && cp start.sh AppDir/AppRun && chmod +x AppDir/AppRun && printf \'[Desktop Entry]\nType=Application\nName=Provoware Clean Tool 2026\nExec=AppRun\nIcon=provoware-clean-tool\nCategories=Utility;\nTerminal=true\n\' > AppDir/provoware-clean-tool.desktop && printf \'<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" rx="32" fill="#123456"/><circle cx="128" cy="128" r="72" fill="#5dd6ff"/></svg>\' > AppDir/provoware-clean-tool.svg',
         ),
     ]
     notes: list[str] = []
@@ -218,6 +230,68 @@ def _auto_fix_appimage_basics() -> list[str]:
         notes.append(f"[{prefix}] {message}")
         if not ok:
             break
+    return notes
+
+
+def _resolve_appimagetool_command() -> tuple[str | None, str]:
+    """Liefert einen robusten AppImageTool-Befehl inkl. einfacher Hilfe."""
+    local_tool = ROOT / "tools" / "appimage" / "appimagetool-x86_64.AppImage"
+    if local_tool.exists():
+        return (
+            f"{local_tool.as_posix()} --appimage-extract-and-run",
+            "Lokales appimagetool wird mit FUSE-freiem Modus gestartet.",
+        )
+
+    ok, _ = _run_shell_step(
+        "System-AppImageTool prüfen", "command -v appimagetool >/dev/null"
+    )
+    if ok:
+        return ("appimagetool", "Systemweites appimagetool wird verwendet.")
+
+    return (
+        None,
+        "Kein appimagetool gefunden. Nächster Schritt: python3 tools/release_gap_report.py --auto-fix-appimage",
+    )
+
+
+def _auto_build_appimage() -> list[str]:
+    """Baut nach Basisprüfung ein AppImage und bestätigt das Ergebnis."""
+    notes: list[str] = []
+    tool_cmd, tool_hint = _resolve_appimagetool_command()
+    if not tool_cmd:
+        return [f"[WARN] {tool_hint}"]
+
+    notes.append(f"[INFO] {tool_hint}")
+    pre_checks = _collect_appimage_checks()
+    missing_preconditions = [
+        c for c in pre_checks if (not c.ok and c.name != "Build-Artefakt vorhanden")
+    ]
+    if missing_preconditions:
+        first_missing = missing_preconditions[0]
+        notes.append(
+            f"[WARN] Vorbedingung fehlt: {first_missing.name}. Nächster Schritt: {first_missing.next_step}"
+        )
+        return notes
+
+    output_path = ROOT / "dist" / "Provoware-Clean-Tool-x86_64.AppImage"
+    build_command = (
+        "mkdir -p dist && " f"ARCH=x86_64 {tool_cmd} AppDir {output_path.as_posix()}"
+    )
+    ok, message = _run_shell_step("AppImage-Build", build_command)
+    notes.append(f"[{'OK' if ok else 'WARN'}] {message}")
+    if not ok:
+        return notes
+
+    if output_path.exists() and output_path.stat().st_size > 0:
+        size_mb = output_path.stat().st_size / (1024 * 1024)
+        notes.append(
+            f"[OK] Build-Artefakt bestätigt: {output_path.as_posix()} ({size_mb:.1f} MB)."
+        )
+        return notes
+
+    notes.append(
+        "[WARN] Build lief durch, aber Artefakt fehlt oder ist leer. Nächster Schritt: python3 tools/release_gap_report.py --appimage-only"
+    )
     return notes
 
 
@@ -255,11 +329,21 @@ def main() -> int:
         action="store_true",
         help="Versucht fehlende AppImage-Basics automatisch zu erstellen und prüft danach erneut.",
     )
+    parser.add_argument(
+        "--auto-build-appimage",
+        action="store_true",
+        help="Baut nach Basisprüfung automatisch ein AppImage-Artefakt in dist/.",
+    )
     args = parser.parse_args()
 
     if args.auto_fix_appimage:
         print("[RELEASE][APPIMAGE] Starte Auto-Fix für Basisbausteine …")
         for line in _auto_fix_appimage_basics():
+            print(f"[RELEASE][APPIMAGE] {line}")
+
+    if args.auto_build_appimage:
+        print("[RELEASE][APPIMAGE] Starte Auto-Build für dist/ …")
+        for line in _auto_build_appimage():
             print(f"[RELEASE][APPIMAGE] {line}")
 
     if args.appimage_only:

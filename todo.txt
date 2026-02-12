@@ -172,3 +172,9 @@ NEXT: Qualitätslauf pro Schritt mit Zeitmessung erweitern und im Report die dre
 
 DONE: Live-Vorschau zeigt jetzt Design-Nähe (%), Preview-Zielwerte sind in der Design-Referenz verankert und der Design-Check validiert diese Pflichtfelder automatisch. (2026-02-12)
 NEXT: Theme-übergreifende Verlaufsmessung für Design-Nähe ergänzen (letzter Messwert pro Theme sichtbar im Dashboard), danach Gates erneut vollständig laufen lassen. (2026-02-12)
+
+DONE: AppImage-Lücke geschlossen: Auto-Fix + Auto-Build + JA/NEIN-Check laufen reproduzierbar, Release-Statuszahlen über README/RELEASE_CHECKLIST/Developer-Manual synchronisiert. (2026-02-12)
+NEXT: AppImage auf einem zweiten Linux-System manuell starten, 2-Minuten-Smoke durchführen und Release-Tag inkl. Artefakt-Hinweis setzen. (2026-02-12)
+
+DONE: Binärdatei aus dem Repo entfernt, dist/*.AppImage in .gitignore aufgenommen und Versions-Registry bereinigt. (2026-02-12)
+NEXT: AppImage nur im Release-Job erzeugen (CI/Build-Host) und als Artefakt veröffentlichen statt im Git-Stand zu speichern. (2026-02-12)

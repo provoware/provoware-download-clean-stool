@@ -1382,8 +1382,8 @@ fi
 if check_optional_toolchain \
   "AppImage-Build (linuxdeploy + appimagetool)" \
   "test -x tools/appimage/appimagetool-x86_64.AppImage || test -x tools/appimage/linuxdeploy-x86_64.AppImage || command -v appimagetool >/dev/null || command -v linuxdeploy >/dev/null" \
-  "python3 tools/release_gap_report.py --auto-fix-appimage && python3 tools/release_gap_report.py --appimage-only" \
-  "Auto-Fix verfügbar: python3 tools/release_gap_report.py --auto-fix-appimage. Danach zeigt --appimage-only den klaren JA/NEIN-Status."; then
+  "python3 tools/release_gap_report.py --auto-fix-appimage && python3 tools/release_gap_report.py --auto-build-appimage && python3 tools/release_gap_report.py --appimage-only" \
+  "Auto-Fix und Auto-Build verfügbar: python3 tools/release_gap_report.py --auto-fix-appimage && python3 tools/release_gap_report.py --auto-build-appimage. Danach zeigt --appimage-only den klaren JA/NEIN-Status."; then
   APPIMAGE_OPTIONAL_STATUS="OK"
 fi
 
@@ -1509,7 +1509,7 @@ if [ -f "tools/release_gap_report.py" ]; then
     echo "[STATUS] ✅ AppImage-Releasecheck: JA (Mindestpunkte erfüllt)"
   else
     echo "[WARN] AppImage-Releasecheck: NEIN"
-    echo "[HILFE] Nächster Schritt: python3 tools/release_gap_report.py --appimage-only"
+    echo "[HILFE] Nächster Schritt: python3 tools/release_gap_report.py --auto-fix-appimage && python3 tools/release_gap_report.py --auto-build-appimage && python3 tools/release_gap_report.py --appimage-only"
   fi
 fi
 
