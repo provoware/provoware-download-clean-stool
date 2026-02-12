@@ -11,15 +11,16 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **97%**
- - **Abgeschlossene Punkte:** **98**
- - **Offene Punkte:** **0**
- - **Nächster Schritt:** Optional-Checks in start.sh um einen kompakten Reparatur-Status je Werkzeug erweitern, damit Web/AppImage-Hürden direkt mit einem Klickpfad gelöst werden.
+ - **Entwicklungsfortschritt:** **89%**
+ - **Abgeschlossene Punkte:** **16**
+ - **Offene Punkte:** **2**
+ - **Nächster Schritt:** Zusätzliche automatische Tests für Kernmodule ergänzen, damit die zwei verbleibenden Release-Punkte reproduzierbar abgedeckt sind.
 
 ### Schnellüberblick (laienfreundlich)
 
 - **Was wurde analysiert?** Alle aktuell offenen Punkte wurden in drei kleine, direkt umsetzbare Pakete zerlegt.
 - **Was ist jetzt klarer?** Es gibt eine feste Reihenfolge mit messbaren Kriterien und kopierbaren Befehlen.
+- **A11y-Hinweis (Barrierefreiheit):** Alle Next Steps bleiben in kurzer, einfacher Sprache und mit klarer Reihenfolge für Tastatur-Nutzung dokumentiert.
 - **Was mache ich bei Warnungen?** `cat exports/setup_log.txt` öffnen, `bash tools/run_quality_checks.sh` ausführen, danach `bash start.sh` erneut starten.
 
 ## 0.2) Nächste logische Schritte (in einfacher Sprache)

@@ -1,3 +1,8 @@
+## 2026-02-12 – Release-Iteration: Codeformat-Releasepunkt abgeschlossen + Status-Sync + A11y-Textpflege
+- **Was:** `RELEASE_CHECKLIST.md` markiert den offenen Releasepunkt zur festen Codeformatierung im Quality-Gate als abgeschlossen; README-Status wurde auf denselben Stand synchronisiert und um einen kurzen A11y-Hinweis ergänzt.
+- **Warum:** Ein offener Release-Punkt sollte vollständig beendet und in allen Steuerdokumenten konsistent sichtbar sein, damit keine widersprüchlichen Reifestände entstehen.
+- **Wirkung:** Messbarer Release-Fortschritt (16/18), klarere barrierearme Orientierung in einfacher Sprache und eine belastbare Basis für die letzten zwei offenen Punkte.
+
 ## 2026-02-12 – Start-Iteration: Qualitäts-Kompaktblock + Zähler-Validierung + klare Auto-Fix-Hilfe
 - **Was:** `start.sh` ergänzt einen kompakten Qualitätsblock mit Warn-/Hinweiszähler, validiert diese Werte als nicht-negative Ganzzahlen und zeigt klare Auto-Fix-Befehle in richtiger Reihenfolge.
 - **Warum:** Nutzer:innen sollten Warnungen ohne Rätselraten und ohne fehlerhafte Statusanzeige direkt beheben können.

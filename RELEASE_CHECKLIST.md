@@ -1,20 +1,21 @@
 # Release-Finalisierung – Statusdatei (Iteration)
 
-Stand: 2026-02-11
+Stand: 2026-02-12
 
 ## Entwicklungsfortschritt
 
-- **Gesamtfortschritt:** **83%**
-- **Abgeschlossene Punkte:** **15**
-- **Offene Punkte:** **3**
+- **Gesamtfortschritt:** **89%**
+- **Abgeschlossene Punkte:** **16**
+- **Offene Punkte:** **2**
 
-Berechnung (einfach): `15 abgeschlossen / 18 gesamt = 83,3%`.
+Berechnung (einfach): `16 abgeschlossen / 18 gesamt = 88,9%`.
 
 ## Release-Checkliste
 
-### ✅ Abgeschlossen (15)
+### ✅ Abgeschlossen (16)
 - [x] Startroutine mit klaren Auto-Reparatur-Endstatusmeldungen.
 - [x] Qualitäts-Gate-Skript vorhanden (`tools/run_quality_checks.sh`).
+- [x] Automatische Codeformatierung fest in Quality-Gate integrieren.
 - [x] Smoke-Test-Skript vorhanden (`tools/smoke_test.py`).
 - [x] Fehlerdialog mit Next-Step-Aktionen (erneut, reparatur, protokoll).
 - [x] Headless-Start wird abgefangen, kein harter Crash.
@@ -29,15 +30,14 @@ Berechnung (einfach): `15 abgeschlossen / 18 gesamt = 83,3%`.
 - [x] Startbefehl und manuelle Fallback-Befehle sind dokumentiert.
 - [x] Standardisierte A11y-Checkliste (Kontrast, Fokus) wird automatisch im Quality-Gate geprüft.
 
-### ⏳ Offen (3)
-- [ ] Automatische Codeformatierung fest in Quality-Gate integrieren.
+### ⏳ Offen (2)
 - [ ] Kernmodule mit zusätzlichen automatischen Tests absichern.
 - [ ] Input-/Output-Validierung als zentralen Standard technisch erzwingen.
 
 ## Nächster Schritt (eine Iteration)
 
-1. Input-/Output-Validierung per gemeinsamem Helper in `core/` technisch erzwingen.
-2. Danach Smoke- und Quality-Checks um diesen Validierungsstandard ergänzen.
+1. Kernmodule mit zusätzlichen automatischen Tests absichern (insbesondere `core/validation.py` und Startpfad).
+2. Danach Input-/Output-Validierung als zentralen Standard technisch erzwingen und im Smoke-Test prüfen.
 
 ### Vollständige Befehle
 
