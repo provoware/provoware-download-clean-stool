@@ -1,3 +1,8 @@
+## 2026-02-12 – Doku-Iteration: Standards-Check + README-Oberflächenbild + klare Refactoring-Aussage
+- **Was:** README um einen kompakten Standards-Check (Info-Dateien), ein eingebettetes kleines Oberflächenbild (SVG, Alt-Text) und ein klares Refactoring-Kurzfazit ergänzt.
+- **Warum:** Die Fragen zu Globalstandards, Dokumentationsabdeckung und README-Bild sollten direkt, barrierearm und ohne Zusatzdateien beantwortet werden.
+- **Wirkung:** Schnellere Orientierung für Teams, sichtbare UI-Vorschau in der README und besser nachvollziehbare Doku-Reife.
+
 ## 2026-02-12 – Start-Iteration: Optional-Kurzbericht + Status-Validierung + Debug-Hilfe
 - **Was:** `start.sh` ergänzt einen einheitlichen Kurzbericht für optionale Checks, validiert optionalen Status strikt auf `OK/WARN` und protokolliert im Debug-Modus den genauen Prüf-Befehl.
 - **Warum:** Optionale Warnungen sollten ohne Fachwissen sofort in einer klaren Reihenfolge lösbar sein, während fehlerhafte Statuswerte technisch abgefangen werden.
