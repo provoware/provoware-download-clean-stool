@@ -6,6 +6,7 @@ sicherzustellen, dass zur Entwicklungszeit keine Importfehler auftreten.
 
 import importlib
 import json
+import os
 import sys
 import tempfile
 from pathlib import Path
@@ -320,6 +321,21 @@ def run_gui_debug_snapshot_checks(main_module: object) -> None:
         )
 
 
+def should_run_gui_checks() -> tuple[bool, str]:
+    """Entscheidet robust, ob GUI-nahe Smoke-Checks laufen können."""
+    if os.environ.get("SMOKE_SKIP_GUI", "0") == "1":
+        return (
+            False,
+            "SMOKE_SKIP_GUI=1 gesetzt. Nächster Schritt: Ohne SMOKE_SKIP_GUI im Desktop-Terminal erneut ausführen.",
+        )
+    if not os.environ.get("DISPLAY") and not os.environ.get("WAYLAND_DISPLAY"):
+        return (
+            False,
+            "keine Display/Wayland-Sitzung erkannt. Nächster Schritt: Im Desktop-Terminal mit aktivem Display erneut ausführen.",
+        )
+    return True, "GUI-Voraussetzungen erkannt"
+
+
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
     if str(repo_root) not in sys.path:
@@ -368,6 +384,14 @@ def main() -> int:
     except Exception as e:
         print("Core validation checks failed:", e)
         return 1
+
+    run_gui, gui_reason = should_run_gui_checks()
+    if not run_gui:
+        print(f"Smoke test passed (GUI-Checks übersprungen: {gui_reason})")
+        print(
+            "Nächster Schritt: Für vollständigen GUI-Smoke im Desktop-Terminal erneut ausführen."
+        )
+        return 0
 
     try:
         # Attempt to import the main window without starting the event loop

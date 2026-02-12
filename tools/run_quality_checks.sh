@@ -7,6 +7,7 @@ AUTO_FIX="${AUTO_FIX:-0}"
 AUTO_FIX_ON_WARN="${AUTO_FIX_ON_WARN:-1}"
 FAST_MODE="${FAST_MODE:-1}"
 AUTO_INSTALL_TOOLS="${AUTO_INSTALL_TOOLS:-1}"
+STRICT_SMOKE="${STRICT_SMOKE:-0}"
 STATE_FILE="$ROOT_DIR/data/quality_state.json"
 WARNINGS=0
 TOTAL_STEPS=11
@@ -86,6 +87,34 @@ AUTO_FIX="$(normalize_binary_flag "$AUTO_FIX" "AUTO_FIX")"
 AUTO_FIX_ON_WARN="$(normalize_binary_flag "$AUTO_FIX_ON_WARN" "AUTO_FIX_ON_WARN")"
 FAST_MODE="$(normalize_binary_flag "$FAST_MODE" "FAST_MODE")"
 AUTO_INSTALL_TOOLS="$(normalize_binary_flag "$AUTO_INSTALL_TOOLS" "AUTO_INSTALL_TOOLS")"
+STRICT_SMOKE="$(normalize_binary_flag "$STRICT_SMOKE" "STRICT_SMOKE")"
+
+check_gui_smoke_prerequisites() {
+  # Prüft minimale GUI-Voraussetzungen vor dem Smoke-Test.
+  # Output: 0 wenn alles bereit ist; sonst 1 + verständlicher Hinweis mit Next Step.
+  local missing_items=()
+
+  if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
+    missing_items+=("Display/Wayland-Sitzung")
+  fi
+  if ! ldconfig -p 2>/dev/null | grep -q "libGL.so.1" && [ ! -e "/usr/lib/x86_64-linux-gnu/libGL.so.1" ] && [ ! -e "/lib/x86_64-linux-gnu/libGL.so.1" ]; then
+    missing_items+=("libGL.so.1")
+  fi
+  if ! ldconfig -p 2>/dev/null | grep -q "libEGL.so.1" && [ ! -e "/usr/lib/x86_64-linux-gnu/libEGL.so.1" ] && [ ! -e "/lib/x86_64-linux-gnu/libEGL.so.1" ]; then
+    missing_items+=("libEGL.so.1")
+  fi
+  if ! ldconfig -p 2>/dev/null | grep -q "libxkbcommon.so.0" && [ ! -e "/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0" ] && [ ! -e "/lib/x86_64-linux-gnu/libxkbcommon.so.0" ]; then
+    missing_items+=("libxkbcommon.so.0")
+  fi
+
+  if [ "${#missing_items[@]}" -eq 0 ]; then
+    return 0
+  fi
+
+  say "[QUALITY][WARN] Smoke-Voraussetzungen fehlen: ${missing_items[*]}"
+  say "[QUALITY][HILFE] Nächster Schritt: Im Desktop-Terminal ausführen: sudo apt update && sudo apt install -y libgl1 libegl1 libxkbcommon0"
+  return 1
+}
 
 run_optional() {
   local tool_name="$1"
@@ -399,10 +428,25 @@ run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR
 
 announce_quality_step 4 "Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
-  if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
-    say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
-    say "[QUALITY][HILFE] Nächster Schritt: bash start.sh für automatische Reparaturhilfe."
-    WARNINGS=$((WARNINGS + 1))
+  smoke_rc=0
+  if ! check_gui_smoke_prerequisites; then
+    if [ "$STRICT_SMOKE" = "1" ]; then
+      WARNINGS=$((WARNINGS + 1))
+      say "[QUALITY][WARN] STRICT_SMOKE=1: Fehlende Voraussetzungen gelten als Qualitätswarnung mit hoher Priorität."
+    else
+      say "[QUALITY][INFO] Smoke-Test wurde in dieser Umgebung übersprungen (kein harter Fehler)."
+    fi
+  else
+    if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
+      smoke_rc=$?
+    fi
+    if [ "$smoke_rc" -ne 0 ]; then
+      say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (Code: $smoke_rc)."
+      say "[QUALITY][HILFE] Nächster Schritt: bash start.sh für automatische Reparaturhilfe oder python3 tools/smoke_test.py für Einzeldiagnose."
+      WARNINGS=$((WARNINGS + 1))
+    else
+      say "[QUALITY][OK] Smoke-Test erfolgreich abgeschlossen."
+    fi
   fi
 else
   say "[QUALITY][INFO] Kein Smoke-Test gefunden."
