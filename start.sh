@@ -610,6 +610,15 @@ echo "[STATUS] Hinweise: WARN=$QUALITY_WARN_COUNT, INFO=$QUALITY_INFO_COUNT"
 echo "[HILFE] Nächster Schritt: $QUALITY_HINT"
 echo "[HILFE] Log-Datei: $QUALITY_LOG"
 
+if [ -f "tools/release_gap_report.py" ]; then
+  if ! python3 tools/release_gap_report.py >>"$QUALITY_LOG" 2>&1; then
+    echo "[WARN] Release-Report meldet noch offene oder widersprüchliche Punkte."
+    echo "[HILFE] Nächster Schritt: python3 tools/release_gap_report.py"
+  else
+    echo "[STATUS] ✅ Release-Report: OK"
+  fi
+fi
+
 # 6) Linux-Systembibliotheken prüfen (vor Smoke-Test)
 check_and_repair_linux_lib() {
   local lib_name="$1"

@@ -83,3 +83,5 @@ DONE: Debug-Hilfe für optionale Checks erweitert (Prüfbefehl im Log + erneuter
 NEXT: Die gleiche Kurzbericht-Logik in tools/quality_gate_gui.py sichtbar machen, damit GUI und Terminal identische Hilfe-Texte liefern. (2026-02-12)
 DONE: Standards-Abgleich in den Info-Dateien dokumentiert, README um kleines eingebettetes UI-Bild erweitert und Refactoring-Kurzfazit in einfacher Sprache ergänzt. (2026-02-12)
 NEXT: Echte GUI-Live-Screenshot-Datei (PNG/SVG) automatisiert erzeugen und bei jedem UI-Release in README referenzieren. (2026-02-12)
+DONE: Neuer Release-Lücken-Report (tools/release_gap_report.py) ergänzt und in Quality-Gate sowie Start-Routine mit klaren Next Steps eingebunden. (2026-02-12)
+NEXT: Die zwei offenen UX-Release-Punkte aus docs/developer_manual.md umsetzen und danach den Release-Status in allen drei Statusdateien synchron auf 100% setzen. (2026-02-12)

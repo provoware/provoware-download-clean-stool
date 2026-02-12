@@ -388,3 +388,8 @@
 - **Was:** `AGENTS.md` auf Version 2.1 angehoben und die Iterationsregel auf genau zwei vollständig abgeschlossene Punkte pro Iteration umgestellt (inkl. Scope/DoD/Planung).
 - **Warum:** Der Arbeitsmodus soll pro Durchlauf nicht nur einen, sondern zwei klar abgegrenzte, merge-fähige Fortschrittspunkte erzwingen.
 - **Wirkung:** Iterationen bleiben klein, aber liefern pro Merge mehr sichtbaren Fortschritt bei weiterhin klaren Qualitäts-Gates.
+
+## 2026-02-12 – Release-Transparenz: Automatischer Lücken-Report im Quality-/Start-Flow
+- **Was:** Neues Skript `tools/release_gap_report.py` ergänzt, in `tools/run_quality_checks.sh` als zusätzlicher Schritt eingebunden und in `start.sh` mit klarer Hilfe-Ausgabe verknüpft.
+- **Warum:** Die Frage „Was fehlt noch für den Release?“ sollte jederzeit automatisch, konsistent und in einfacher Sprache beantwortet werden.
+- **Wirkung:** Nutzer:innen sehen offene oder widersprüchliche Release-Punkte direkt mit konkretem ersten Next Step statt manueller Suche in mehreren Dateien.
