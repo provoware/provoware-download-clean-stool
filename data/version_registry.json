@@ -1,5 +1,5 @@
 {
-  "global_version": "2026.02.11.5",
+  "global_version": "2026.02.12",
   "files": {
     "app/main.py": "2026.02.11.3",
     "core/settings.py": "2026.02.11",
@@ -12,9 +12,9 @@
     "app/web_api.py": "2026.02.11.1",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.11.1",
-    "README.md": "2026.02.11.5",
-    "CHANGELOG.md": "2026.02.11.5",
-    "todo.txt": "2026.02.11.5",
-    "data/version_registry.json": "2026.02.11.5"
+    "README.md": "2026.02.12",
+    "CHANGELOG.md": "2026.02.12",
+    "todo.txt": "2026.02.12",
+    "data/version_registry.json": "2026.02.12"
   }
 }

@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **90%**
- - **Abgeschlossene Punkte:** **83**
- - **Offene Punkte:** **3**
- - **Nächster Schritt:** Die drei priorisierten Optimierungen aus Abschnitt **0.3** nacheinander umsetzen (Accessibility-Hilfe, Start-Autoreparatur, Quality-Automation).
+ - **Entwicklungsfortschritt:** **93%**
+ - **Abgeschlossene Punkte:** **86**
+ - **Offene Punkte:** **2**
+ - **Nächster Schritt:** Start-Routine weiter in Richtung Themen-Check + Web-Startpfad ausbauen und danach den finalen Release-Check schließen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -47,6 +47,23 @@ bash start.sh
 - Alle drei Punkte sind abgeschlossen und als DONE dokumentiert.
 - Mindestens ein Hilfe- oder Accessibility-Punkt ist sichtbar verbessert.
 - Alle vier Befehle laufen grün oder sind mit klarem Grund als NEXT ITERATION dokumentiert.
+
+
+## 0.4) Aktuelle Iteration (3 abgeschlossene Text-Punkte)
+
+1. **README-Status geschärft (klar, kurz, messbar)**  
+   Fortschritt und nächste Schritte sind jetzt kompakt und laienfreundlich formuliert.
+2. **Changelog-Eintrag im 3-Zeilen-Format ergänzt**  
+   Was/Warum/Wirkung wurde als Mini-Protokoll ergänzt.
+3. **todo.txt auf DONE/NEXT aktualisiert**  
+   Abschluss und nächster kleiner Schritt sind mit Datum nachgeführt.
+
+### Zwei kurze Laienvorschläge
+- Öffne zuerst `README.md` und arbeite nur die vier Prüf-Befehle der Reihe nach ab.
+- Wenn ein Schritt fehlschlägt, nutze zuerst den dort genannten „Next Step“, statt alles gleichzeitig zu ändern.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führe `bash start.sh` aus und prüfe danach in `exports/setup_log.txt`, ob fehlende Pakete automatisch erkannt und gelöst wurden. Wenn dort noch Warnungen stehen, behebe nur **einen** Warnpunkt und starte den Ablauf erneut.
 
 ## 0.3) Vollständige Analyse: nächste offene Punkte und Optimierungen
 
