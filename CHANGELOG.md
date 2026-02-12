@@ -1,3 +1,7 @@
+- Was: `start.sh` validiert jetzt den Quality-Logpfad vor dem Lauf, protokolliert den aktiven Pfad sichtbar und ergänzt A11y-Theme-Hilfe bei Blendung. (2026-02-12)
+- Warum: Fehler durch ungültige Logpfade sollten früh, verständlich und reproduzierbar abgefangen werden; zusätzlich brauchte die Start-Hilfe einen klaren Blendungs-Hinweis.
+- Wirkung: Stabilerer Qualitätslauf mit klarerem Debug-Pfad und bessere barrierearme Bedienhilfe durch direkte Theme-Next-Steps.
+
 - Was: `tools/run_quality_checks.sh` steuert Auto-Fix jetzt transparent über `AUTO_FIX_ON_WARN=auto` und verhindert stille Standard-Umformatierung. (2026-02-12)
 - Warum: Ein reiner Qualitätscheck sollte den Arbeitsstand nicht unerwartet ändern und in CI reproduzierbar bleiben.
 - Wirkung: Nutzer:innen erhalten planbare Prüfungen, klare Fix-Hinweise und sichere Rückgängig-Schritte nach Auto-Korrekturen.

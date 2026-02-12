@@ -39,6 +39,23 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+## 0.33) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Qualitäts-Logpfad wird jetzt vor dem Lauf robust validiert**  
+   `start.sh` prüft den übergebenen Logpfad (`run_quality_with_autofix`) auf leere/absolute Pfade, erstellt den Zielordner bei Bedarf und bricht mit klaren Next Steps ab, wenn kein sicherer Schreibzugriff vorliegt.
+2. **Qualitätslauf bestätigt jetzt aktiv den tatsächlichen Protokoll-Zielpfad**  
+   Vor dem ersten Check wird der vorbereitete Pfad sichtbar ausgegeben, damit Nutzer:innen direkt sehen, wo der vollständige Report liegt (Debug/Support-freundlich).
+3. **A11y-Hilfe um klare Theme-Empfehlung bei Blendung erweitert (A11y/Text)**  
+   Die Start-Hilfe enthält jetzt eine explizite Empfehlung, bei Blendung sofort auf `kontrast` oder `senior` zu wechseln.
+
+### Zwei kurze Laienvorschläge
+- Wenn ein Qualitätslauf komisch wirkt, schauen Sie zuerst in `exports/quality_report.txt`, bevor Sie erneut starten.
+- Bei zu grellen Farben wechseln Sie direkt auf das Theme **kontrast** – das ist meist am ruhigsten lesbar.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitern Sie als nächsten kleinen Schritt den Qualitätslauf um einen kurzen Hinweis, wie viele Sekunden der letzte Lauf gebraucht hat. So sehen Nutzer:innen sofort, ob der Ablauf normal schnell war oder ob ein Bereich ungewöhnlich lange hängt.
+
 ## 0.32) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Qualitätslauf verhindert jetzt stille Auto-Formatierung im Standardmodus**  
