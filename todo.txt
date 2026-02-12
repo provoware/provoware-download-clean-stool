@@ -169,3 +169,6 @@ NEXT: Startmeldung um sichtbare Fix-Strategie vor dem Quality-Gate erweitern (nu
 
 DONE: Iterationsprofil SAFE/TURBO mit Vorab-Plan in start.sh ergänzt und FAST_MODE-Hinweise im Quality-Lauf geschärft. (2026-02-12)
 NEXT: Qualitätslauf pro Schritt mit Zeitmessung erweitern und im Report die drei langsamsten Schritte automatisch markieren. (2026-02-12)
+
+DONE: Live-Vorschau zeigt jetzt Design-Nähe (%), Preview-Zielwerte sind in der Design-Referenz verankert und der Design-Check validiert diese Pflichtfelder automatisch. (2026-02-12)
+NEXT: Theme-übergreifende Verlaufsmessung für Design-Nähe ergänzen (letzter Messwert pro Theme sichtbar im Dashboard), danach Gates erneut vollständig laufen lassen. (2026-02-12)
