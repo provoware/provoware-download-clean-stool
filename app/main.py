@@ -1857,6 +1857,34 @@ class MainWindow(QMainWindow):
         if self.root_path:
             self.lbl_folder.setText(str(self.root_path))
         btn_choose.clicked.connect(self._choose_folder)
+
+        actions_bar = QHBoxLayout()
+        actions_bar.setSpacing(8)
+        self.btn_dash_open_folder = QPushButton("Ordner im Dateimanager öffnen")
+        self.btn_dash_open_folder.setToolTip(
+            "Öffnet den aktuell ausgewählten Zielordner direkt aus dem Dashboard"
+        )
+        self.btn_dash_open_folder.clicked.connect(
+            self._open_selected_folder_in_file_manager
+        )
+        self.btn_dash_help = QPushButton("Hilfe-Center")
+        self.btn_dash_help.setToolTip(
+            "Zeigt die Schritt-für-Schritt-Hilfe in einfacher Sprache"
+        )
+        self.btn_dash_help.clicked.connect(self._show_general_help)
+        self.btn_dash_continue = QPushButton("Direkt zu Schritt 2")
+        self.btn_dash_continue.setToolTip(
+            "Speichert die Angaben und springt direkt in die Filter- und Rasteransicht"
+        )
+        self.btn_dash_continue.clicked.connect(self._welcome_next)
+        for button in (
+            self.btn_dash_open_folder,
+            self.btn_dash_help,
+            self.btn_dash_continue,
+        ):
+            button.setMinimumHeight(42)
+            actions_bar.addWidget(button)
+        layout.addLayout(actions_bar)
         # Theme selection
         hl_theme = QHBoxLayout()
         lbl_theme = QLabel("Farbschema:")
@@ -2237,6 +2265,7 @@ class MainWindow(QMainWindow):
         self.lbl_dashboard_info.setText(
             f"{neon_mockup}<br/><br/>"
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
+            "<b>Alles auf einem Bildschirm:</b> Sidebar links, Aktionsraster in der Mitte, Hilfe- und Statuspanel rechts.<br/>"
             f"• System: {system_text}<br/>"
             "• Offline-Betrieb: aktiv (keine Internetverbindung nötig)<br/>"
             f"• Aktueller Zielordner: {folder_text}<br/>"
@@ -2250,6 +2279,10 @@ class MainWindow(QMainWindow):
             "2) Wählen Sie ein gut lesbares Farbschema.<br/>"
             "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten.<br/>"
             "4) Prüfen Sie im Dashboard, ob der Speicherstatus auf ✅ steht.<br/><br/>"
+            "<b>Extra-Hilfe (idiotensicher):</b><br/>"
+            "• <b>Bereich 1 – Start:</b> Ordner wählen, dann Theme prüfen.<br/>"
+            "• <b>Bereich 2 – Aufräumen:</b> Eine Kachel klicken und Vorschlag bestätigen.<br/>"
+            "• <b>Bereich 3 – Hilfe:</b> Bei Fehlern immer zuerst den Hilfe-Button nutzen.<br/><br/>"
             "<b>Gate-Übersicht:</b><br/>"
             f"{self._build_gate_status_html()}"
         )
@@ -2267,7 +2300,7 @@ class MainWindow(QMainWindow):
             self._refresh_history_display()
 
     def _build_soft_neon_dashboard_mockup(self) -> str:
-        """Erstellt eine barrierearme Soft-Neon-Mockup-Vorschau mit validiertem Output."""
+        """Erstellt eine barrierearme Dashboard-Vorschau mit Sidebar, Raster und Hilfepanel."""
 
         header_segments = ["Segment A", "Segment B", "Segment C"]
         if len(header_segments) != 3:
@@ -2291,34 +2324,35 @@ class MainWindow(QMainWindow):
         mockup = (
             "<div style='background:#0a1020;border-radius:30px;padding:16px;border:1px solid #2a3f68;'>"
             "<div style='display:flex;gap:12px;align-items:center;margin-bottom:12px;'>"
-            "<div style='flex:1;background:#121f37;border-radius:999px;padding:10px 16px;color:#7f93bf;'>🔎 Suche</div>"
+            "<div style='flex:1;background:#121f37;border-radius:999px;padding:10px 16px;color:#7f93bf;'>🔎 Dashboard-Suche · Ordner · Presets</div>"
             "<div style='display:flex;gap:10px;'>"
             + "".join(
-                "<span style='display:inline-block;width:44px;height:6px;border-radius:999px;background:#7d57ff;'></span>"
+                "<span style='display:inline-block;width:44px;height:6px;border-radius:999px;background:#61e1ff;'></span>"
                 for _ in header_segments
             )
             + "</div></div>"
             "<table width='100%' cellspacing='10'><tr>"
-            f"<td width='72' style='vertical-align:top;background:#050b19;border-radius:22px;padding:10px;text-align:center;'>{icon_col}</td>"
+            f"<td width='86' style='vertical-align:top;background:#050b19;border-radius:22px;padding:12px;text-align:center;color:#dbe7ff;'>{icon_col}<div style='margin-top:10px;font-size:11px;'>Sidebar</div></td>"
             "<td style='vertical-align:top;'>"
-            "<div style='display:flex;gap:10px;margin-bottom:10px;'>"
-            "<div style='flex:1;background:#14233d;border-radius:20px;padding:10px;'>"
-            "<span style='color:#f0f4ff;'>Product Sales</span><br/><b style='color:#ff2d5f;'>$983.080</b></div>"
-            "<div style='flex:1;background:#14233d;border-radius:20px;padding:10px;'>"
-            "<span style='color:#f0f4ff;'>Revenue</span><br/><b style='color:#4b7bff;'>$983.080</b></div>"
-            "<div style='flex:1;background:#ff1f58;border-radius:20px;padding:10px;color:#ffffff;'>"
-            "<span>Total Profit</span><br/><b>$715.803</b></div></div>"
-            "<div style='background:#132239;border-radius:24px;padding:12px;color:#e7ecff;'>"
-            "Soft-Neon-Layering: große Kartenradien, weiche Schatten, rote/violette/blau-cyan Akzente.</div>"
+            "<div style='background:#14233d;border-radius:20px;padding:12px;margin-bottom:10px;color:#f0f4ff;'>"
+            "<b>Download-Clean-Zentrale</b><br/><span style='color:#a9b8d8;'>Alles sofort im Blick: Ordnerwahl, Schnellaktionen und Hilfe.</span></div>"
+            "<table width='100%' cellspacing='8'>"
+            "<tr><td style='background:#1b3362;border:1px solid #61e1ff;border-radius:14px;padding:10px;color:#ffffff;'>📂 Ordner wählen</td>"
+            "<td style='background:#1b3362;border:1px solid #7ec9ff;border-radius:14px;padding:10px;color:#ffffff;'>🧹 Große Dateien</td>"
+            "<td style='background:#1b3362;border:1px solid #61e1ff;border-radius:14px;padding:10px;color:#ffffff;'>🧩 Duplikate</td></tr>"
+            "<tr><td style='background:#1b3362;border:1px solid #7ec9ff;border-radius:14px;padding:10px;color:#ffffff;'>🎵 Medien sortieren</td>"
+            "<td style='background:#1b3362;border:1px solid #61e1ff;border-radius:14px;padding:10px;color:#ffffff;'>📊 Analyse starten</td>"
+            "<td style='background:#1b3362;border:1px solid #7ec9ff;border-radius:14px;padding:10px;color:#ffffff;'>✅ Plan prüfen</td></tr>"
+            "</table>"
             "</td>"
-            "<td width='230' style='vertical-align:top;'>"
-            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#f0f4ff;text-align:center;margin-bottom:10px;'>"
-            "Profil · Glow-Rahmen · klare Typografie</div>"
-            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;margin-bottom:10px;'>Rechte Karten-Spalte mit Balken/Illustration</div>"
-            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;'>Kontrast-Hinweis: Akzente sparsam einsetzen.</div>"
+            "<td width='250' style='vertical-align:top;'>"
+            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#f0f4ff;margin-bottom:10px;'>"
+            "<b>Hilfe-Panel</b><br/>1) Ordner wählen<br/>2) Kachel drücken<br/>3) Vorschau prüfen</div>"
+            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;margin-bottom:10px;'>"
+            "Status: Kontrast, Rechte, Speicher und letzter Lauf mit ✅/⚠️.</div>"
+            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;'>"
+            "Fehlerhilfe: Erneut versuchen · Reparatur · Protokoll.</div>"
             "</td></tr></table>"
-            "<div style='background:#102039;border-radius:28px;padding:12px;color:#dbe7ff;'>"
-            "Untere Hauptkarte: breite Linie mit blau/roten Kurven und Marker; Legende oben rechts.</div>"
             "</div>"
         )
         if not mockup.strip():
@@ -2418,6 +2452,35 @@ class MainWindow(QMainWindow):
             self.settings.download_dir = str(self.root_path)
             self._save_settings_with_feedback("Ordnerauswahl")
             self._refresh_dashboard_info()
+
+    def _open_selected_folder_in_file_manager(self) -> None:
+        """Öffnet den gewählten Zielordner direkt aus dem Dashboard mit validierten Next Steps."""
+
+        target_folder = self.root_path or Path(self.settings.download_dir)
+        if not target_folder:
+            self._show_error_with_mini_help(
+                title="Ordner fehlt",
+                happened_text="Es ist noch kein Zielordner für das Dashboard gesetzt.",
+                next_clicks=[
+                    "Erneut versuchen: Erst auf 'Ordner wählen…' klicken.",
+                    "Reparatur: Danach erneut 'Ordner im Dateimanager öffnen' nutzen.",
+                ],
+            )
+            return
+
+        expanded_folder = Path(target_folder).expanduser()
+        if not expanded_folder.exists() or not expanded_folder.is_dir():
+            self._show_error_with_mini_help(
+                title="Ordner nicht erreichbar",
+                happened_text="Der gewählte Ordner ist nicht vorhanden oder kein Verzeichnis.",
+                next_clicks=[
+                    "Erneut versuchen: Einen vorhandenen Ordner neu auswählen.",
+                    "Protokoll: Bei externer Platte zuerst das Laufwerk einhängen.",
+                ],
+            )
+            return
+
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(expanded_folder)))
 
     def _welcome_next(self) -> None:
         # Save theme settings

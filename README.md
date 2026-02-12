@@ -16,7 +16,7 @@ Für eine Schritt‑für‑Schritt‑Anleitung zur Nutzung des Werkzeugs, einsch
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
  - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **22**
+ - **Abgeschlossene Punkte:** **25**
  - **Offene Punkte:** **0**
  - **Nächster Schritt:** Release-Kandidat auf Zielsystem testen (AppImage starten, Smoke durchklicken, Log prüfen) und Tag vorbereiten.
 
@@ -40,6 +40,23 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+
+## 0.38) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Dashboard-Vorschau auf One-Screen-Layout geschärft**  
+   `app/main.py` zeigt die Zielstruktur jetzt explizit als „Sidebar + Aktionsraster + Hilfe-/Statuspanel“ und erklärt die Bedienung in einfacher Sprache direkt im Dashboard-Text.
+2. **Design-Mockup auf Download-Ordner-Bereinigung ausgerichtet**  
+   Die Soft-Neon-Vorschau zeigt nun konkrete Download-Clean-Karten (Ordner wählen, Duplikate, Analyse, Plan) statt generischer Business-Kennzahlen.
+3. **Neue Dashboard-Aktionsleiste mit direktem Ordnerzugriff und Hilfe (A11y/Text)**  
+   In Schritt 1 gibt es jetzt drei große Buttons („Ordner im Dateimanager öffnen“, „Hilfe-Center“, „Direkt zu Schritt 2“) inklusive validierter Fehlerpfade mit klaren Next Steps.
+
+### Zwei kurze Laienvorschläge
+- Klicken Sie zuerst auf **Ordner im Dateimanager öffnen**, um direkt zu prüfen, ob wirklich der richtige Download-Ordner aktiv ist.
+- Nutzen Sie danach **Direkt zu Schritt 2**, um ohne Umweg in Filter und Schnellraster zu springen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Als nächstes können Sie im gleichen Dashboard eine kleine rechte Seitenkarte „Letzte Bereinigung“ ergänzen (mit Datum, Anzahl Dateien, freigemachter Speicher). So sehen Laien sofort, ob der letzte Lauf erfolgreich war, ohne in extra Menüs suchen zu müssen.
 
 ## 0.37) Aktuelle Iteration (3 Punkte, DONE)
 

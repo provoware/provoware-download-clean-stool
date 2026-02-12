@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Layout: One-Screen-Dashboard für Download-Bereinigung
+- **Was:** `app/main.py` erweitert Dashboard-Text, Soft-Neon-Mockup und Start-Aktionsleiste um Sidebar/Raster/Help-Panel plus Button „Ordner im Dateimanager öffnen“.
+- **Warum:** Das Zielbild „alles auf einem Bildschirm“ sollte für Laien direkt sichtbar und ohne Umwege bedienbar sein.
+- **Wirkung:** Klarere Orientierung, schnellerer Startfluss und bessere Hilfe-/A11y-Führung direkt im Haupttool.
+
 ## 2026-02-12 – Binärfrei: AppImage nur lokal erzeugen
 - **Was:** `.gitignore` ignoriert jetzt `dist/*.AppImage`; das bereits getrackte AppImage wurde aus dem Repo entfernt und nicht mehr in der Versions-Registry geführt.
 - **Warum:** Das Zielsystem unterstützt keine Binärdaten im Repository; Releases sollen reproduzierbar gebaut statt als Binärblob eingecheckt werden.
