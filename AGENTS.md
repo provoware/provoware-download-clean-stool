@@ -1,6 +1,6 @@
 # AGENTS.md
 # AGENTS.md – Three-Point-Completion Iteration (Merge-Ready by Default)
-Version: 2.3
+Version: 2.4
 Ziel: Jede Iteration schließt **genau drei klar abgegrenzte Punkte vollständig** ab, ist merge-ready und erhöht den Release-Reifegrad.
 Leitmotiv: Drei kleinste vollständige Punkte pro Iteration, harte Qualitäts-Gates, sofort integrierbar. Eine der drei Aufgaben muss immer eine sinnvolle Erweiterung der Hilfselemente, der Texte oder der Barrierefreiheit sein.
 
@@ -13,6 +13,10 @@ Jede Iteration muss:
  - alle Punkte so klein wie möglich halten (smallest shippable change)
  - merge-ready sein (Code + Doku + Checks erledigt)
  - den Release-Fortschritt messbar erhöhen
+
+Zählregel für die drei Punkte:
+- Die drei Pflichtpunkte beziehen sich immer auf funktionale Produktaspekte außerhalb reiner Info-Dateien.
+- Info-Dateien (z. B. `README.md`, `CHANGELOG.md`, `todo.txt`) sind verpflichtende Begleit-Dokumentation und zählen nicht als eigener Funktionspunkt.
 
 Maximal:
 - 1 Problemklasse
@@ -98,7 +102,7 @@ Wenn erneut rot:
 
 ## 6) Dokumentation (pro Iteration Pflicht)
 ### 6.0 README-Status
-Ganz oben in README immer aktualisieren:
+README regelmäßig aktualisieren (mindestens alle 2–3 Iterationen oder sofort bei kritischen Scope-/Release-Änderungen):
 - exakte Prozentzahl Fortschritt (z. B. `81%`)
 - Liste **Abgeschlossen**
 - Liste **Offen**

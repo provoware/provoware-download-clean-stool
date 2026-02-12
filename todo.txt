@@ -1,3 +1,5 @@
+DONE: AGENTS-Regeln für README-Zyklus + Aufgaben-Zählung präzisiert, Projektdetailbeschreibung mit Migrationsplan angelegt. (2026-02-12)
+NEXT: Sichere Alias-Phase für versionierte Dateinamen technisch vorbereiten (Inventar + Referenztests). (2026-02-12)
 DONE: Quality-Checks zählen Schritte jetzt konsistent (1/6–6/6), prüfen JSON-Typen mit und geben bei Typfehlern klare Next Steps in einfacher Sprache. (2026-02-12)
 NEXT: Typvalidierung im Quality-Check um Zahlenbereichsprüfungen (Min/Max) erweitern und bei Verstoß direkte Korrekturbeispiele ausgeben. (2026-02-12)
 DONE: Entwicklerbereich hat jetzt eine klare Status-Legende (✅/🟡) mit kurzer Bedienhilfe in einfacher Sprache. (2026-02-11)

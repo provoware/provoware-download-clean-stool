@@ -34,6 +34,13 @@ Ja, das geht. Unten ist eine kleine, barrierearme Vorschau direkt in der README 
 ![Kleine schematische Vorschau der Tool-Oberfläche](data:image/svg+xml;utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='480'%20height='220'%20viewBox='0%200%20480%20220'%3E%3Crect%20width='480'%20height='220'%20fill='%230f172a'/%3E%3Crect%20x='18'%20y='18'%20width='444'%20height='184'%20rx='12'%20fill='%231e293b'/%3E%3Ctext%20x='36'%20y='52'%20font-size='18'%20fill='%23e2e8f0'%20font-family='Arial,sans-serif'%3EProvoware%20Clean%20Tool%3C/text%3E%3Crect%20x='36'%20y='72'%20width='182'%20height='32'%20rx='8'%20fill='%232563eb'/%3E%3Ctext%20x='52'%20y='93'%20font-size='14'%20fill='white'%20font-family='Arial,sans-serif'%3EAnalyse%20starten%3C/text%3E%3Crect%20x='230'%20y='72'%20width='212'%20height='32'%20rx='8'%20fill='%2310b981'/%3E%3Ctext%20x='246'%20y='93'%20font-size='14'%20fill='white'%20font-family='Arial,sans-serif'%3EPlan%20anzeigen%3C/text%3E%3Crect%20x='36'%20y='120'%20width='406'%20height='58'%20rx='8'%20fill='%230b1220'/%3E%3Ctext%20x='48'%20y='144'%20font-size='13'%20fill='%23cbd5e1'%20font-family='Arial,sans-serif'%3EHilfe:%20Tab%20f%C3%BCr%20Fokus,%20Enter%20zum%20Start.%3C/text%3E%3Ctext%20x='48'%20y='164'%20font-size='13'%20fill='%23cbd5e1'%20font-family='Arial,sans-serif'%3ENext%20Step:%20Bei%20Fehler%20%E2%80%9EReparatur%E2%80%9C%20nutzen.%3C/text%3E%3C/svg%3E)
 
 
+
+### Struktur- und Erweiterbarkeits-Update (Iteration)
+
+- **Dateinamen-Suffix-Strategie:** Für neue variable Dateien verwenden wir ab jetzt das Muster `name__vYYYY.MM.DD__status.ext` (Beispiel: `report__v2026.02.12__draft.md`).
+- **Wichtig:** Bestehende Kern-Dateien wurden **nicht** global umbenannt, damit Startskripte, Imports und Tool-Aufrufe stabil bleiben. Eine sichere Migrationsliste steht in `docs/projektdetailbeschreibung_v2026.02.12_status-done.md`.
+- **Erweiterbarkeit geprüft:** Es gibt jetzt eine klare Bewertung mit konkreten Ausbaupunkten für Plugin-Schnittstellen, Konfigurationstrennung und Testautomatisierung.
+
 ### Schnellüberblick (laienfreundlich)
 
 - **Was wurde analysiert?** Alle aktuell offenen Punkte wurden in drei kleine, direkt umsetzbare Pakete zerlegt.
