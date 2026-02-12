@@ -71,6 +71,16 @@
     ],
     "next_steps_in_error_messages": "required_in_plain_language"
   },
+  "module_priority_policy": {
+    "critical": [
+      "PySide6",
+      "PIL",
+      "Pillow",
+      "numpy",
+      "pandas"
+    ],
+    "medium_default": "mittel"
+  },
   "structure_policy": {
     "app": "GUI/Oberfläche",
     "core": "Kernlogik",

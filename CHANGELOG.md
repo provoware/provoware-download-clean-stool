@@ -1,3 +1,8 @@
+## 2026-02-12 – Start/Manifest-Iteration: Modul-Priorität aus Registry
+- **Was:** `start.sh` liest Modul-Prioritäten jetzt aus `data/standards_manifest.json`; das Manifest enthält dafür den neuen Block `module_priority_policy`.
+- **Warum:** Prioritätsregeln sollten zentral gepflegt werden statt direkt im Startskript, damit Änderungen konsistent und wartbar bleiben.
+- **Wirkung:** Der Reparaturstatus im Start bleibt verständlich, ist jetzt konfigurierbar und besser auf zukünftige Iterationen vorbereitet.
+
 ## 2026-02-12 – Design-Iteration: Referenzbild als prüfbare Zielvorgabe
 - Was: Neue Datei `data/design_reference_domotic_assistant.json` dokumentiert das Referenzbild mit Farbpalette, Layoutmaßen, Abständen, Typografie, Komponentenregeln und Ansichtsfragen; zusätzlich prüft `tools/design_reference_check.py` diese Vorgaben automatisch.
 - Warum: Die visuelle Zielrichtung sollte nicht nur beschrieben, sondern technisch reproduzierbar, barrierearm und als Qualitätsstandard erzwingbar sein.

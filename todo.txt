@@ -1,3 +1,6 @@
+DONE: Start-Routine liest Modul-Prioritäten jetzt aus dem Manifest (`data/standards_manifest.json`) statt aus fest codierter Liste und protokolliert den Status weiterhin kompakt. (2026-02-12)
+NEXT: Mini-UX-Gate um interaktive Dialog-Klickpfade erweitern, damit Bedienfluss in `tools/quality_gate_gui.py` automatisch mitgeprüft wird. (2026-02-12)
+
 DONE: Design-Referenzbild als JSON-Zielvorgabe dokumentiert, automatischen Design-Check ergänzt und Quality-Gate auf 12 Schritte erweitert. (2026-02-12)
 NEXT: Genau eine sichtbare Startseiten-Komponente gemäß Design-Referenz umsetzen (z. B. Kartenabstand oder aktive Kartenkontur) und mit Screenshot gegenprüfen. (2026-02-12)
 
