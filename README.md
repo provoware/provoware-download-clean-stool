@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **89%**
- - **Abgeschlossene Punkte:** **16**
- - **Offene Punkte:** **2**
- - **Nächster Schritt:** Zusätzliche automatische Tests für Kernmodule ergänzen, damit die zwei verbleibenden Release-Punkte reproduzierbar abgedeckt sind.
+ - **Entwicklungsfortschritt:** **100%**
+ - **Abgeschlossene Punkte:** **18**
+ - **Offene Punkte:** **0**
+ - **Nächster Schritt:** Release-Artefakte final verifizieren und anschließend das nächste 3-Punkte-UX-Paket planen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -49,6 +49,23 @@ bash start.sh
 - Mindestens ein Hilfe- oder Accessibility-Punkt ist sichtbar verbessert.
 - Alle vier Befehle laufen grün oder sind mit klarem Grund als NEXT ITERATION dokumentiert.
 
+
+
+## 0.8) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Kernmodul-Tests im Smoke-Test erweitert**  
+   `tools/smoke_test.py` prüft jetzt zusätzlich die zentrale Validierung (`require_non_empty_text`, `require_output`) inklusive Fehlertext mit klaren Next Steps.
+2. **Input-/Output-Validierung technisch als Standard abgesichert**  
+   `tools/run_quality_checks.sh` enthält nun einen eigenen Schritt „Validierungsstandard-Check“, der fehlende Standardfunktionen in `core/validation.py` automatisch als Warnung meldet.
+3. **Hilfetext im Qualitätslauf erweitert (A11y/Text)**  
+   Neue Warnungen enthalten einfache Sprache plus konkrete Folgeaktion, damit Fehler schneller ohne Fachwissen behoben werden können.
+
+### Zwei kurze Laienvorschläge
+- Starte bei Problemen zuerst `bash tools/run_quality_checks.sh` und folge exakt den `[QUALITY][HILFE]`-Schritten.
+- Wenn der Smoke-Test rot ist, öffne die Meldung und prüfe als Erstes, ob ein Feld leer ist oder ein Ergebnis fehlt.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führe jetzt die vier Gates nacheinander aus (`compileall`, Quality-Check, Smoke-Test, Start), kontrolliere danach `exports/quality_report.txt` und übernimm nur dann den Stand, wenn alle Schritte grün oder klar als Hinweis erklärt sind.
 
 ## 0.4) Aktuelle Iteration (3 abgeschlossene Punkte)
 

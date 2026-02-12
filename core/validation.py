@@ -72,6 +72,27 @@ def require_non_negative_number(value: object, field_name: str) -> float:
     return float(value)
 
 
+def require_non_empty_text(value: object, field_name: str) -> str:
+    """Validate that value is a non-empty text string."""
+    value_text = require_type(value, str, field_name).strip()
+    if not value_text:
+        raise ValidationError(
+            f"Ungültiger Input bei '{field_name}': Text darf nicht leer sein. "
+            "Nächster Schritt: Klaren Text eintragen und erneut versuchen."
+        )
+    return value_text
+
+
+def require_output(value: T | None, output_name: str) -> T:
+    """Validate that a function output exists and can be used safely."""
+    if value is None:
+        raise ValidationError(
+            f"Ungültiger Output bei '{output_name}': Ergebnis fehlt. "
+            "Nächster Schritt: Vorherigen Verarbeitungsschritt prüfen und erneut starten."
+        )
+    return value
+
+
 def require_condition(condition: bool, message: str) -> None:
     """Validate an output/runtime condition and raise a clear error."""
     if not condition:

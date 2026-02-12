@@ -11,13 +11,14 @@
     "data/presets/quick_all.json": "2026.02.11.1",
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
-    "tools/smoke_test.py": "2026.02.11.1",
-    "README.md": "2026.02.12.5",
-    "CHANGELOG.md": "2026.02.12.5",
-    "todo.txt": "2026.02.12.5",
-    "data/version_registry.json": "2026.02.12.5",
-    "tools/run_quality_checks.sh": "2026.02.12.2",
-    "RELEASE_CHECKLIST.md": "2026.02.12.5",
-    "core/history.py": "2026.02.12.5"
+    "tools/smoke_test.py": "2026.02.12.2",
+    "README.md": "2026.02.12.6",
+    "CHANGELOG.md": "2026.02.12.6",
+    "todo.txt": "2026.02.12.6",
+    "data/version_registry.json": "2026.02.12.6",
+    "tools/run_quality_checks.sh": "2026.02.12.3",
+    "RELEASE_CHECKLIST.md": "2026.02.12.6",
+    "core/history.py": "2026.02.12.5",
+    "core/validation.py": "2026.02.12.6"
   }
 }

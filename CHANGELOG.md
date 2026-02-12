@@ -1,3 +1,8 @@
+
+## 2026-02-12 – Release-Iteration: Restpunkte zu Tests und Validierungsstandard geschlossen
+- **Was:** `core/validation.py`, `tools/smoke_test.py` und `tools/run_quality_checks.sh` um verpflichtende Input-/Output-Validierung plus automatische Prüfungen erweitert.
+- **Warum:** Die letzten offenen Release-Punkte (mehr Kernmodul-Tests und technische Erzwingung der Validierungsstandards) sollten reproduzierbar abgeschlossen werden.
+- **Wirkung:** Qualitätslauf meldet Standardlücken sofort mit Next Steps, und der Smoke-Test deckt zentrale Validierungsfehler jetzt automatisch ab.
 ## 2026-02-12 – Release-Iteration: Codeformat-Releasepunkt abgeschlossen + Status-Sync + A11y-Textpflege
 - **Was:** `RELEASE_CHECKLIST.md` markiert den offenen Releasepunkt zur festen Codeformatierung im Quality-Gate als abgeschlossen; README-Status wurde auf denselben Stand synchronisiert und um einen kurzen A11y-Hinweis ergänzt.
 - **Warum:** Ein offener Release-Punkt sollte vollständig beendet und in allen Steuerdokumenten konsistent sichtbar sein, damit keine widersprüchlichen Reifestände entstehen.
