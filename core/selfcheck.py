@@ -20,7 +20,10 @@ def run_selfcheck() -> Tuple[bool, str]:
     """
     # Require at least Python 3.8
     if sys.version_info < (3, 8):
-        return False, "Python 3.8 oder höher ist erforderlich"
+        return (
+            False,
+            "Python 3.8 oder höher ist erforderlich. Nächster Schritt: Python aktualisieren und start.sh erneut ausführen.",
+        )
     root = Path(__file__).resolve().parent.parent
     logs_dir = root / "logs"
     exports_dir = root / "exports"
@@ -28,5 +31,8 @@ def run_selfcheck() -> Tuple[bool, str]:
         logs_dir.mkdir(parents=True, exist_ok=True)
         exports_dir.mkdir(parents=True, exist_ok=True)
     except Exception as e:
-        return False, f"Fehler beim Erstellen der Verzeichnisse: {e}"
-    return True, "Selfcheck erfolgreich"
+        return (
+            False,
+            f"Fehler beim Erstellen der Verzeichnisse: {e}. Nächster Schritt: Schreibrechte für logs/exports prüfen und start.sh erneut ausführen.",
+        )
+    return True, "Selfcheck erfolgreich. Nächster Schritt: GUI kann gestartet werden."

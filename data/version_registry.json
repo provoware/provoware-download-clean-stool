@@ -16,7 +16,7 @@
     "CHANGELOG.md": "2026.02.12.21",
     "todo.txt": "2026.02.12.21",
     "data/version_registry.json": "2026.02.12.21",
-    "tools/run_quality_checks.sh": "2026.02.12.7",
+    "tools/run_quality_checks.sh": "2026.02.12.8",
     "RELEASE_CHECKLIST.md": "2026.02.12.7",
     "core/history.py": "2026.02.12.5",
     "core/validation.py": "2026.02.12.6",
@@ -26,6 +26,8 @@
     "tools/release_gap_report.py": "2026.02.12.2",
     "data/standards_manifest.json": "2026.02.12.1",
     "docs/developer_manual.md": "2026.02.12.2",
-    "docs/debugging_gui_state.html": "2026.02.12.1"
+    "docs/debugging_gui_state.html": "2026.02.12.1",
+    "core/selfcheck.py": "2026.02.12.1",
+    "tools/exit_path_audit.py": "2026.02.12.1"
   }
 }

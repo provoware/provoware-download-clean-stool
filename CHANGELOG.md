@@ -2,6 +2,10 @@
 - **Was:** `app/main.py` ergänzt feste Hilfezeilen in „Analyse“ und „Plan“ (Tastaturweg, Kontrast-Hinweis, nächste Aktion); `start.sh` erkennt zusätzlich fehlende Python-Module per Importtest und versucht eine automatische Reparatur mit klarer Erfolgs-/Fehlerausgabe.
 - **Warum:** Nutzer:innen sollen in beiden Arbeitsschritten sofort barrierearme Orientierung erhalten und Startprobleme durch fehlende Module automatisch, nachvollziehbar und robust gelöst bekommen.
 - **Wirkung:** Bessere A11y-Führung im UI, klarer Reparaturstatus („erfolgreich“/„nicht möglich“) und stabilerer Start ohne manuelle Fehlersuche.
+## 2026-02-12 – Quality-Iteration: Exit-Knoten-Audit + klare Selfcheck-Next-Steps
+- **Was:** Neues Tool `tools/exit_path_audit.py` ergänzt und in `tools/run_quality_checks.sh` als fester Schritt integriert; `core/selfcheck.py` liefert jetzt bei Erfolg/Fehlern klare „Nächster Schritt“-Hinweise.
+- **Warum:** Exit-Pfade sollten nicht nur abbrechen, sondern immer eine direkte, laienfreundliche Lösung anbieten und automatisch geprüft werden.
+- **Wirkung:** Konsistentere Fehlermeldungen, besserer Accessibility-Textfluss und automatischer Nachweis, dass zentrale Exit-Knoten konkrete Lösungswege bieten.
 
 ## 2026-02-12 – Debug-Iteration: Optischer GUI-HTML-Snapshot
 - **Was:** `app/main.py` erzeugt jetzt automatisch `docs/debugging_gui_state.html`, ergänzt den Button „Debug-HTML öffnen“ und erweitert den Smoke-Test in `tools/smoke_test.py` um Snapshot-Prüfungen.

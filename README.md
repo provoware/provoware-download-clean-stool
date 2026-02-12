@@ -11,9 +11,9 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **98%**
+ - **Entwicklungsfortschritt:** **99%**
  - **Abgeschlossene Punkte:** **28**
- - **Offene Punkte:** **0**
+ - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
 
 
@@ -133,21 +133,22 @@ bash start.sh
 
 
 
+
 ## 0.14) Aktuelle Iteration (3 Punkte, DONE)
 
-1. **Feste Hilfezeile im Analyse-Schritt ergänzt (A11y/Text)**  
-   `app/main.py` zeigt in Schritt 3 jetzt dauerhaft eine kurze Hilfe mit Tastaturweg, Kontrast-Hinweis und klarer nächster Aktion.
-2. **Feste Hilfezeile im Plan-Schritt ergänzt (A11y/Text)**  
-   `app/main.py` zeigt in Schritt 4 dieselbe feste Struktur (Tastatur, Kontrast, nächste Aktion) plus Accessibility-Beschreibung für Screenreader.
-3. **Start-Autoreparatur für fehlende Module robuster gemacht**  
-   `start.sh` erkennt fehlende Python-Module per Importtest, startet automatisch eine gezielte Reparatur und meldet den Endstatus eindeutig als „erfolgreich“ oder „nicht möglich“.
+1. **Exit-Knoten-Audit als automatischer Qualitätscheck ergänzt**  
+   Neues Skript `tools/exit_path_audit.py` prüft zentrale Start-/Quality-Dateien auf Exit-Pfade ohne direkte Lösungshinweise in einfacher Sprache.
+2. **Quality-Gate erweitert um Exit-Knoten-Hilfeprüfung**  
+   `tools/run_quality_checks.sh` enthält jetzt einen festen Schritt 9/10, der den Exit-Audit automatisch ausführt und bei Bedarf klare Next Steps anzeigt.
+3. **Selfcheck-Fehlertexte mit konkreten Next Steps vereinheitlicht (A11y/Text)**  
+   `core/selfcheck.py` liefert bei Fehlern und Erfolg kurze, verständliche Anweisungen („Nächster Schritt …“), damit auch Laien direkt weiterarbeiten können.
 
 ### Zwei kurze Laienvorschläge
-- Wenn die Schrift schwer lesbar ist, stelle im Tool sofort auf „High-Contrast“ um und starte dann erst die Analyse.
-- Wenn beim Start Warnungen kommen, prüfe zuerst nur den Abschnitt „Auto-Reparatur-Status“, bevor du manuell Pakete installierst.
+- Wenn der Start abbricht, zuerst `python3 tools/exit_path_audit.py` ausführen und die erste gemeldete Stelle beheben.
+- Danach `bash tools/run_quality_checks.sh` starten, damit alle automatischen Checks in derselben Reihenfolge laufen.
 
 ### Detaillierter nächster Schritt (einfach erklärt)
-Ergänze als nächsten kleinen Technikschritt eine kurze Zusammenfassung „Welche Module wurden repariert?“ direkt im Start-Log-Block, damit bei Support-Fällen sofort sichtbar ist, ob ein Modul-Import nach der Reparatur wirklich funktioniert hat.
+Öffne bei einer Warnung die gemeldete Datei, ergänze direkt am Exit-Pfad einen Satz mit „Nächster Schritt …“, führe dann den Audit und den Quality-Check erneut aus. So ist jeder Abbruch für Nutzer:innen sofort lösbar.
 
 ## 0.13) Aktuelle Iteration (3 Punkte, DONE)
 
