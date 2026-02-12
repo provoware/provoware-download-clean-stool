@@ -440,6 +440,17 @@ echo "[STATUS] $OVERALL_ICON Gesamtstatus Abhängigkeiten: $OVERALL_STATUS"
 echo "[STATUS] $OVERALL_MESSAGE"
 
 # 3) Optionalen Ausbau prüfen (Web-Frontend + AppImage)
+normalize_optional_status() {
+  # Validiert den Status optionaler Checks und liefert nur OK oder WARN.
+  local raw_value="${1:-WARN}"
+  if [ "$raw_value" = "OK" ] || [ "$raw_value" = "WARN" ]; then
+    printf '%s' "$raw_value"
+    return 0
+  fi
+  printf '%s' "WARN"
+  return 1
+}
+
 check_optional_toolchain() {
   local feature_name="$1"
   local check_cmd="$2"
@@ -453,6 +464,7 @@ check_optional_toolchain() {
   fi
 
   echo "[CHECK][OPTIONAL] Prüfe Ausbaupfad: $feature_name"
+  log_debug "Optional-Check-Befehl für '$feature_name': $check_cmd"
   if bash -lc "$check_cmd" >/dev/null 2>&1; then
     echo "[OK][OPTIONAL] $feature_name ist bereit."
     echo "[HILFE][OPTIONAL] $success_hint"
@@ -461,7 +473,29 @@ check_optional_toolchain() {
 
   echo "[WARN][OPTIONAL] $feature_name ist noch nicht eingerichtet."
   echo "[HILFE][OPTIONAL] Nächster Schritt: $install_hint"
+  echo "[HILFE][OPTIONAL] Danach zur Kontrolle erneut starten: bash start.sh"
   return 1
+}
+
+print_optional_quickfix_block() {
+  # Zeigt bei optionalen Warnungen eine einheitliche Hilfe mit klarer Reihenfolge.
+  local web_status_input="${1:-WARN}"
+  local appimage_status_input="${2:-WARN}"
+  local web_status
+  local appimage_status
+  web_status="$(normalize_optional_status "$web_status_input")"
+  appimage_status="$(normalize_optional_status "$appimage_status_input")"
+
+  echo "[OPTIONAL] ===== Kurzbericht Optional-Checks ====="
+  echo "[OPTIONAL] Web-Frontend: $web_status | AppImage: $appimage_status"
+
+  if [ "$web_status" = "WARN" ] || [ "$appimage_status" = "WARN" ]; then
+    echo "[OPTIONAL] Nächster Schritt 1: Protokoll prüfen: cat exports/setup_log.txt"
+    echo "[OPTIONAL] Nächster Schritt 2: Optionales Ziel auswählen und nur diesen Bereich installieren."
+    echo "[OPTIONAL] Nächster Schritt 3: Erneut prüfen mit: bash start.sh"
+  else
+    echo "[OPTIONAL] Beide optionalen Ausbaupfade sind bereit."
+  fi
 }
 
 WEB_OPTIONAL_STATUS="WARN"
@@ -483,8 +517,12 @@ if check_optional_toolchain \
   APPIMAGE_OPTIONAL_STATUS="OK"
 fi
 
+WEB_OPTIONAL_STATUS="$(normalize_optional_status "$WEB_OPTIONAL_STATUS")"
+APPIMAGE_OPTIONAL_STATUS="$(normalize_optional_status "$APPIMAGE_OPTIONAL_STATUS")"
+
 echo "[STATUS][OPTIONAL] Web-Frontend-Bereitschaft: $WEB_OPTIONAL_STATUS"
 echo "[STATUS][OPTIONAL] AppImage-Bereitschaft: $APPIMAGE_OPTIONAL_STATUS"
+print_optional_quickfix_block "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS"
 
 # 4) Kritische Imports prüfen (ohne Crash)
 echo "[CHECK] Prüfe kritische Module"

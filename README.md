@@ -52,6 +52,22 @@ bash start.sh
 
 
 
+## 0.11) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Optional-Checks nutzen jetzt einen einheitlichen Kurzbericht**  
+   `start.sh` zeigt für Web-Frontend und AppImage einen kompakten Block mit klarer 3-Schritt-Reihenfolge statt verstreuter Einzelhinweise.
+2. **Optional-Status wird strikt validiert (Input/Output-Schutz)**  
+   Der Status optionaler Prüfungen wird technisch auf `OK`/`WARN` begrenzt, damit die Start-Zusammenfassung robust und vorhersagbar bleibt.
+3. **Debug-Hilfe im Optional-Check erweitert (Text/A11y)**  
+   Im Debug-Modus wird der genaue Prüf-Befehl protokolliert; bei Warnungen gibt es eine klare, einfache Folgeaktion („erneut starten“).
+
+### Zwei kurze Laienvorschläge
+- Nutze bei unklaren Optional-Warnungen zuerst `cat exports/setup_log.txt` und entscheide dann nur **einen** Ausbaupfad (Web oder AppImage).
+- Starte bei Rückfragen einmal mit `DEBUG_LOG_MODE=1 bash start.sh`, damit du die genaue Prüfreihenfolge im Protokoll siehst.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänze als nächsten kleinen Schritt dieselbe 3-Schritt-Kurzlogik auch in den einzelnen Dialogfenstern (`tools/quality_gate_gui.py`), damit Terminal und GUI dieselben Next Steps zeigen.
+
 ## 0.10) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **A11y-Theme-Check prüft jetzt auch Auswahl- und Disabled-Kontrast**  
