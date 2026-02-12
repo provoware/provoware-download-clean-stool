@@ -1,3 +1,8 @@
+## 2026-02-12 – Iterations-Disziplin: planbarer SAFE/TURBO-Ablauf
+- **Was:** `start.sh` unterstützt jetzt `ITERATION_SPEED_PROFILE` (`safe`/`turbo`) inkl. validierter Vorab-Plananzeige; `tools/run_quality_checks.sh` erklärt FAST_MODE klar als Zwischenstand vs. Abschlusslauf.
+- **Warum:** Iterationen sollen schneller werden, ohne den finalen Qualitätslauf und robuste Gates zu verlieren.
+- **Wirkung:** Teams können bewusst zwischen Tempo und Tiefe steuern, behalten klare Next Steps und reduzieren unnötige Doppelarbeit.
+
 ## 2026-02-12 – Start-Iteration: Laufzeittransparenz & Workdir-Status
 - **Was:** `start.sh` misst jetzt die Qualitätslaufzeit in Sekunden, zeigt den Status des Nutzerordner-Schreibtests in der Abschlussübersicht und ergänzt einen klaren Fast-Mode-Hinweis bei langen Läufen.
 - **Warum:** Nutzer:innen sollen sofort sehen, ob Qualitätsprüfungen ungewöhnlich lange dauern und ob der Arbeitsordner in `~/.local/share` wirklich schreibbar ist.

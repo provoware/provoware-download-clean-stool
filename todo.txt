@@ -166,3 +166,6 @@ DONE: Soft-Neon-Layoutvorgabe umgesetzt: neues Theme, Neon-Dashboard-Mockup und 
 NEXT: Kleine automatische Theme-Stabilitätsprüfung ergänzen (dunkel/neon/kontrast nacheinander anwenden und Vorschau-Text pro Schritt validieren). (2026-02-12)
 DONE: Qualitätslauf standardisiert: keine stille Auto-Formatierung im Normalmodus, CI-sichere Fix-Logik und klare Git-Next-Steps nach Auto-Korrektur ergänzt. (2026-02-12)
 NEXT: Startmeldung um sichtbare Fix-Strategie vor dem Quality-Gate erweitern (nur prüfen vs. auto reparieren) und danach Gates erneut laufen lassen. (2026-02-12)
+
+DONE: Iterationsprofil SAFE/TURBO mit Vorab-Plan in start.sh ergänzt und FAST_MODE-Hinweise im Quality-Lauf geschärft. (2026-02-12)
+NEXT: Qualitätslauf pro Schritt mit Zeitmessung erweitern und im Report die drei langsamsten Schritte automatisch markieren. (2026-02-12)

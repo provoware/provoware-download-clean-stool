@@ -101,6 +101,7 @@ print_quality_summary_for_humans() {
     return 0
   fi
   say "[QUALITY][ÜBERSICHT] Bitte führen Sie diese Reihenfolge aus:"
+  say "[QUALITY][HILFE] Vorplanung: Erst FAST_MODE=1 für schnelles Feedback, dann FAST_MODE=0 als finaler Sicherheitslauf."
   say "[QUALITY][HILFE] 1) Auto-Korrektur starten: AUTO_FIX=1 bash tools/run_quality_checks.sh"
   say "[QUALITY][HILFE] 2) Vollprüfung starten: FAST_MODE=0 bash tools/run_quality_checks.sh"
   say "[QUALITY][HILFE] 3) Danach Startprüfung laufen lassen: bash start.sh"
@@ -491,6 +492,12 @@ if [ "$FAST_MODE" = "1" ] && [ "$AUTO_FIX" = "0" ] && [ -n "$CACHED_SIGNATURE" ]
 fi
 
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
+if [ "$FAST_MODE" = "1" ]; then
+  say "[QUALITY][INFO] FAST_MODE=1 aktiv: schneller Durchlauf für frühes Feedback (Zwischenstand)."
+  say "[QUALITY][HILFE] Merge-sicherer Abschluss: FAST_MODE=0 bash tools/run_quality_checks.sh"
+else
+  say "[QUALITY][INFO] FAST_MODE=0 aktiv: vollständiger Qualitätslauf für merge-ready Ergebnis."
+fi
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
 announce_quality_step 1 "Syntaxprüfung (compileall)"
