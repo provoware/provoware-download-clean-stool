@@ -1,3 +1,8 @@
+## 2026-02-12 – Quality-Iteration: Exit-Knoten-Audit + klare Selfcheck-Next-Steps
+- **Was:** Neues Tool `tools/exit_path_audit.py` ergänzt und in `tools/run_quality_checks.sh` als fester Schritt integriert; `core/selfcheck.py` liefert jetzt bei Erfolg/Fehlern klare „Nächster Schritt“-Hinweise.
+- **Warum:** Exit-Pfade sollten nicht nur abbrechen, sondern immer eine direkte, laienfreundliche Lösung anbieten und automatisch geprüft werden.
+- **Wirkung:** Konsistentere Fehlermeldungen, besserer Accessibility-Textfluss und automatischer Nachweis, dass zentrale Exit-Knoten konkrete Lösungswege bieten.
+
 ## 2026-02-12 – Debug-Iteration: Optischer GUI-HTML-Snapshot
 - **Was:** `app/main.py` erzeugt jetzt automatisch `docs/debugging_gui_state.html`, ergänzt den Button „Debug-HTML öffnen“ und erweitert den Smoke-Test in `tools/smoke_test.py` um Snapshot-Prüfungen.
 - **Warum:** Der aktuelle GUI-Zustand soll jederzeit visuell nachvollziehbar und als einfache Testdatei nutzbar sein.
