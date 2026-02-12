@@ -153,3 +153,5 @@ NEXT: Release-Lücke AppImage schließen und danach `python3 tools/release_gap_r
 
 DONE: Start-Vorprüfung erweitert (Smoke/Registry-Dateien), CLI-Tool-Check mit Auto-Reparatur ergänzt und A11y-Theme-Check auf venv-Python umgestellt. (2026-02-12)
 NEXT: Preflight um einen kleinen Selbsttest für Schreibrechte von logs/exports mit klarer Auto-Reparatur-Hilfe erweitern. (2026-02-12)
+DONE: Soft-Neon-Layoutvorgabe umgesetzt: neues Theme, Neon-Dashboard-Mockup und erweiterte A11y-Theme-Hinweise in app/main.py ergänzt. (2026-02-12)
+NEXT: Kleine automatische Theme-Stabilitätsprüfung ergänzen (dunkel/neon/kontrast nacheinander anwenden und Vorschau-Text pro Schritt validieren). (2026-02-12)

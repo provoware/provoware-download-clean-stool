@@ -1,3 +1,7 @@
+- Was: `app/main.py` ergänzt ein neues Soft-Neon-Theme, erweitert die Theme-Schnellwahl und zeigt eine strukturierte Neon-Dashboard-Mockup-Vorschau. (2026-02-12)
+- Warum: Die gewünschte Gesamtästhetik (Dark-UI mit weichen Neon-Akzenten) sollte sofort sichtbar, auswählbar und nachvollziehbar umgesetzt werden.
+- Wirkung: Die Startansicht entspricht stärker der vorgegebenen Designsprache, bleibt barrierearm nutzbar und bietet klare Kontrast-Wechselpfade.
+
 - Was: `start.sh` prüft nun Schreibrechte für `logs/` und `exports/`, repariert sie bei Bedarf automatisch und gibt klare Rechte-Next-Steps aus. (2026-02-12)
 - Warum: Fehlende Schreibrechte führten zu schwer verständlichen Startabbrüchen ohne klaren Selbsttest.
 - Wirkung: Die Startroutine erkennt Rechteprobleme früh, versucht eine sichere Korrektur und erklärt laienverständlich den nächsten manuellen Schritt.
