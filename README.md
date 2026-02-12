@@ -11,10 +11,19 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **95%**
+ - **Entwicklungsfortschritt:** **96%**
  - **Abgeschlossene Punkte:** **26**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
+
+### Neuer Start-Qualitätslauf (Auto-Fix + A11y-Theme-Check)
+
+Die Startroutine führt jetzt vor dem Start automatisch einen Theme-/Kontrast-Check und bei Qualitätswarnungen genau einen Auto-Fix-Lauf mit Kontrolllauf aus.
+
+Kurz gesagt:
+- A11y-Theme-Check läuft automatisch (`python3 tools/a11y_theme_check.py`)
+- Qualitätscheck läuft automatisch mit einem Reparaturversuch (`AUTO_FIX=1`)
+- Bei verbleibenden Warnungen erscheinen klare Next Steps in einfacher Sprache
 
 ### Neuer Release-Lücken-Report (schnelle Antwort auf „Was fehlt noch?“)
 

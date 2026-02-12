@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: A11y-Theme-Gate + Auto-Fix-Qualitätslauf + klarere Hilfe
+- **Was:** `start.sh` führt jetzt automatisch den A11y-Theme-Check aus, erweitert die A11y-Hilfe um Theme-Auswahl/Prüfbefehl und startet bei Qualitätswarnungen genau einen Auto-Fix mit anschließendem Kontrolllauf.
+- **Warum:** Nutzer:innen sollen Kontrast-/Theme-Probleme und Qualitätswarnungen ohne Fachwissen direkt beim Start mit klarer Reihenfolge beheben können.
+- **Wirkung:** Bessere Barrierefreiheit, robusterer Startprozess und verständliche Next Steps bei verbleibenden Warnungen.
+
 ## 2026-02-12 – Quality-Iteration: Zahlenbereichsprüfung + Hilfetexte + robuste JSON-Checks
 - **Was:** `tools/run_quality_checks.sh` erweitert den JSON-Check um optionale Min/Max-Bereiche und prüft `confirm_threshold` in allen Presets auf den Bereich 1–100.
 - **Warum:** Falsche Zahlenwerte sollen früh und eindeutig erkannt werden, bevor sie später zu schwer verständlichen Laufzeitproblemen führen.

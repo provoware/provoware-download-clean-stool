@@ -278,8 +278,57 @@ print_accessibility_next_steps() {
   # Hilft beim barrierearmen Einstieg direkt nach der Startprüfung.
   echo "[A11Y] Kurze Hilfe (barrierearm):"
   echo "[A11Y] - Tastatur: Mit Tab vor/zurück durch Schaltflächen gehen, Enter zum Bestätigen nutzen."
-  echo "[A11Y] - Kontrast: Bei schlechter Lesbarkeit im Tool auf High-Contrast Theme wechseln."
+  echo "[A11Y] - Theme-Auswahl: Bei schlechter Lesbarkeit zwischen Dark, Light und High-Contrast wechseln."
+  echo "[A11Y] - Kontrast-Check: Mit python3 tools/a11y_theme_check.py die Theme-Kontraste automatisch prüfen."
   echo "[A11Y] - Nächster Klick: Erst Scan starten, dann die Vorschau prüfen, danach Aufräumen ausführen."
+}
+
+
+run_a11y_theme_gate() {
+  # Prüft Theme-Kontraste automatisch und liefert klare Hilfe bei Warnungen.
+  # Output: 0 bei erfolgreicher Prüfung ohne Warnstatus, sonst 1.
+  local a11y_log_path="${1:-exports/quality_report.txt}"
+
+  if [ ! -f "tools/a11y_theme_check.py" ]; then
+    echo "[WARN] A11y-Theme-Check fehlt (tools/a11y_theme_check.py)." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Datei wiederherstellen und danach bash start.sh erneut ausführen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if python3 tools/a11y_theme_check.py >> "$a11y_log_path" 2>&1; then
+    echo "[OK] A11y-Theme-Check ist grün." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] A11y-Theme-Check meldet Kontrast- oder Theme-Warnungen." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: python3 tools/a11y_theme_check.py ausführen und erste Warnung im Theme korrigieren." | tee -a "$SETUP_LOG"
+  return 1
+}
+run_quality_with_autofix() {
+  # Führt den Qualitätslauf robust aus: Erst Prüfung, bei Warnungen ein Auto-Fix, danach Kontrolllauf.
+  # Output: 0 wenn Abschluss ohne Warn-Exitcode möglich, 1 bei weiterhin rotem Ergebnis.
+  local quality_log_path="${1:-exports/quality_report.txt}"
+
+  if bash tools/run_quality_checks.sh > "$quality_log_path" 2>&1; then
+    echo "[OK] Qualitätsprüfung ohne Warn-Exitcode abgeschlossen."
+    return 0
+  fi
+
+  echo "[WARN] Qualitätsprüfung meldet Warnungen. Starte genau einen Auto-Fix-Lauf." | tee -a "$SETUP_LOG"
+  if AUTO_FIX=1 bash tools/run_quality_checks.sh >> "$quality_log_path" 2>&1; then
+    echo "[OK] Auto-Fix-Lauf abgeschlossen. Starte Kontrolllauf." | tee -a "$SETUP_LOG"
+  else
+    echo "[WARN] Auto-Fix-Lauf konnte nicht alles reparieren. Kontrolllauf folgt trotzdem." | tee -a "$SETUP_LOG"
+  fi
+
+  if bash tools/run_quality_checks.sh >> "$quality_log_path" 2>&1; then
+    echo "[OK] Kontrolllauf nach Auto-Fix ist grün." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] Qualitätswarnungen bleiben nach Auto-Fix bestehen." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: quality_report lesen, erste Warnung beheben, dann bash start.sh erneut starten." | tee -a "$SETUP_LOG"
+  return 1
 }
 
 DEBUG_LOG_MODE="$(normalize_binary_runtime_flag "${DEBUG_LOG_MODE:-0}" "DEBUG_LOG_MODE")"
@@ -587,11 +636,16 @@ echo "[CHECK] Führe Qualitätsprüfung aus"
 QUALITY_STATUS="OK"
 QUALITY_ICON="✅"
 QUALITY_HINT="Keine Aktion nötig."
-if ! bash tools/run_quality_checks.sh > "$QUALITY_LOG" 2>&1; then
+if ! run_a11y_theme_gate "$QUALITY_LOG"; then
+  QUALITY_STATUS="WARN"
+  QUALITY_ICON="⚠️"
+  QUALITY_HINT="Bitte zuerst den A11y-Theme-Check prüfen und die erste Warnung beheben."
+fi
+if ! run_quality_with_autofix "$QUALITY_LOG"; then
   log_debug "Qualitätsprüfung meldet Warnung. Öffne Details in $QUALITY_LOG."
   QUALITY_STATUS="WARN"
   QUALITY_ICON="⚠️"
-  QUALITY_HINT="Bitte zuerst die Qualitäts-Hilfe öffnen und dann erneut starten."
+  QUALITY_HINT="Bitte zuerst die erste Warnung beheben, dann Qualitätslauf erneut starten und danach erneut starten."
   echo "[WARN] Qualitätsprüfung meldet etwas. Tool versucht trotzdem zu starten."
   python3 tools/quality_gate_gui.py || true
 fi
