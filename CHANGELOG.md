@@ -1,3 +1,8 @@
+## 2026-02-12 – UX-Iteration: Modus-Trennung + Tool-Bibel + Gate-Übersicht
+- **Was:** `app/main.py` ergänzt eine Modus-Auswahl (Laien/Entwickler), einen Tool-Bibel-Dialog mit schnellen Dokumentpfaden und eine kompakte Gate-Übersicht (G1–G4) im Dashboard.
+- **Warum:** Laien sollen weniger kognitive Last haben, während fortgeschrittene Nutzer technische Transparenz direkt im Tool erhalten.
+- **Wirkung:** Klarere Informationshierarchie, bessere Auffindbarkeit der Entwicklerdoku und verständlichere Statuskommunikation für den nächsten Schritt.
+
 ## 2026-02-12 – Start-Iteration: A11y-Theme-Gate + Auto-Fix-Qualitätslauf + klarere Hilfe
 - **Was:** `start.sh` führt jetzt automatisch den A11y-Theme-Check aus, erweitert die A11y-Hilfe um Theme-Auswahl/Prüfbefehl und startet bei Qualitätswarnungen genau einen Auto-Fix mit anschließendem Kontrolllauf.
 - **Warum:** Nutzer:innen sollen Kontrast-/Theme-Probleme und Qualitätswarnungen ohne Fachwissen direkt beim Start mit klarer Reihenfolge beheben können.

@@ -11,10 +11,20 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **96%**
+ - **Entwicklungsfortschritt:** **97%**
  - **Abgeschlossene Punkte:** **26**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
+
+
+### Neue UX-Iteration: Zwei Modi + Tool-Bibel + Gate-Dashboard
+
+Neu in dieser Iteration (kompakt):
+- **Laien-Modus (Standard):** Blendet im Startschritt die wichtigsten Elemente ein, damit Einsteiger schneller ans Ziel kommen.
+- **Entwickler-Modus:** Zeigt den getrennten Statusbereich und öffnet über **Tool-Bibel** schnell die technischen Quellen.
+- **Gate-Dashboard im Haupt-Dashboard:** Zeigt G1–G4 mit Ampel-Symbolen und direktem Befehl in einfacher Sprache.
+
+Diese drei Punkte erhöhen die Transparenz, ohne die normale Bedienung zu überladen.
 
 ### Neuer Start-Qualitätslauf (Auto-Fix + A11y-Theme-Check)
 
