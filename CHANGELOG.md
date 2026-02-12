@@ -446,3 +446,8 @@
 - **Was:** Neues Skript `tools/release_gap_report.py` ergänzt, in `tools/run_quality_checks.sh` als zusätzlicher Schritt eingebunden und in `start.sh` mit klarer Hilfe-Ausgabe verknüpft.
 - **Warum:** Die Frage „Was fehlt noch für den Release?“ sollte jederzeit automatisch, konsistent und in einfacher Sprache beantwortet werden.
 - **Wirkung:** Nutzer:innen sehen offene oder widersprüchliche Release-Punkte direkt mit konkretem ersten Next Step statt manueller Suche in mehreren Dateien.
+
+## 2026-02-12 – Iteration: Validierung + stabile Reparaturhinweise
+- **Was:** Neue Validierungen für Auswahlwerte und Verzeichnispfade ergänzt, Settings-Normalisierung daran gekoppelt und Start-Reparaturblock mit Modul-Importstatus erweitert.
+- **Warum:** Damit Laien Fehler früher verstehen und Startprobleme schrittweise ohne Abbruch beheben können.
+- **Wirkung:** Robustere Eingaben, klarere Rückmeldungen und weniger unklare Reparaturabbrüche.

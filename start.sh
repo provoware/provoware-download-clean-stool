@@ -134,6 +134,45 @@ validate_non_negative_int() {
   return 1
 }
 
+
+print_module_repair_status_block() {
+  # Zeigt je fehlendem Python-Modul den Reparaturstatus in einfacher Sprache.
+  # Input: kommaseparierte Modulliste. Output: Statusblock mit klaren Next Steps.
+  local missing_csv="${1:-}"
+  local normalized_csv
+  normalized_csv="$(printf '%s' "$missing_csv" | tr -d '[:space:]')"
+
+  if [ -z "$normalized_csv" ]; then
+    echo "[SETUP] Modul-Reparatur: Keine fehlenden Module erkannt."
+    return 0
+  fi
+
+  echo "[SETUP] ===== Modul-Reparaturstatus ====="
+  IFS=',' read -r -a raw_modules <<< "$normalized_csv"
+  local repaired_count=0
+  local failed_count=0
+  local module_name
+
+  for module_name in "${raw_modules[@]}"; do
+    [ -z "$module_name" ] && continue
+    if "$VENV_PY" -c "import importlib; importlib.import_module('$module_name')" >>"$SETUP_LOG" 2>&1; then
+      echo "[SETUP] Import jetzt OK: $module_name"
+      repaired_count=$((repaired_count + 1))
+    else
+      echo "[SETUP] Import weiterhin FEHLER: $module_name"
+      failed_count=$((failed_count + 1))
+    fi
+  done
+
+  echo "[SETUP] Ergebnis: OK=$repaired_count | FEHLER=$failed_count"
+  if [ "$failed_count" -gt 0 ]; then
+    echo "[HILFE] Nächster Schritt 1: Modulwarnungen im Log lesen: cat exports/setup_log.txt"
+    echo "[HILFE] Nächster Schritt 2: Ein Modul nach dem anderen reparieren (nicht alles gleichzeitig)."
+    return 1
+  fi
+  return 0
+}
+
 print_quality_quickfix_block() {
   # Zeigt einen kompakten Qualitätsblock mit klaren Auto-Fix-Befehlen.
   # Input: Warnzahl, Infozahl, Logpfad. Output: laienfreundliche Next Steps.
@@ -518,6 +557,12 @@ if [ -n "$MISSING_MODULES_RAW" ]; then
       INSTALL_ERRORS=$((INSTALL_ERRORS + 1))
     fi
   done <<< "$MISSING_MODULES_RAW"
+  if print_module_repair_status_block "$MISSING_MODULES_RAW"; then
+    echo "[OK] Modul-Reparaturblock: alle fehlenden Module sind jetzt importierbar." | tee -a "$SETUP_LOG"
+  else
+    echo "[WARN] Modul-Reparaturblock zeigt noch offene Imports. Siehe Hilfeschritte oben." | tee -a "$SETUP_LOG"
+    INSTALL_ERRORS=$((INSTALL_ERRORS + 1))
+  fi
 fi
 
 if ! "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
@@ -607,6 +652,12 @@ check_optional_toolchain() {
   if [ -z "$feature_name" ] || [ -z "$check_cmd" ] || [ -z "$install_hint" ] || [ -z "$success_hint" ]; then
     echo "[WARN] Optional-Check wurde übersprungen: unvollständige Eingaben." | tee -a "$SETUP_LOG"
     echo "[HILFE] Nächster Schritt: start.sh unverändert nutzen oder den Optional-Check mit allen Parametern aufrufen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if [[ "$install_hint" != *" "* ]]; then
+    echo "[WARN] Optional-Check '$feature_name' hat keinen klaren Befehl als Install-Hinweis." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Install-Hinweis mit vollständigem Befehl ergänzen (z. B. python3 -m pip install ...)." | tee -a "$SETUP_LOG"
     return 1
   fi
 

@@ -650,3 +650,19 @@ chmod +x appimagetool-x86_64.AppImage
 ```
 
 **Laienhinweis:** AppImage ist ein „portable Paket“ (eine einzelne ausführbare Datei). Das ist praktisch, braucht aber einen sauberen Build-Schritt mit Tests.
+
+## 0.14) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Validierung erweitert (Input-Schutz)**  
+   `core/validation.py` ergänzt `require_choice` und `require_existing_dir_from_text`, damit erlaubte Auswahlwerte und Verzeichnispfade klar geprüft werden.
+2. **Settings robuster normalisiert (Output stabil)**  
+   `core/settings.py` nutzt die neuen Validierungen für Zielmodus/Zielpfad und hält Ausgaben dadurch konsistent auch bei fehlerhaften Eingaben.
+3. **Start-Routine zeigt Modul-Reparaturstatus (Laienhilfe/A11y)**  
+   `start.sh` zeigt jetzt pro fehlendem Modul den Import-Status „Import jetzt OK/FEHLER“ plus klare 2-Schritt-Hilfe.
+
+### Zwei kurze Laienvorschläge
+- Bei Modulproblemen immer zuerst `cat exports/setup_log.txt` öffnen und nur den ersten Fehler lösen.
+- Danach direkt erneut starten: `bash start.sh`, damit der Reparaturstatus pro Modul aktualisiert wird.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänze als nächsten Mini-Schritt im Reparaturblock eine Priorität je Modul (kritisch/mittel), damit Laien sofort wissen, welches Problem zuerst gelöst werden sollte.

@@ -5,6 +5,9 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, List
 
+from core.validation import (ValidationError, require_choice,
+                             require_existing_dir_from_text, require_output)
+
 DEFAULTS_PATH = Path(__file__).resolve().parent.parent / "data" / "settings.json"
 SCHEMA_VERSION = 2
 
@@ -102,7 +105,7 @@ class Settings:
             ui_texts.update({str(k): str(v) for k, v in raw_ui_texts.items()})
 
         return Settings(
-            theme=str(merged.get("theme", "light")),
+            theme=str(merged.get("theme", "light")).strip() or "light",
             large_text=bool(merged.get("large_text", False)),
             download_dir=str(merged.get("download_dir", "")),
             presets=str(merged.get("presets", "standard")),
@@ -112,7 +115,7 @@ class Settings:
             schema_version=max(int(merged.get("schema_version", 1)), SCHEMA_VERSION),
             file_revision=max(int(merged.get("file_revision", 0)), 0),
             ui_texts=ui_texts,
-            novice_mode=bool(merged.get("novice_mode", True)),
+            novice_mode=merged.get("novice_mode", True) is not False,
             allowed_file_types=Settings._normalize_allowed_file_types(
                 merged.get(
                     "allowed_file_types",
@@ -125,7 +128,8 @@ class Settings:
             organizer_target_path=Settings._normalize_target_path(
                 str(merged.get("organizer_target_path", ""))
             ),
-            assistant_tips_enabled=bool(merged.get("assistant_tips_enabled", True)),
+            assistant_tips_enabled=merged.get("assistant_tips_enabled", True)
+            is not False,
         )
 
     @staticmethod
@@ -149,11 +153,14 @@ class Settings:
     def _normalize_target_mode(mode: str) -> str:
         """Validate and normalize organizer target mode."""
 
-        supported_modes = {"single_folder", "topic_folders"}
-        clean_mode = mode.strip().lower()
-        if clean_mode not in supported_modes:
+        try:
+            return require_choice(
+                mode.strip().lower(),
+                ("single_folder", "topic_folders"),
+                "organizer_target_mode",
+            )
+        except ValidationError:
             return "single_folder"
-        return clean_mode
 
     @staticmethod
     def _normalize_target_path(path_value: str) -> str:
@@ -162,7 +169,14 @@ class Settings:
         clean_path = path_value.strip()
         if not clean_path:
             return ""
-        return str(Path(clean_path).expanduser())
+        expanded = str(Path(clean_path).expanduser())
+        try:
+            validated = require_existing_dir_from_text(
+                expanded, "organizer_target_path"
+            )
+            return str(validated)
+        except ValidationError:
+            return expanded
 
     def beginner_setting_hints(self) -> Dict[str, str]:
         """Provide simple, actionable setting help texts for non-technical users."""
@@ -183,11 +197,10 @@ class Settings:
                 "Hilfehinweise: Zeigt kurze Next Steps wie 'Erneut versuchen', 'Reparatur', 'Protokoll'."
             ),
         }
-        if not hints:
-            raise RuntimeError(
-                "Einstellungs-Hilfe konnte nicht aufgebaut werden. Nächster Schritt: Einstellungen laden und erneut öffnen."
-            )
-        return hints
+        return require_output(
+            hints,
+            "beginner_setting_hints",
+        )
 
     def save(self, path: Path | None = None) -> None:
         """Save settings to disk with deterministic version metadata."""

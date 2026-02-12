@@ -1,3 +1,5 @@
+DONE: Validierungen erweitert (Auswahl/Pfad), Start-Routine zeigt Modul-Reparaturstatus je Import und gibt klare 2-Schritt-Laienhilfe bei offenen Modulen. (2026-02-12)
+NEXT: Modul-Reparaturstatus zusätzlich als kompakten Abschnitt in exports/setup_log.txt mit Priorität (kritisch/mittel) pro Modul ausgeben. (2026-02-12)
 DONE: Qualitätsdialog kann jetzt Folgeaktionen direkt ausführen (Auto-Fix, Qualitätslauf, Start), validiert DEBUG_LOG_MODE robust und zeigt Tastatur-Hilfe für bessere Barrierefreiheit. (2026-02-12)
 NEXT: Mini-UX-Gate-Skript um einen automatischen Dialog-Interaktionscheck für `tools/quality_gate_gui.py` erweitern, damit die neuen Aktionen auch im CI-Smokelauf abgesichert sind. (2026-02-12)
 DONE: Feste Hilfezeile in Analyse und Plan ergänzt (Tastaturweg, Kontrast-Hinweis, klare nächste Aktion) inklusive Accessibility-Texten. (2026-02-12)

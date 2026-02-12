@@ -59,7 +59,7 @@ def require_existing_dir(path: object, field_name: str) -> Path:
 
 def require_non_negative_number(value: object, field_name: str) -> float:
     """Validate that value is int/float and non-negative."""
-    if not isinstance(value, (int, float)):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
         raise ValidationError(
             f"Ungültiger Input bei '{field_name}': Zahl erwartet. "
             "Nächster Schritt: Numerischen Wert eintragen und erneut versuchen."
@@ -81,6 +81,34 @@ def require_non_empty_text(value: object, field_name: str) -> str:
             "Nächster Schritt: Klaren Text eintragen und erneut versuchen."
         )
     return value_text
+
+
+def require_choice(
+    value: object, allowed_values: Sequence[str], field_name: str
+) -> str:
+    """Validate that a text value is one of the allowed entries."""
+    selected = require_non_empty_text(value, field_name)
+    cleaned_allowed = [
+        entry.strip() for entry in allowed_values if entry and entry.strip()
+    ]
+    if not cleaned_allowed:
+        raise ValidationError(
+            f"Ungültige Konfiguration bei '{field_name}': keine erlaubten Werte hinterlegt. "
+            "Nächster Schritt: Liste erlaubter Werte ergänzen und erneut ausführen."
+        )
+    if selected not in cleaned_allowed:
+        readable_allowed = ", ".join(cleaned_allowed)
+        raise ValidationError(
+            f"Ungültiger Input bei '{field_name}': '{selected}' ist nicht erlaubt. "
+            f"Erlaubte Werte: {readable_allowed}. Nächster Schritt: einen erlaubten Wert auswählen."
+        )
+    return selected
+
+
+def require_existing_dir_from_text(path_text: object, field_name: str) -> Path:
+    """Validate a non-empty directory text path and resolve it to Path."""
+    normalized_path = Path(require_non_empty_text(path_text, field_name)).expanduser()
+    return require_existing_dir(normalized_path, field_name)
 
 
 def require_output(value: T | None, output_name: str) -> T:
