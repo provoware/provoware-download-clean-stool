@@ -188,6 +188,7 @@ validate_required_json() {
   local file_path="$1"
   local required_keys_csv="$2"
   local required_types_csv="${3:-}"
+  local required_ranges_csv="${4:-}"
 
   if [ ! -f "$file_path" ]; then
     say "[QUALITY][WARN] JSON-Datei fehlt: $file_path"
@@ -196,7 +197,7 @@ validate_required_json() {
     return 0
   fi
 
-  if ! python3 - "$file_path" "$required_keys_csv" "$required_types_csv" <<'PY'
+  if ! python3 - "$file_path" "$required_keys_csv" "$required_types_csv" "$required_ranges_csv" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -204,12 +205,30 @@ from pathlib import Path
 file_path = Path(sys.argv[1])
 required_keys = [key for key in sys.argv[2].split(",") if key]
 required_types_raw = [entry for entry in sys.argv[3].split(",") if entry]
+required_ranges_raw = [entry for entry in sys.argv[4].split(",") if entry]
 required_types: dict[str, str] = {}
+required_ranges: dict[str, tuple[float | None, float | None]] = {}
 for entry in required_types_raw:
     if ":" not in entry:
         continue
     key, expected = entry.split(":", 1)
     required_types[key.strip()] = expected.strip()
+
+for entry in required_ranges_raw:
+    parts = [part.strip() for part in entry.split(":", 2)]
+    if len(parts) != 3:
+        continue
+    key, minimum_raw, maximum_raw = parts
+
+    def parse_boundary(raw_value: str) -> float | None:
+        if raw_value == "*":
+            return None
+        try:
+            return float(raw_value)
+        except ValueError:
+            return None
+
+    required_ranges[key] = (parse_boundary(minimum_raw), parse_boundary(maximum_raw))
 
 
 def is_type_ok(value: object, expected: str) -> bool:
@@ -245,7 +264,25 @@ for key, expected in required_types.items():
 
 if invalid_types:
     print(f"[QUALITY][WARN] Inhalt unvollständig oder Typ passt nicht in {file_path}: {', '.join(invalid_types)}")
-    print("[QUALITY][HILFE] Nächster Schritt: Werte in einfacher Form korrigieren (z. B. Text statt leerem Wert) und erneut prüfen.")
+    print("[QUALITY][HILFE] Nächster Schritt: Werte in einfacher Form korrigieren (z. B. Text statt leerem Wert oder true/false bei Schaltern) und erneut prüfen.")
+    raise SystemExit(1)
+
+range_issues = []
+for key, (minimum, maximum) in required_ranges.items():
+    if key not in payload:
+        continue
+    value = payload[key]
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        range_issues.append(f"{key} (keine Zahl)")
+        continue
+    if minimum is not None and value < minimum:
+        range_issues.append(f"{key} (< {minimum:g})")
+    if maximum is not None and value > maximum:
+        range_issues.append(f"{key} (> {maximum:g})")
+
+if range_issues:
+    print(f"[QUALITY][WARN] Zahlenbereich verletzt in {file_path}: {', '.join(range_issues)}")
+    print("[QUALITY][HILFE] Nächster Schritt: Beispiel-Korrektur `confirm_threshold`: 20 (erlaubt 1 bis 100), dann Check erneut starten.")
     raise SystemExit(1)
 
 print(f"[QUALITY][OK] JSON-Struktur geprüft: {file_path}")
@@ -375,9 +412,9 @@ fi
 say "[QUALITY] 6/9 JSON-Struktur-Check"
 validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
 validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
-validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
-validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
-validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
+validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
+validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
+validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
 
 
 say "[QUALITY] 7/9 Validierungsstandard-Check"

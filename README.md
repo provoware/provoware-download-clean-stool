@@ -106,6 +106,22 @@ bash start.sh
 
 
 
+## 0.13) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **JSON-Qualitätscheck kann jetzt Min/Max-Bereiche prüfen**  
+   `tools/run_quality_checks.sh` unterstützt für Pflichtwerte zusätzliche Bereichsregeln (z. B. `1 bis 100`).
+2. **Preset-Schwellenwert wird technisch begrenzt (Input/Output-Schutz)**  
+   Für `confirm_threshold` in `standard`, `power` und `senior` wird jetzt automatisch der Bereich **1–100** geprüft.
+3. **Hilfeausgabe bei Zahlenfehlern verbessert (A11y/Text)**  
+   Bei Verstößen erscheint ein direktes Korrekturbeispiel in einfacher Sprache, damit die Reparatur ohne Fachwissen gelingt.
+
+### Zwei kurze Laienvorschläge
+- Wenn der Qualitätslauf wegen Zahlenwerten warnt, nutze zuerst das Beispiel in der Meldung und ändere nur diesen einen Wert.
+- Starte danach direkt erneut: `bash tools/run_quality_checks.sh`, damit du sofort siehst, ob der Wert jetzt passt.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitere als nächsten kleinen Schritt dieselbe Min/Max-Prüfung für weitere numerische Felder (z. B. Größen- oder Altersgrenzen) und ergänze je Feld genau ein verständliches Korrekturbeispiel, damit jede Warnung direkt lösbar bleibt.
+
 ## 0.12) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **AppImage-Releasecheck mit klarer JA/NEIN-Antwort ergänzt**  
