@@ -133,3 +133,6 @@ NEXT: AppImage in dist bauen und mit python3 tools/release_gap_report.py --appim
 
 DONE: Mini-UX-Gate validiert jetzt Check-Konfiguration und Smoke-Check nutzt robuste Bibliotheksprüfung mit klareren Linux-Next-Steps. (2026-02-12)
 NEXT: Release-Lücke AppImage schließen und danach `python3 tools/release_gap_report.py --appimage-only` auf Releasefertig: JA bringen. (2026-02-12)
+
+DONE: Start-Vorprüfung erweitert (Smoke/Registry-Dateien), CLI-Tool-Check mit Auto-Reparatur ergänzt und A11y-Theme-Check auf venv-Python umgestellt. (2026-02-12)
+NEXT: Preflight um einen kleinen Selbsttest für Schreibrechte von logs/exports mit klarer Auto-Reparatur-Hilfe erweitern. (2026-02-12)
