@@ -471,3 +471,8 @@
 - **Was:** `start.sh` protokolliert den Modul-Reparaturstatus jetzt auch im Fall „keine fehlenden Module“ mit Kompaktblock; neues Skript `tools/mini_ux_gate.py`; `tools/run_quality_checks.sh` ergänzt festen Schritt 10/11 für das Mini-UX-Gate.
 - **Warum:** Der Mini-UX-Gate aus den Standards sollte technisch verbindlich automatisiert laufen und bei allen Startzuständen nachvollziehbar protokolliert sein.
 - **Wirkung:** Bessere Nachvollziehbarkeit im Setup-Log, frühere UX-/A11y-Hinweise und klarere Next Steps im Qualitätslauf.
+
+## 2026-02-12 – Start-Iteration: Vorprüfung + Auto-Format im Startfluss
+- **Was:** `start.sh` ergänzt eine feste Vorprüfung für Pflichtdateien, einen validierten Schalter `ENABLE_AUTO_FORMAT` (0/1) und einen automatischen Format-Schritt vor dem Qualitäts-Gate.
+- **Warum:** Startabbrüche durch fehlende Basisdateien oder uneinheitliche Formatstände sollten früh, verständlich und mit klaren Befehlen abgefangen werden.
+- **Wirkung:** Stabilerer Start, konsistentere Codebasis und bessere Nutzerführung durch klare Next Steps in einfacher Sprache.
