@@ -12,11 +12,11 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.4",
-    "README.md": "2026.02.12.44",
-    "CHANGELOG.md": "2026.02.12.40",
-    "todo.txt": "2026.02.12.41",
-    "data/version_registry.json": "2026.02.12.45",
-    "tools/run_quality_checks.sh": "2026.02.12.13",
+    "README.md": "2026.02.12.45",
+    "CHANGELOG.md": "2026.02.12.41",
+    "todo.txt": "2026.02.12.42",
+    "data/version_registry.json": "2026.02.12.46",
+    "tools/run_quality_checks.sh": "2026.02.12.14",
     "RELEASE_CHECKLIST.md": "2026.02.12.10",
     "core/history.py": "2026.02.12.5",
     "core/validation.py": "2026.02.12.7",
@@ -32,10 +32,10 @@
     "tools/mini_ux_gate.py": "2026.02.12.2",
     "data/design_reference_domotic_assistant.json": "2026.02.12.1",
     "tools/design_reference_check.py": "2026.02.12.2",
-    "docs/design_reference_thumbnail.svg": "2026.02.12.1"
-    ,"docs/release_plan__v2026.02.12__draft.md": "2026.02.12.1"
-    ,"core/plugins.py": "2026.02.12.1"
-    ,"plugins/__init__.py": "2026.02.12.1"
-    ,"docs/user_manual.md": "2026.02.12.1"
+    "docs/design_reference_thumbnail.svg": "2026.02.12.1",
+    "docs/release_plan__v2026.02.12__draft.md": "2026.02.12.1",
+    "core/plugins.py": "2026.02.12.1",
+    "plugins/__init__.py": "2026.02.12.1",
+    "docs/user_manual.md": "2026.02.12.1"
   }
 }

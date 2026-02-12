@@ -160,3 +160,5 @@ DONE: Start-Vorprüfung erweitert (Smoke/Registry-Dateien), CLI-Tool-Check mit A
 NEXT: Preflight um einen kleinen Selbsttest für Schreibrechte von logs/exports mit klarer Auto-Reparatur-Hilfe erweitern. (2026-02-12)
 DONE: Soft-Neon-Layoutvorgabe umgesetzt: neues Theme, Neon-Dashboard-Mockup und erweiterte A11y-Theme-Hinweise in app/main.py ergänzt. (2026-02-12)
 NEXT: Kleine automatische Theme-Stabilitätsprüfung ergänzen (dunkel/neon/kontrast nacheinander anwenden und Vorschau-Text pro Schritt validieren). (2026-02-12)
+DONE: Qualitätslauf standardisiert: keine stille Auto-Formatierung im Normalmodus, CI-sichere Fix-Logik und klare Git-Next-Steps nach Auto-Korrektur ergänzt. (2026-02-12)
+NEXT: Startmeldung um sichtbare Fix-Strategie vor dem Quality-Gate erweitern (nur prüfen vs. auto reparieren) und danach Gates erneut laufen lassen. (2026-02-12)
