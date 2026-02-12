@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **94%**
- - **Abgeschlossene Punkte:** **89**
- - **Offene Punkte:** **1**
- - **Nächster Schritt:** Start-Routine auf vollständige paketmanager-neutrale Reparaturpfade (apt/dnf/pacman) ausbauen und danach den finalen Release-Check schließen.
+ - **Entwicklungsfortschritt:** **95%**
+ - **Abgeschlossene Punkte:** **92**
+ - **Offene Punkte:** **0**
+ - **Nächster Schritt:** Arbeitsordner-Standard auch für optionale Export-Profile und Web-API konsistent nutzen, damit alle Modi denselben sicheren Nutzerpfad verwenden.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -64,6 +64,16 @@ bash start.sh
 
 ### Detaillierter nächster Schritt (einfach erklärt)
 Teste die Startroutine einmal auf einem System ohne `python3-venv`. Prüfe dann in `exports/setup_log.txt`, ob der richtige Paketmanager erkannt wurde, die Installation versucht wurde und danach der Venv-Aufbau erfolgreich lief.
+
+
+## 0.5) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Start prüft Arbeitsordner und legt ihn automatisch im Linux-Nutzerpfad an**  
+   Beim Start wird jetzt `~/.local/share/provoware-clean-tool-2026` geprüft. Fehlt der Ordner, wird er automatisch erzeugt.
+2. **Linux-Rechte werden klar validiert und verständlich erklärt**  
+   Die Startroutine prüft Lesen/Schreiben/Öffnen. Bei fehlenden Rechten gibt es klare Next Steps mit kopierbarem `chmod`-Hinweis.
+3. **Hilfe-/Textverbesserung für Laien und Barrierefreiheit ergänzt**  
+   Bei Arbeitsordner-Fehlern zeigt die Startroutine einfache, gut verständliche Hinweise inklusive direkter Reparaturschritte.
 
 ## 0.3) Vollständige Analyse: nächste offene Punkte und Optimierungen
 
