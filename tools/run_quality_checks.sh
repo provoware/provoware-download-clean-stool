@@ -9,9 +9,22 @@ FAST_MODE="${FAST_MODE:-1}"
 AUTO_INSTALL_TOOLS="${AUTO_INSTALL_TOOLS:-1}"
 STATE_FILE="$ROOT_DIR/data/quality_state.json"
 WARNINGS=0
+TOTAL_STEPS=11
 
 say() {
   printf '%s\n' "$1"
+}
+
+announce_quality_step() {
+  # Gibt einheitliche, validierte Schrittzeilen für den Qualitätslauf aus.
+  # Input: Schrittindex und kurzer Titel. Output: [QUALITY] X/Y Titel.
+  local raw_step="${1:-0}"
+  local step_title="${2:-Unbenannter Schritt}"
+  if ! [[ "$raw_step" =~ ^[0-9]+$ ]] || [ "$raw_step" -lt 1 ] || [ "$raw_step" -gt "$TOTAL_STEPS" ]; then
+    say "[QUALITY][WARN] Ungültiger Schrittindex '$raw_step'. Verwende sicheren Fallback 1/$TOTAL_STEPS."
+    raw_step=1
+  fi
+  say "[QUALITY] ${raw_step}/${TOTAL_STEPS} ${step_title}"
 }
 
 resolve_quality_python() {
@@ -370,21 +383,21 @@ fi
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
-say "[QUALITY] 1/10 Syntaxprüfung (compileall)"
+announce_quality_step 1 "Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
   "$ROOT_DIR/core" \
   "$ROOT_DIR/tools" \
   "$ROOT_DIR/start.sh"
 
-say "[QUALITY] 2/10 Formatprüfung"
+announce_quality_step 2 "Formatprüfung"
 run_optional "black" "black --check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "black \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 run_optional "isort" "isort --check-only \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "isort \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 3/10 Lintprüfung"
+announce_quality_step 3 "Lintprüfung"
 run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "ruff check --fix \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 4/10 Smoke-Test"
+announce_quality_step 4 "Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
     say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
@@ -396,7 +409,7 @@ else
 fi
 
 
-say "[QUALITY] 5/10 A11y-Theme-Check"
+announce_quality_step 5 "A11y-Theme-Check"
 if [ -f "$ROOT_DIR/tools/a11y_theme_check.py" ]; then
   if ! python3 "$ROOT_DIR/tools/a11y_theme_check.py"; then
     say "[QUALITY][WARN] A11y-Theme-Check meldet Probleme bei Kontrast oder Fokusregeln."
@@ -409,7 +422,7 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 6/10 JSON-Struktur-Check"
+announce_quality_step 6 "JSON-Struktur-Check"
 validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
 validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
 validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
@@ -417,7 +430,7 @@ validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,fil
 validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
 
 
-say "[QUALITY] 7/10 Validierungsstandard-Check"
+announce_quality_step 7 "Validierungsstandard-Check"
 if ! python3 - "$ROOT_DIR/core/validation.py" <<'PY'
 import ast
 import sys
@@ -439,12 +452,12 @@ then
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 8/10 Versions-Registry-Check"
+announce_quality_step 8 "Versions-Registry-Check"
 validate_version_registry
 
 
 
-say "[QUALITY] 9/10 Exit-Knoten-Hilfe-Check"
+announce_quality_step 9 "Exit-Knoten-Hilfe-Check"
 if [ -f "$ROOT_DIR/tools/exit_path_audit.py" ]; then
   if ! python3 "$ROOT_DIR/tools/exit_path_audit.py"; then
     say "[QUALITY][WARN] Exit-Knoten-Check meldet fehlende Lösungshinweise."
@@ -456,7 +469,7 @@ else
   say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Versionsverwaltung holen."
   WARNINGS=$((WARNINGS + 1))
 fi
-say "[QUALITY] 10/11 Mini-UX-Gate"
+announce_quality_step 10 "Mini-UX-Gate"
 if [ -f "$ROOT_DIR/tools/mini_ux_gate.py" ]; then
   if ! python3 "$ROOT_DIR/tools/mini_ux_gate.py"; then
     say "[QUALITY][WARN] Mini-UX-Gate meldet fehlende Hilfe-/A11y-Hinweise."
@@ -469,7 +482,7 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 11/11 Release-Lücken-Report"
+announce_quality_step 11 "Release-Lücken-Report"
 if [ -f "$ROOT_DIR/tools/release_gap_report.py" ]; then
   if ! python3 "$ROOT_DIR/tools/release_gap_report.py"; then
     say "[QUALITY][WARN] Release-Lücken-Report zeigt noch offene oder widersprüchliche Punkte."
