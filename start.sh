@@ -56,6 +56,12 @@ run_preflight_health_checks() {
     return 1
   fi
 
+  if ! ensure_runtime_write_access; then
+    echo "[WARN] Vorprüfung: Schreibzugriff für logs/ und exports/ ist nicht verfügbar." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Rechte im Projektordner prüfen und danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
   if [ "${#missing_paths[@]}" -eq 0 ]; then
     echo "[CHECK] Vorprüfung: Alle Pflichtdateien sind vorhanden." | tee -a "$SETUP_LOG"
     return 0
@@ -67,6 +73,49 @@ run_preflight_health_checks() {
   done
   echo "[HILFE] Nächster Schritt 1: Fehlende Dateien aus dem Repository wiederherstellen (git restore <datei>)." | tee -a "$SETUP_LOG"
   echo "[HILFE] Nächster Schritt 2: Danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+  return 1
+}
+
+ensure_runtime_write_access() {
+  # Prüft Schreibrechte für logs/ und exports/ inkl. kleinem Auto-Reparaturversuch.
+  # Output: 0 wenn beide Verzeichnisse beschreibbar sind, sonst 1 mit klaren Next Steps.
+  local target_dirs=("logs" "exports")
+  local dir_path
+  local probe_file
+  local failed_count=0
+
+  for dir_path in "${target_dirs[@]}"; do
+    mkdir -p "$dir_path" 2>/dev/null || true
+    probe_file="$dir_path/.write_probe_$$.tmp"
+
+    if printf '%s\n' "write-check $(date +%Y-%m-%dT%H:%M:%S)" > "$probe_file" 2>/dev/null; then
+      rm -f "$probe_file"
+      echo "[CHECK] Schreibtest OK: $dir_path" | tee -a "$SETUP_LOG"
+      continue
+    fi
+
+    echo "[WARN] Schreibtest fehlgeschlagen: $dir_path" | tee -a "$SETUP_LOG"
+    echo "[SETUP] Auto-Reparatur: setze Nutzerrechte für $dir_path (chmod u+rwx)." | tee -a "$SETUP_LOG"
+    chmod u+rwx "$dir_path" 2>/dev/null || true
+
+    if printf '%s\n' "write-check-repair $(date +%Y-%m-%dT%H:%M:%S)" > "$probe_file" 2>/dev/null; then
+      rm -f "$probe_file"
+      echo "[CHECK] Schreibtest nach Reparatur OK: $dir_path" | tee -a "$SETUP_LOG"
+      continue
+    fi
+
+    failed_count=$((failed_count + 1))
+    echo "[WARN] Auto-Reparatur konnte Schreibzugriff nicht herstellen: $dir_path" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt 1: Eigentümer prüfen: ls -ld $dir_path" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt 2: Rechte setzen: chmod u+rwx $dir_path" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt 3: Start erneut ausführen: bash start.sh" | tee -a "$SETUP_LOG"
+  done
+
+  if [ "$failed_count" -eq 0 ]; then
+    echo "[CHECK] Vorprüfung Schreibrechte: alle Zielordner sind beschreibbar." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
   return 1
 }
 
