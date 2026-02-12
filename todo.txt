@@ -96,3 +96,6 @@ DONE: Neuer Release-Lücken-Report (tools/release_gap_report.py) ergänzt und in
 NEXT: Die zwei offenen UX-Release-Punkte aus docs/developer_manual.md umsetzen und danach den Release-Status in allen drei Statusdateien synchron auf 100% setzen. (2026-02-12)
 DONE: standards_manifest auf v1.1 erweitert (G5 Mini-UX, Doku-Pflichten, Auto-Qualität/Formatierung, Hilfeelement-Pflicht) und README-Abdeckung ergänzt. (2026-02-12)
 NEXT: Mini-UX-Gate als kleines automatisches Prüfskript technisch ausführen und Ergebnis im Quality-Report protokollieren. (2026-02-12)
+
+DONE: UI hat jetzt Laien-/Entwickler-Modus, Tool-Bibel-Dialog und Gate-Übersicht im Dashboard (G1–G4). (2026-02-12)
+NEXT: Als nächste 3 Mini-Punkte Dateibaum-Ansicht, Vorher/Nachher-Tabelle und sichtbare Undo-Historie im Hauptfluss ergänzen. (2026-02-12)

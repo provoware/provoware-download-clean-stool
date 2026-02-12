@@ -97,6 +97,16 @@ class MainWindow(QMainWindow):
         "3) Farben absichern: prüfen Sie Theme-Kontrast immer mit Hell/Dunkel/Kontrast.",
         "4) Status vereinheitlichen: dieselben Symbole (✅ ⚠️) in allen grafischen Bereichen zeigen.",
     ]
+    EXPERIENCE_MODES = {
+        "Laien-Modus (empfohlen)": "beginner",
+        "Entwickler-Modus (Tool-Bibel)": "developer",
+    }
+    TOOL_BIBLE_DOCS = [
+        ("Entwicklerhandbuch", "docs/developer_manual.md"),
+        ("Agenten-Regeln", "AGENTS.md"),
+        ("Standards-Manifest", "data/standards_manifest.json"),
+    ]
+
     PROJECT_STATUS_ITEMS = [
         {
             "state": "done",
@@ -302,6 +312,114 @@ class MainWindow(QMainWindow):
             "Dialogfenster mit einer kurzen Anleitung zur Nutzung des Programms"
         )
         message.exec()
+
+    def _build_gate_status_html(self) -> str:
+        """Erstellt eine kompakte Gate-Übersicht mit verständlicher Ampelanzeige."""
+
+        gate_specs = [
+            ("G1 Syntax", "python -m compileall -q .", Path("exports/setup_log.txt")),
+            (
+                "G2 Qualität",
+                "bash tools/run_quality_checks.sh",
+                Path("exports/quality_report.txt"),
+            ),
+            ("G3 Smoke", "python tools/smoke_test.py", Path("tools/smoke_test.py")),
+            ("G4 Start", "bash start.sh", Path("start.sh")),
+        ]
+        rows: list[str] = []
+        for gate_name, gate_command, probe_path in gate_specs:
+            probe_exists = probe_path.exists()
+            icon = "✅" if probe_exists else "⚠️"
+            state = "bereit" if probe_exists else "bitte ausführen"
+            rows.append(
+                f"• {icon} <b>{escape(gate_name)}:</b> {escape(state)}<br/>"
+                f"&nbsp;&nbsp;&nbsp;&nbsp;Befehl: <code>{escape(gate_command)}</code>"
+            )
+
+        if len(rows) != len(gate_specs):
+            raise RuntimeError(
+                "Gate-Übersicht unvollständig. Nächster Schritt: Gate-Liste prüfen und erneut laden."
+            )
+
+        return "<br/>".join(rows)
+
+    def _show_tool_bible(self) -> None:
+        """Öffnet einen Dialog mit schnellen Einstiegen in die technische Tool-Bibel."""
+
+        available_docs: list[tuple[str, Path]] = []
+        for label, relative_path in self.TOOL_BIBLE_DOCS:
+            clean_label = label.strip()
+            if not clean_label:
+                raise ValueError(
+                    "Dokumentname fehlt. Nächster Schritt: Tool-Bibel-Eintrag ergänzen."
+                )
+            abs_path = Path(relative_path).resolve()
+            if abs_path.exists():
+                available_docs.append((clean_label, abs_path))
+
+        if not available_docs:
+            raise RuntimeError(
+                "Tool-Bibel ist aktuell nicht verfügbar. Nächster Schritt: Dokumente prüfen und erneut öffnen."
+            )
+
+        doc_lines = [
+            f"• <b>{escape(label)}:</b> {escape(str(path))}"
+            for label, path in available_docs
+        ]
+        message = QMessageBox(self)
+        message.setWindowTitle("Tool-Bibel")
+        message.setIcon(QMessageBox.Information)
+        message.setText(
+            "<b>Entwickler-Hub:</b><br/>"
+            "Hier finden Sie technische Quellen. Für Laien reicht meist der Standardmodus.<br/><br/>"
+            + "<br/>".join(doc_lines)
+        )
+        message.setInformativeText(
+            "Nächster Schritt: Mit 'Ordner öffnen' den technischen Bereich prüfen oder mit 'Schließen' normal weiterarbeiten."
+        )
+        btn_open = message.addButton("Ordner öffnen", QMessageBox.ActionRole)
+        message.addButton("Schließen", QMessageBox.RejectRole)
+        message.setAccessibleName("Tool-Bibel Dialog")
+        message.setAccessibleDescription(
+            "Dialog mit schnellen Links für fortgeschrittene Nutzer und Entwickler"
+        )
+        message.exec()
+
+        if message.clickedButton() == btn_open:
+            docs_dir = Path("docs").resolve()
+            if not docs_dir.exists():
+                raise RuntimeError(
+                    "Dokumentenordner fehlt. Nächster Schritt: Projektstruktur prüfen und erneut öffnen."
+                )
+            QDesktopServices.openUrl(QUrl.fromLocalFile(str(docs_dir)))
+
+    def _apply_experience_mode(self, selected_mode: str) -> None:
+        """Schaltet zwischen Laien- und Entwicklerbereich mit klaren Hinweisen um."""
+
+        clean_mode = selected_mode.strip()
+        mode_key = self.EXPERIENCE_MODES.get(clean_mode)
+        if mode_key is None:
+            raise ValueError(
+                "Bedienmodus ist ungültig. Nächster Schritt: Bitte einen sichtbaren Modus auswählen."
+            )
+
+        developer_visible = mode_key == "developer"
+        for widget in self.developer_widgets:
+            widget.setVisible(developer_visible)
+
+        if developer_visible:
+            self.lbl_mode_hint.setText(
+                "<b>Entwickler-Modus aktiv:</b> Zusätzliche Status- und Tool-Bibel-Bereiche sind sichtbar."
+            )
+        else:
+            self.lbl_mode_hint.setText(
+                "<b>Laien-Modus aktiv:</b> Es werden nur die wichtigsten Schritte angezeigt."
+            )
+
+        if self.lbl_mode_hint.text().strip() == "":
+            raise RuntimeError(
+                "Modus-Hinweis fehlt. Nächster Schritt: Modus erneut auswählen."
+            )
 
     def __init__(self) -> None:
         super().__init__()
@@ -1126,6 +1244,32 @@ class MainWindow(QMainWindow):
         btn_help.clicked.connect(self._show_general_help)
         layout.addWidget(btn_help)
 
+        mode_bar = QHBoxLayout()
+        mode_bar.addWidget(QLabel("Bedienmodus:"))
+        self.combo_experience_mode = QComboBox()
+        self.combo_experience_mode.addItems(list(self.EXPERIENCE_MODES.keys()))
+        self.combo_experience_mode.setCurrentText("Laien-Modus (empfohlen)")
+        self.combo_experience_mode.setToolTip(
+            "Laien-Modus zeigt nur Kernschritte. Entwickler-Modus blendet Tool-Bibel und Statushilfe ein."
+        )
+        self.combo_experience_mode.setAccessibleName("Bedienmodus Auswahl")
+        mode_bar.addWidget(self.combo_experience_mode, 1)
+        btn_tool_bible = QPushButton("Tool-Bibel öffnen")
+        btn_tool_bible.setToolTip(
+            "Öffnet einen kurzen Entwickler-Hub mit Pfaden zu technischen Dokumenten"
+        )
+        btn_tool_bible.clicked.connect(self._show_tool_bible)
+        mode_bar.addWidget(btn_tool_bible)
+        layout.addLayout(mode_bar)
+
+        self.lbl_mode_hint = QLabel()
+        self.lbl_mode_hint.setWordWrap(True)
+        self.lbl_mode_hint.setAccessibleName("Modus Hinweis")
+        self.lbl_mode_hint.setStyleSheet(
+            "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+        )
+        layout.addWidget(self.lbl_mode_hint)
+
         preview_shell = QHBoxLayout()
         preview_shell.setSpacing(12)
 
@@ -1461,6 +1605,19 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.list_project_status)
         self._apply_project_status_filter("all")
 
+        self.developer_widgets = [
+            dev_area_title,
+            dev_area_help,
+            self.btn_status_filter_all,
+            self.btn_status_filter_open,
+            self.lbl_project_status_summary,
+            self.list_project_status,
+        ]
+        self.combo_experience_mode.currentTextChanged.connect(
+            self._apply_experience_mode
+        )
+        self._apply_experience_mode(self.combo_experience_mode.currentText())
+
         # Verlauf (History) anzeigen: zeigt die letzten Läufe mit Anzahl Dateien und Megabytes.
         history_title = QLabel("<b>Verlauf (Dateien/MB pro Lauf)</b>")
         history_title.setAccessibleName("Verlauf Titel")
@@ -1580,7 +1737,9 @@ class MainWindow(QMainWindow):
             "1) Wählen Sie einen Ordner.<br/>"
             "2) Wählen Sie ein gut lesbares Farbschema.<br/>"
             "3) Drücken Sie <b>Weiter</b>, um die Analyse zu starten.<br/>"
-            "4) Prüfen Sie im Dashboard, ob der Speicherstatus auf ✅ steht."
+            "4) Prüfen Sie im Dashboard, ob der Speicherstatus auf ✅ steht.<br/><br/>"
+            "<b>Gate-Übersicht:</b><br/>"
+            f"{self._build_gate_status_html()}"
         )
 
         # Wenn ein Verlauf angezeigt wird, diesen ebenfalls aktualisieren
