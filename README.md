@@ -40,6 +40,22 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+## 0.35) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Start-Routine hat jetzt ein planbares Iterationsprofil (`safe`/`turbo`)**  
+   `start.sh` validiert `ITERATION_SPEED_PROFILE` und zeigt bei ungültigen Werten sofort klare Next Steps in einfacher Sprache.
+2. **Start zeigt vorab eine klare 3-Schritt-Ausführungsplanung**  
+   Vor dem eigentlichen Setup erscheint jetzt ein Copy/Paste-Plan mit passenden Befehlen für schnellen Vorab-Check und merge-sicheren Vollcheck.
+3. **Quality-Check erklärt FAST_MODE jetzt aktiv als Zwischenstand vs. Abschlusslauf (Hilfe/Text/A11y)**  
+   `tools/run_quality_checks.sh` ergänzt klare Hinweise: `FAST_MODE=1` für schnelles Feedback, `FAST_MODE=0` als finaler Sicherheitslauf.
+
+### Zwei kurze Laienvorschläge
+- Nutzen Sie im Alltag zuerst den schnellen Check: `FAST_MODE=1 bash tools/run_quality_checks.sh`.
+- Vor jedem Commit einmal den Vollcheck ausführen: `FAST_MODE=0 bash tools/run_quality_checks.sh`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führen Sie als nächsten kleinen Ausbau eine automatische Zeitmessung pro Qualitäts-Schritt ein (z. B. Schritt 4 = 3 Sekunden). So sehen Sie sofort, welcher Abschnitt Iterationen ausbremst, und können gezielt nur dort verbessern.
+
 ## 0.34) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Start-Zusammenfassung zeigt jetzt die Qualitätslaufzeit in Sekunden**  

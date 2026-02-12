@@ -13,6 +13,43 @@ TOOL_WORKDIR_SLUG="provoware-clean-tool-2026"
 QUALITY_DURATION_SECONDS="0"
 RUNTIME_ACCESS_STATUS="WARN"
 
+normalize_iteration_speed_profile() {
+  # Validiert das Geschwindigkeitsprofil für den Startlauf.
+  # Erlaubte Werte: safe (voller Lauf) oder turbo (schneller Verlauf mit FAST_MODE).
+  local raw_value="${1:-safe}"
+  case "$raw_value" in
+    safe|turbo)
+      printf '%s' "$raw_value"
+      return 0
+      ;;
+    *)
+      echo "[WARN] ITERATION_SPEED_PROFILE hat einen ungültigen Wert '$raw_value'. Erlaubt: safe oder turbo." | tee -a "$SETUP_LOG"
+      echo "[HILFE] Nächster Schritt: ITERATION_SPEED_PROFILE=safe bash start.sh (maximale Prüfung) oder ITERATION_SPEED_PROFILE=turbo bash start.sh (schneller)." | tee -a "$SETUP_LOG"
+      printf '%s' "safe"
+      return 1
+      ;;
+  esac
+}
+
+print_iteration_execution_plan() {
+  # Zeigt vor dem Start einen klaren Ablauf für die aktuelle Iteration an.
+  # Input: speed_profile (safe/turbo). Output: kurze Kommandokette für Copy/Paste.
+  local speed_profile="${1:-safe}"
+  if [ "$speed_profile" = "turbo" ]; then
+    echo "[PLAN] Iterationsprofil: TURBO (schneller Durchlauf mit unverändertem Qualitäts-Gate)." | tee -a "$SETUP_LOG"
+    echo "[PLAN] 1) Schnellcheck: FAST_MODE=1 bash tools/run_quality_checks.sh" | tee -a "$SETUP_LOG"
+    echo "[PLAN] 2) Vollprüfung vor Merge: FAST_MODE=0 bash tools/run_quality_checks.sh" | tee -a "$SETUP_LOG"
+    echo "[PLAN] 3) End-to-End-Start: ITERATION_SPEED_PROFILE=turbo bash start.sh" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Für maximale Sicherheit statt Tempo: ITERATION_SPEED_PROFILE=safe bash start.sh" | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[PLAN] Iterationsprofil: SAFE (vollständige Qualitätsprüfung mit maximaler Robustheit)." | tee -a "$SETUP_LOG"
+  echo "[PLAN] 1) Vollprüfung: FAST_MODE=0 bash tools/run_quality_checks.sh" | tee -a "$SETUP_LOG"
+  echo "[PLAN] 2) Optionaler Auto-Fix: AUTO_FIX=1 bash tools/run_quality_checks.sh" | tee -a "$SETUP_LOG"
+  echo "[PLAN] 3) End-to-End-Start: ITERATION_SPEED_PROFILE=safe bash start.sh" | tee -a "$SETUP_LOG"
+}
+
 normalize_enable_auto_format_flag() {
   # Validiert das Format-Flag (0/1) und liefert bei Fehlern einen sicheren Fallback.
   local raw_value="${1:-1}"
@@ -1051,10 +1088,13 @@ DEBUG_LOG_MODE="$(normalize_binary_runtime_flag "${DEBUG_LOG_MODE:-0}" "DEBUG_LO
 export DEBUG_LOG_MODE
 ENABLE_AUTO_FORMAT="$(normalize_enable_auto_format_flag "${ENABLE_AUTO_FORMAT:-1}")"
 export ENABLE_AUTO_FORMAT
+ITERATION_SPEED_PROFILE="$(normalize_iteration_speed_profile "${ITERATION_SPEED_PROFILE:-safe}")"
+export ITERATION_SPEED_PROFILE
 
 echo "[START] Provoware Clean Tool 2026 – Auto-Setup"
 log_debug "Debug-Modus aktiv. Zusätzliche Details werden in $SETUP_LOG protokolliert."
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
+print_iteration_execution_plan "$ITERATION_SPEED_PROFILE"
 
 if ! run_preflight_health_checks; then
   python3 tools/boot_error_gui.py "Pflichtdateien für den Start fehlen.
