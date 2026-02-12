@@ -81,6 +81,35 @@
     ],
     "medium_default": "mittel"
   },
+  "dependency_manifest": {
+    "python_required": [
+      "PySide6>=6.5",
+      "Pillow>=10.0.0",
+      "ruff>=0.6.0"
+    ],
+    "python_optional_web": [
+      "flask",
+      "fastapi",
+      "uvicorn"
+    ],
+    "cli_required": [
+      "bash",
+      "python3",
+      "rg"
+    ],
+    "cli_optional_release": [
+      "appimagetool",
+      "linuxdeploy"
+    ],
+    "commands_used": {
+      "start": "bash start.sh",
+      "syntax_gate": "python -m compileall -q .",
+      "quality_gate": "bash tools/run_quality_checks.sh",
+      "smoke_gate": "python tools/smoke_test.py",
+      "mini_ux_gate": "python tools/mini_ux_gate.py",
+      "design_gate": "python tools/design_reference_check.py"
+    }
+  },
   "structure_policy": {
     "app": "GUI/Oberfläche",
     "core": "Kernlogik",

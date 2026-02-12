@@ -129,14 +129,20 @@ class MainWindow(QMainWindow):
             border-width: 2px;
             border-radius: 12px;
             padding: 12px 14px;
-            min-height: 56px;
+            min-height: 96px;
             text-align: left;
+            background-color: #1b3362;
+            color: #ffffff;
+        }
+        QPushButton[quickTile="true"]:hover {
+            border-color: #61e1ff;
+            background-color: #213f70;
         }
         QPushButton[quickTile="true"][quickSection="medien"] {
-            border-color: #2563eb;
+            border-color: #61e1ff;
         }
         QPushButton[quickTile="true"][quickSection="aufräumen"] {
-            border-color: #0f766e;
+            border-color: #7ec9ff;
         }
         QSizeGrip {
             width: 34px;
@@ -2431,6 +2437,12 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.lbl_quick_grid_help)
 
         quick_grid_host = QWidget()
+        quick_grid_host.setObjectName("quick-grid-shell")
+        quick_grid_host.setStyleSheet(
+            "#quick-grid-shell {"
+            "background:#162e5c; border:1px solid #4b6698; border-radius:14px; padding:10px;"
+            "}"
+        )
         quick_grid_host.setAccessibleName("Schnellstart Raster")
         quick_grid_host.setAccessibleDescription(
             "Grid-Hauptbereich mit gruppierten Schnellstart-Karten"
@@ -3264,7 +3276,7 @@ class MainWindow(QMainWindow):
         tile.setToolTip(f"Bereich {clean_section}: {clean_tooltip}")
         tile.setAccessibleName(clean_name)
         tile.setAccessibleDescription(f"{clean_desc}. Enter startet die Aktion direkt.")
-        tile.setMinimumHeight(52)
+        tile.setMinimumHeight(96)
         tile.setProperty("quickSection", clean_section.lower())
         tile.setProperty("quickTile", "true")
         tile.setObjectName(f"quick-tile-{clean_section.lower()}")

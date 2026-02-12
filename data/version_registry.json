@@ -1,9 +1,9 @@
 {
   "global_version": "2026.02.12",
   "files": {
-    "app/main.py": "2026.02.12.12",
+    "app/main.py": "2026.02.12.13",
     "core/settings.py": "2026.02.12.1",
-    "start.sh": "2026.02.12.18",
+    "start.sh": "2026.02.12.19",
     "AGENTS.md": "2.4",
     "data/ui_texts.json": "2026.02.11.1",
     "data/presets/quick_docs.json": "2026.02.11.1",
@@ -12,10 +12,10 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.4",
-    "README.md": "2026.02.12.39",
-    "CHANGELOG.md": "2026.02.12.37",
-    "todo.txt": "2026.02.12.37",
-    "data/version_registry.json": "2026.02.12.39",
+    "README.md": "2026.02.12.40",
+    "CHANGELOG.md": "2026.02.12.38",
+    "todo.txt": "2026.02.12.38",
+    "data/version_registry.json": "2026.02.12.40",
     "tools/run_quality_checks.sh": "2026.02.12.13",
     "RELEASE_CHECKLIST.md": "2026.02.12.9",
     "core/history.py": "2026.02.12.5",
@@ -24,13 +24,14 @@
     "docs/projektdetailbeschreibung_v2026.02.12_status-done.md": "2026.02.12.1",
     "tools/quality_gate_gui.py": "2026.02.12.3",
     "tools/release_gap_report.py": "2026.02.12.2",
-    "data/standards_manifest.json": "2026.02.12.2",
+    "data/standards_manifest.json": "2026.02.12.3",
     "docs/developer_manual.md": "2026.02.12.4",
     "docs/debugging_gui_state.html": "2026.02.12.1",
     "core/selfcheck.py": "2026.02.12.1",
     "tools/exit_path_audit.py": "2026.02.12.1",
     "tools/mini_ux_gate.py": "2026.02.12.2",
     "data/design_reference_domotic_assistant.json": "2026.02.12.1",
-    "tools/design_reference_check.py": "2026.02.12.1"
+    "tools/design_reference_check.py": "2026.02.12.2",
+    "docs/design_reference_thumbnail.svg": "2026.02.12.1"
   }
 }

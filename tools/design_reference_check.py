@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parents[1]
 DESIGN_FILE = ROOT_DIR / "data/design_reference_domotic_assistant.json"
+THUMBNAIL_FILE = ROOT_DIR / "docs/design_reference_thumbnail.svg"
 
 
 def _require_type(value: object, expected_type: type, message: str) -> None:
@@ -129,6 +130,23 @@ def _validate_view_questions(questions: list[str]) -> None:
         )
 
 
+def _validate_thumbnail_reference(path: Path) -> None:
+    _require_type(
+        path,
+        Path,
+        "Thumbnail-Pfad ungültig. Nächster Schritt: docs/design_reference_thumbnail.svg als pathlib.Path übergeben.",
+    )
+    if not path.exists():
+        raise FileNotFoundError(
+            "Design-Thumbnail fehlt. Nächster Schritt: docs/design_reference_thumbnail.svg wiederherstellen."
+        )
+    text = path.read_text(encoding="utf-8").strip()
+    if not text.startswith("<svg") and "<svg" not in text:
+        raise ValueError(
+            "Design-Thumbnail ist kein SVG. Nächster Schritt: gültige SVG-Datei in docs/design_reference_thumbnail.svg ablegen."
+        )
+
+
 def main() -> int:
     payload = _load_payload(DESIGN_FILE)
     _require_keys(
@@ -149,6 +167,7 @@ def main() -> int:
     _validate_a11y_targets(payload["accessibility_targets"])
     _validate_spacing_scale(payload["layout_blueprint"])
     _validate_view_questions(payload["view_questions_checklist"])
+    _validate_thumbnail_reference(THUMBNAIL_FILE)
 
     _require_output(
         True,
@@ -158,7 +177,7 @@ def main() -> int:
         "[DESIGN][OK] Design-Zielvorgabe vollständig, a11y-konform und prüfbar dokumentiert."
     )
     print(
-        "[DESIGN][HILFE] Nächster Schritt: Änderungen an UI-Abständen/Farben gegen data/design_reference_domotic_assistant.json spiegeln."
+        "[DESIGN][HILFE] Nächster Schritt: Änderungen an UI-Abständen/Farben gegen data/design_reference_domotic_assistant.json und docs/design_reference_thumbnail.svg spiegeln."
     )
     return 0
 
