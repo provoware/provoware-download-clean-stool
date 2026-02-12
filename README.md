@@ -19,6 +19,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+## 0.16) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Modul-Reparaturstatus jetzt mit Priorität + Kompaktblock im Setup-Log**  
+   `start.sh` ergänzt bei der Modul-Reparatur je Modul die Priorität (**kritisch/mittel**) und schreibt zusätzlich einen kompakten Ergebnisblock direkt in `exports/setup_log.txt`.
+2. **Qualitätszähler robust gekapselt und validiert**  
+   Die neue Funktion `extract_quality_count` liest Warn-/Info-Zähler aus dem Qualitätsprotokoll robust aus und liefert immer eine nicht-negative Zahl zurück.
+3. **A11y-Hilfe am Start klarer strukturiert (Text/Hilfeelement)**  
+   Die feste A11y-Hilfe nutzt jetzt eine klare 1–5-Reihenfolge (Tastatur, Kontrast, Schnelltest, Ablauf, Debug-Start) in einfacher Sprache.
+
+### Zwei kurze Laienvorschläge
+- Wenn beim Start etwas fehlt: Öffne zuerst `exports/setup_log.txt` und prüfe den neuen Block „Modul-Reparatur kompakt“.
+- Nutze bei Lesbarkeitsproblemen sofort den Schnelltest: `python3 tools/a11y_theme_check.py`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Starte das Tool einmal absichtlich mit einem fehlenden Python-Modul in der virtuellen Umgebung und prüfe, ob im Setup-Log der neue Kompaktblock mit Priorität erscheint. Behebe danach nur das erste Modul mit Priorität „kritisch“, starte erneut und kontrolliere, dass die Warnzahl sinkt.
+
 ## 0.15) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Alle Hauptseiten scrollen jetzt barrierearm und dynamisch**  
