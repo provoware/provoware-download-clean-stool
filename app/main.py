@@ -125,6 +125,19 @@ class MainWindow(QMainWindow):
             width: 0px;
             height: 0px;
         }
+        QPushButton[quickTile="true"] {
+            border-width: 2px;
+            border-radius: 12px;
+            padding: 12px 14px;
+            min-height: 56px;
+            text-align: left;
+        }
+        QPushButton[quickTile="true"][quickSection="medien"] {
+            border-color: #2563eb;
+        }
+        QPushButton[quickTile="true"][quickSection="aufräumen"] {
+            border-color: #0f766e;
+        }
         QSizeGrip {
             width: 34px;
             height: 34px;
@@ -145,6 +158,18 @@ class MainWindow(QMainWindow):
         ("Agenten-Regeln", "AGENTS.md"),
         ("Standards-Manifest", "data/standards_manifest.json"),
     ]
+    QUICK_SECTION_META = {
+        "Medien": {
+            "badge": "🎵 Medien",
+            "hint": "Ideal für Fotos, Dokumente und Musik.",
+            "accent": "#2563eb",
+        },
+        "Aufräumen": {
+            "badge": "🧹 Aufräumen",
+            "hint": "Ideal für große Dateien, Duplikate und Komplettlauf.",
+            "accent": "#0f766e",
+        },
+    }
 
     PROJECT_STATUS_ITEMS = [
         {
@@ -284,6 +309,57 @@ class MainWindow(QMainWindow):
         raise ValueError(
             "Status konnte nicht formatiert werden. Nächster Schritt: Statuswerte prüfen."
         )
+
+    def _create_quick_section_header(self, section_name: str) -> QLabel:
+        """Erzeugt eine validierte Bereichsüberschrift für Schnellstart-Karten."""
+
+        clean_section = section_name.strip()
+        section_meta = self.QUICK_SECTION_META.get(clean_section)
+        if section_meta is None:
+            raise ValueError(
+                "Schnellstart-Bereich fehlt. Nächster Schritt: 'Medien' oder 'Aufräumen' verwenden."
+            )
+
+        badge = str(section_meta.get("badge", "")).strip()
+        hint = str(section_meta.get("hint", "")).strip()
+        accent = str(section_meta.get("accent", "")).strip()
+        if not badge or not hint or not accent:
+            raise RuntimeError(
+                "Bereichsüberschrift unvollständig. Nächster Schritt: Badge, Hinweis und Farbe ergänzen."
+            )
+
+        header = QLabel(
+            f"<b>{escape(badge)}</b><br/><span style='color:{escape(accent)}'>{escape(hint)}</span>"
+        )
+        header.setAccessibleName(f"Schnellstart Bereich {clean_section}")
+        header.setAccessibleDescription(
+            f"Überschrift für den Bereich {clean_section} mit kurzer Orientierungshilfe"
+        )
+        if header.text().strip() == "":
+            raise RuntimeError(
+                "Bereichsüberschrift konnte nicht erstellt werden. Nächster Schritt: Eingaben prüfen und erneut öffnen."
+            )
+        return header
+
+    def _build_quick_grid_keyboard_help(self) -> str:
+        """Liefert eine kurze Tastaturhilfe für das Schnellstart-Raster."""
+
+        entries = [
+            "Navigation: Mit Tab springen Sie von Kachel zu Kachel.",
+            "Start: Mit Enter oder Leertaste wird die aktive Kachel sofort ausgeführt.",
+            "Sicherheit: Ergebnis immer in Schritt 3 prüfen, bevor Sie verschieben.",
+        ]
+        clean_entries = [entry.strip() for entry in entries if entry.strip()]
+        if len(clean_entries) != 3:
+            raise RuntimeError(
+                "Tastaturhilfe unvollständig. Nächster Schritt: Genau drei klare Hinweise ergänzen."
+            )
+        help_text = "<br/>".join(f"• {escape(entry)}" for entry in clean_entries)
+        if not help_text:
+            raise RuntimeError(
+                "Tastaturhilfe konnte nicht erstellt werden. Nächster Schritt: Hinweise erneut prüfen."
+            )
+        return help_text
 
     def _apply_project_status_filter(self, filter_mode: str) -> bool:
         """Setzt den Filter für den Hilfebereich und rendert die Ergebnisliste robust neu."""
@@ -2341,14 +2417,16 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(quick_label)
 
+        keyboard_help = self._build_quick_grid_keyboard_help()
         self.lbl_quick_grid_help = QLabel(
             "Die Schnell-Aktionen sind jetzt als Raster (Grid) in zwei Bereiche gruppiert: "
-            "<b>Medien</b> und <b>Aufräumen</b>. Das hilft bei schneller Orientierung."
+            "<b>Medien</b> und <b>Aufräumen</b>. Das hilft bei schneller Orientierung.<br/>"
+            f"{keyboard_help}"
         )
         self.lbl_quick_grid_help.setWordWrap(True)
         self.lbl_quick_grid_help.setAccessibleName("Schnellstart-Raster Hilfe")
         self.lbl_quick_grid_help.setAccessibleDescription(
-            "Erklärt in einfacher Sprache die neue Gruppierung der Schnellstart-Aktionen"
+            "Erklärt in einfacher Sprache die Gruppierung und die Tastatur-Navigation im Schnellstart-Raster"
         )
         layout.addWidget(self.lbl_quick_grid_help)
 
@@ -2361,16 +2439,8 @@ class MainWindow(QMainWindow):
         quick_grid.setHorizontalSpacing(14)
         quick_grid.setVerticalSpacing(12)
 
-        media_header = QLabel("<b>Bereich: Medien</b>")
-        media_header.setAccessibleName("Schnellstart Bereich Medien")
-        media_header.setAccessibleDescription(
-            "Überschrift für Medien-Aktionen wie Fotos, Dokumente und Musik"
-        )
-        cleanup_header = QLabel("<b>Bereich: Aufräumen</b>")
-        cleanup_header.setAccessibleName("Schnellstart Bereich Aufräumen")
-        cleanup_header.setAccessibleDescription(
-            "Überschrift für Aufräum-Aktionen wie große Dateien und Duplikate"
-        )
+        media_header = self._create_quick_section_header("Medien")
+        cleanup_header = self._create_quick_section_header("Aufräumen")
 
         self.btn_quick1 = self._create_quick_action_tile(
             label=self.ui_texts.get("quick_button_1_label", "Fotos sortieren"),
@@ -3193,13 +3263,19 @@ class MainWindow(QMainWindow):
         tile = QPushButton(clean_label)
         tile.setToolTip(f"Bereich {clean_section}: {clean_tooltip}")
         tile.setAccessibleName(clean_name)
-        tile.setAccessibleDescription(clean_desc)
+        tile.setAccessibleDescription(f"{clean_desc}. Enter startet die Aktion direkt.")
         tile.setMinimumHeight(52)
         tile.setProperty("quickSection", clean_section.lower())
+        tile.setProperty("quickTile", "true")
+        tile.setObjectName(f"quick-tile-{clean_section.lower()}")
 
         if tile.minimumHeight() < 48:
             raise RuntimeError(
                 "Schnellstart-Kachel zu klein. Nächster Schritt: Mindesthöhe auf mindestens 48 setzen."
+            )
+        if tile.property("quickTile") != "true":
+            raise RuntimeError(
+                "Schnellstart-Kachel-Stil fehlt. Nächster Schritt: Kachel-Stilmarkierung erneut setzen."
             )
         return tile
 

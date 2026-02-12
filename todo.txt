@@ -1,3 +1,6 @@
+DONE: Designangleichung Schnellstart-Raster abgeschlossen: Bereichs-Kacheln mit einheitlichem Akzent, validierte Bereichsheader und neue Tastaturhilfe im Raster ergänzt. (2026-02-12)
+NEXT: Als nächsten Mini-Schritt Fokuszustände der Schnellstart-Kacheln (normal/aktiv/ausgewählt) sichtbar vereinheitlichen und mit Mini-UX-Gate + Theme-Check gegenprüfen. (2026-02-12)
+
 DONE: Schnellstart-Befehle im Hauptfenster als gridartiges Raster in die Bereiche „Medien“ und „Aufräumen“ gruppiert, inklusive neuer A11y-Hilfe und klarer Bereichsüberschriften. (2026-02-12)
 NEXT: Als nächsten Mini-Schritt pro Raster-Kachel eine kleine Statuszeile („Zuletzt genutzt“) ergänzen und per Mini-UX-Gate auf klare Sprache/Fokus prüfen. (2026-02-12)
 

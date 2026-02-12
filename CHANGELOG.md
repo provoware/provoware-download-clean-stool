@@ -1,3 +1,9 @@
+## 2026-02-12 – Designangleichung Schnellstart-Raster
+
+- **Was:** `app/main.py` ergänzt einheitliche Schnellstart-Kachelstile mit Bereichsakzenten (Medien/Aufräumen), validierte Bereichsheader als zentrale Hilfsfunktion und neue Tastaturhilfe direkt im Raster.
+- **Warum:** Die Designstruktur sollte sichtbarer vereinheitlicht und gleichzeitig für Tastatur- sowie Screenreader-Nutzung klarer erklärt werden.
+- **Wirkung:** Schnellere visuelle Orientierung, robuster wartbare UI-Bausteine und bessere Barrierefreiheit durch klare Bedienhinweise in einfacher Sprache.
+
 ## 2026-02-12 – UI-Iteration: Schnellstart als gruppiertes Raster
 - **Was:** `app/main.py` stellt die sechs Schnellstart-Befehle im Optionsschritt als Grid mit Bereichsüberschriften „Medien“ und „Aufräumen“ dar und nutzt eine zentrale Kachel-Fabrik mit Input-/Output-Validierung.
 - **Warum:** Die bisherige Zwei-Reihen-Anordnung war weniger klar gebündelt; Nutzer:innen sollen Aktionen schneller finden und mit Screenreader besser verstehen.
