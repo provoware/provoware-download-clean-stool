@@ -86,6 +86,63 @@ run_with_sudo() {
   return 1
 }
 
+detect_system_pkg_manager() {
+  # Gibt den Paketmanager zurück, der auf dem System verfügbar ist.
+  if command -v apt-get >/dev/null 2>&1; then
+    printf '%s' "apt-get"
+    return 0
+  fi
+  if command -v dnf >/dev/null 2>&1; then
+    printf '%s' "dnf"
+    return 0
+  fi
+  if command -v pacman >/dev/null 2>&1; then
+    printf '%s' "pacman"
+    return 0
+  fi
+  printf '%s' ""
+}
+
+try_install_python_venv() {
+  # Versucht python3-venv (oder Distribution-Äquivalent) automatisch zu installieren.
+  # Input: kein Argument. Output: 0 bei Erfolg, 1 bei nicht möglich.
+  local pkg_manager
+  pkg_manager="$(detect_system_pkg_manager)"
+  if [ -z "$pkg_manager" ]; then
+    echo "[WARN] Kein unterstützter Paketmanager gefunden (apt-get/dnf/pacman)." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: python3-venv manuell installieren und dann bash start.sh erneut ausführen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  case "$pkg_manager" in
+    apt-get)
+      run_with_sudo "apt-get update" apt-get update >>"$SETUP_LOG" 2>&1 || return 1
+      run_with_sudo "apt-get install python3-venv" apt-get install -y python3-venv >>"$SETUP_LOG" 2>&1 || return 1
+      ;;
+    dnf)
+      run_with_sudo "dnf install python3-virtualenv" dnf install -y python3-virtualenv >>"$SETUP_LOG" 2>&1 || return 1
+      ;;
+    pacman)
+      run_with_sudo "pacman install python-virtualenv" pacman -Sy --noconfirm python-virtualenv >>"$SETUP_LOG" 2>&1 || return 1
+      ;;
+    *)
+      echo "[WARN] Paketmanager $pkg_manager wird für Auto-Reparatur nicht unterstützt." | tee -a "$SETUP_LOG"
+      return 1
+      ;;
+  esac
+
+  return 0
+}
+
+print_accessibility_next_steps() {
+  # Zeigt kurze, feste Hilfe zu Tastatur und Kontrast an.
+  # Hilft beim barrierearmen Einstieg direkt nach der Startprüfung.
+  echo "[A11Y] Kurze Hilfe (barrierearm):"
+  echo "[A11Y] - Tastatur: Mit Tab vor/zurück durch Schaltflächen gehen, Enter zum Bestätigen nutzen."
+  echo "[A11Y] - Kontrast: Bei schlechter Lesbarkeit im Tool auf High-Contrast Theme wechseln."
+  echo "[A11Y] - Nächster Klick: Erst Scan starten, dann die Vorschau prüfen, danach Aufräumen ausführen."
+}
+
 echo "[START] Provoware Clean Tool 2026 – Auto-Setup"
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
 
@@ -93,7 +150,11 @@ echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
 if [ ! -d "venv" ]; then
   echo "[SETUP] Erstelle virtuelle Umgebung (venv/)"
   if ! python3 -m venv venv >>"$SETUP_LOG" 2>&1; then
-    echo "[ERROR] Konnte keine virtuelle Umgebung erstellen."
+    echo "[WARN] Konnte keine virtuelle Umgebung erstellen. Starte Auto-Reparatur für python3-venv." | tee -a "$SETUP_LOG"
+    if try_install_python_venv && python3 -m venv venv >>"$SETUP_LOG" 2>&1; then
+      echo "[OK] Auto-Reparatur erfolgreich: virtuelle Umgebung wurde erstellt." | tee -a "$SETUP_LOG"
+    else
+      echo "[ERROR] Konnte keine virtuelle Umgebung erstellen."
     python3 tools/boot_error_gui.py "Konnte keine virtuelle Umgebung erstellen.
 
 Lösung:
@@ -103,6 +164,7 @@ Lösung:
 
 Details: exports/setup_log.txt" "Venv-Problem"
     exit 1
+    fi
   fi
 fi
 
@@ -445,6 +507,7 @@ Details: exports/setup_log.txt" "Smoke-Test"
 fi
 
 print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS"
+print_accessibility_next_steps
 
 # 8) GUI starten
 echo "[RUN] Starte GUI"

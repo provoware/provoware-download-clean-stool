@@ -6,6 +6,7 @@ ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 AUTO_FIX="${AUTO_FIX:-0}"
 AUTO_FIX_ON_WARN="${AUTO_FIX_ON_WARN:-1}"
 FAST_MODE="${FAST_MODE:-1}"
+AUTO_INSTALL_TOOLS="${AUTO_INSTALL_TOOLS:-1}"
 STATE_FILE="$ROOT_DIR/data/quality_state.json"
 WARNINGS=0
 
@@ -21,9 +22,20 @@ run_optional() {
 
   if ! command -v "$tool_name" >/dev/null 2>&1; then
     say "[QUALITY][WARN] $tool_name fehlt. Dieser Qualitäts-Check konnte nicht laufen."
-    say "[QUALITY][HILFE] Nächster Schritt: $install_cmd"
-    WARNINGS=$((WARNINGS + 1))
-    return 0
+    if [ "$AUTO_INSTALL_TOOLS" = "1" ]; then
+      say "[QUALITY][FIX] Versuche fehlendes Werkzeug automatisch zu installieren: $tool_name"
+      if eval "$install_cmd" >/dev/null 2>&1 && command -v "$tool_name" >/dev/null 2>&1; then
+        say "[QUALITY][OK] $tool_name wurde automatisch installiert."
+      else
+        say "[QUALITY][HILFE] Auto-Installation nicht möglich. Nächster Schritt: $install_cmd"
+        WARNINGS=$((WARNINGS + 1))
+        return 0
+      fi
+    else
+      say "[QUALITY][HILFE] Nächster Schritt: $install_cmd"
+      WARNINGS=$((WARNINGS + 1))
+      return 0
+    fi
   fi
 
   if [ "$AUTO_FIX" = "1" ]; then
@@ -171,6 +183,7 @@ fi
 
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
+say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
 say "[QUALITY] 1/4 Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
