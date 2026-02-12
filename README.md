@@ -22,6 +22,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+## 0.19) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Vorprüfung prüft jetzt Pflichtdateien vor dem Setup-Lauf**  
+   `start.sh` stoppt früh und verständlich, wenn zentrale Dateien wie `requirements.txt` oder Qualitätswerkzeuge fehlen, und zeigt klare nächste Schritte.
+2. **Auto-Formatierung als fester Start-Schritt ergänzt**  
+   Vor dem Qualitäts-Gate startet `start.sh` nun automatisch einen kurzen Format-/Auto-Fix-Lauf (`AUTO_FIX=1`, `FAST_MODE=1`) für konsistente Standards.
+3. **Neues Start-Flag für Auto-Format robust validiert (A11y/Hilfe)**  
+   `ENABLE_AUTO_FORMAT` akzeptiert nur `0` oder `1` und gibt bei Fehlern eine einfache, barrierearme Hilfe mit vollständigen Befehlen aus.
+
+### Zwei kurze Laienvorschläge
+- Wenn beim Start eine Datei fehlt: zuerst die genannte Datei mit `git restore <datei>` zurückholen und dann erneut `bash start.sh` ausführen.
+- Wenn Sie nur schnell prüfen wollen: `ENABLE_AUTO_FORMAT=0 bash start.sh` nutzen und später einmal separat `AUTO_FIX=1 bash tools/run_quality_checks.sh` starten.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Teste die neue Vorprüfung einmal absichtlich mit einer fehlenden Datei, zum Beispiel indem du `requirements.txt` kurz umbenennst. Starte dann `bash start.sh` und prüfe, ob die Meldung klar sagt, welche Datei fehlt und was als nächstes zu tun ist. Benenne die Datei danach sofort zurück und starte erneut.
+
 ## 0.18) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Fenster startet jetzt automatisch bildschirmgerecht statt Inhalte abzuschneiden**  

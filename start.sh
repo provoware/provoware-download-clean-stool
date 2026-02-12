@@ -10,6 +10,72 @@ ERR_LOG="exports/last_start_error.txt"
 QUALITY_LOG="exports/quality_report.txt"
 TOOL_WORKDIR_SLUG="provoware-clean-tool-2026"
 
+normalize_enable_auto_format_flag() {
+  # Validiert das Format-Flag (0/1) und liefert bei Fehlern einen sicheren Fallback.
+  local raw_value="${1:-1}"
+  if [ "$raw_value" = "0" ] || [ "$raw_value" = "1" ]; then
+    printf '%s' "$raw_value"
+    return 0
+  fi
+  echo "[WARN] ENABLE_AUTO_FORMAT hat einen ungültigen Wert '$raw_value'. Erlaubt sind nur 0 oder 1." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: ENABLE_AUTO_FORMAT=1 bash start.sh für Auto-Format oder ENABLE_AUTO_FORMAT=0 bash start.sh zum Überspringen." | tee -a "$SETUP_LOG"
+  printf '%s' "1"
+  return 1
+}
+
+run_preflight_health_checks() {
+  # Prüft notwendige Start-Dateien vor dem Setup und liefert klare Next Steps.
+  # Output: 0 wenn alle Pflichtdateien vorhanden sind, sonst 1.
+  local required_paths=(
+    "tools/run_quality_checks.sh"
+    "tools/a11y_theme_check.py"
+    "tools/boot_error_gui.py"
+    "requirements.txt"
+  )
+  local missing_paths=()
+  local path
+
+  for path in "${required_paths[@]}"; do
+    if [ ! -f "$path" ]; then
+      missing_paths+=("$path")
+    fi
+  done
+
+  if [ "${#missing_paths[@]}" -eq 0 ]; then
+    echo "[CHECK] Vorprüfung: Alle Pflichtdateien sind vorhanden." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] Vorprüfung fehlgeschlagen: Pflichtdateien fehlen." | tee -a "$SETUP_LOG"
+  for path in "${missing_paths[@]}"; do
+    echo "[WARN] - fehlt: $path" | tee -a "$SETUP_LOG"
+  done
+  echo "[HILFE] Nächster Schritt 1: Fehlende Dateien aus dem Repository wiederherstellen (git restore <datei>)." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt 2: Danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+  return 1
+}
+
+run_auto_format_step() {
+  # Führt bei Bedarf einen klaren Auto-Format-Lauf über das Quality-Skript aus.
+  # Input: ENABLE_AUTO_FORMAT (0/1). Output: 0 bei Erfolg oder bewusstem Skip, sonst 1.
+  local enable_auto_format="${1:-1}"
+
+  if [ "$enable_auto_format" = "0" ]; then
+    echo "[FORMAT] Auto-Format ist deaktiviert (ENABLE_AUTO_FORMAT=0)." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[FORMAT] Starte automatisches Formatieren und Kurzprüfung (AUTO_FIX=1, FAST_MODE=1)." | tee -a "$SETUP_LOG"
+  if AUTO_FIX=1 FAST_MODE=1 AUTO_INSTALL_TOOLS=1 bash tools/run_quality_checks.sh >> "$QUALITY_LOG" 2>&1; then
+    echo "[OK] Auto-Formatierung abgeschlossen." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] Auto-Formatierung meldet Warnungen. Der normale Qualitätslauf folgt trotzdem." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: quality_report prüfen und die erste Warnung beheben." | tee -a "$SETUP_LOG"
+  return 1
+}
+
 determine_default_workdir() {
   # Ermittelt den Linux-Standardarbeitsordner im Nutzerpfad.
   # Output: voller Pfad oder leer bei ungültiger HOME-Umgebung.
@@ -467,10 +533,23 @@ run_quality_with_autofix() {
 
 DEBUG_LOG_MODE="$(normalize_binary_runtime_flag "${DEBUG_LOG_MODE:-0}" "DEBUG_LOG_MODE")"
 export DEBUG_LOG_MODE
+ENABLE_AUTO_FORMAT="$(normalize_enable_auto_format_flag "${ENABLE_AUTO_FORMAT:-1}")"
+export ENABLE_AUTO_FORMAT
 
 echo "[START] Provoware Clean Tool 2026 – Auto-Setup"
 log_debug "Debug-Modus aktiv. Zusätzliche Details werden in $SETUP_LOG protokolliert."
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
+
+if ! run_preflight_health_checks; then
+  python3 tools/boot_error_gui.py "Pflichtdateien für den Start fehlen.
+
+Lösung:
+- Fehlende Dateien aus dem Repository wiederherstellen.
+- Danach erneut starten: bash start.sh
+
+Details: exports/setup_log.txt" "Vorprüfung fehlgeschlagen"
+  exit 1
+fi
 
 if ! ensure_tool_workdir; then
   python3 tools/boot_error_gui.py "Der Standard-Arbeitsordner konnte nicht korrekt vorbereitet werden.
@@ -818,6 +897,7 @@ echo "[CHECK] Führe Qualitätsprüfung aus"
 QUALITY_STATUS="OK"
 QUALITY_ICON="✅"
 QUALITY_HINT="Keine Aktion nötig."
+run_auto_format_step "$ENABLE_AUTO_FORMAT" || true
 if ! run_a11y_theme_gate "$QUALITY_LOG"; then
   QUALITY_STATUS="WARN"
   QUALITY_ICON="⚠️"
