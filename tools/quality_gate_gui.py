@@ -87,16 +87,23 @@ def _validate_debug_log_mode(raw_value: str) -> tuple[str, str]:
 def _run_action_command(action_key: str) -> str:
     """Führt sichere Folgeaktionen aus und liefert einen klaren Ergebnistext zurück."""
 
+    aliases = {
+        "repair": "auto_fix",
+        "retry": "quality",
+        "protokoll": "report",
+    }
+    normalized_action = aliases.get(action_key, action_key)
+
     commands = {
         "auto_fix": ["bash", "tools/run_quality_checks.sh"],
         "quality": ["bash", "tools/run_quality_checks.sh"],
         "restart": ["bash", "start.sh"],
     }
     env = os.environ.copy()
-    if action_key == "auto_fix":
+    if normalized_action == "auto_fix":
         env["AUTO_FIX"] = "1"
 
-    cmd = commands.get(action_key)
+    cmd = commands.get(normalized_action)
     if cmd is None:
         return "[WARN] Unbekannte Aktion. Bitte führen Sie den Befehl manuell aus."
 
@@ -131,8 +138,8 @@ def main() -> int:
         f"Report: {REPORT}\n\n"
         "Bitte diese 3 Schritte ausführen:\n"
         "1) Protokoll öffnen\n"
-        "2) Auto-Fix oder Qualitätslauf starten\n"
-        "3) Start erneut ausführen\n\n"
+        "2) Reparatur starten (Auto-Fix) oder Qualitätslauf starten\n"
+        "3) Erneut versuchen (Start erneut ausführen)\n\n"
         "Tastatur-Hilfe: Mit Tab wechseln, Enter bestätigen, Esc schließen.\n"
         f"Debug-Modus: {debug_mode} (1 = ausführlich, 0 = Standard)\n"
         f"{quickfix_block}\n"
@@ -144,10 +151,10 @@ def main() -> int:
     if shutil.which("zenity"):
         action_prompt = (
             "Was möchten Sie jetzt tun?\n"
-            "- auto_fix: automatische Reparatur starten\n"
-            "- quality: Qualitätslauf erneut starten\n"
-            "- restart: Startskript ausführen\n"
-            "- report: nur Report öffnen"
+            "- auto_fix/repair: automatische Reparatur starten\n"
+            "- quality/retry: Qualitätslauf erneut starten\n"
+            "- restart: Startskript ausführen (erneut versuchen)\n"
+            "- report/protokoll: nur Report öffnen"
         )
         action_result = subprocess.run(
             [
@@ -166,7 +173,16 @@ def main() -> int:
             check=False,
         )
         selected_action = action_result.stdout.strip().lower()
-        if selected_action not in {"", "report", "auto_fix", "quality", "restart"}:
+        if selected_action not in {
+            "",
+            "report",
+            "protokoll",
+            "auto_fix",
+            "repair",
+            "quality",
+            "retry",
+            "restart",
+        }:
             selected_action = "report"
 
         subprocess.run(
@@ -191,13 +207,13 @@ def main() -> int:
             print(excerpt)
         if sys.stdin.isatty():
             print(
-                "\nAktion wählen [report/auto_fix/quality/restart], Enter für 'report':"
+                "\nAktion wählen [report|protokoll/auto_fix|repair/quality|retry/restart], Enter für 'report':"
             )
             selected_action = input().strip().lower() or "report"
         else:
             selected_action = "report"
 
-    if selected_action in {"auto_fix", "quality", "restart"}:
+    if selected_action in {"auto_fix", "repair", "quality", "retry", "restart"}:
         print(_run_action_command(selected_action))
     return 0
 

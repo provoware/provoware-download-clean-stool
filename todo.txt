@@ -124,3 +124,7 @@ DONE: start.sh prüft jetzt Pflichtdateien vor dem Setup, validiert ENABLE_AUTO_
 NEXT: Vorprüfung um optionalen Selbstreparaturmodus für fehlende Info-Dateien erweitern (nur README/CHANGELOG/todo), damit Startabbrüche weiter reduziert werden. (2026-02-12)
 DONE: Start-Optimierung ergänzt: automatische Wiederherstellung von README/CHANGELOG/todo in der Vorprüfung plus festes Mini-UX-Gate (G5) im Startlauf. (2026-02-12)
 NEXT: Mini-UX-Gate um einen kleinen interaktiven Klickpfad-Test erweitern, damit nicht nur Texte, sondern echte Bedienabläufe automatisch geprüft werden. (2026-02-12)
+DONE: Qualitätslauf-Schrittzählung zentral vereinheitlicht (1/11) und gegen ungültige Step-Werte abgesichert. (2026-02-12)
+DONE: Start-Routine um explizites GATE-1-Compileall mit klaren Next Steps erweitert. (2026-02-12)
+DONE: Qualitätsdialog versteht jetzt die Alias-Aktionen repair/retry/protokoll mit klaren Texten für 'Erneut versuchen'. (2026-02-12)
+NEXT: Release-Status in README, RELEASE_CHECKLIST und docs/developer_manual.md auf denselben Fortschrittswert synchronisieren, damit der Release-Report wieder grün wird. (2026-02-12)

@@ -120,6 +120,23 @@ run_auto_format_step() {
   return 1
 }
 
+
+run_gate_compileall() {
+  # Führt GATE 1 (Syntax) als eigenen Startschritt mit klarer Hilfe aus.
+  # Output: 0 bei Erfolg, 1 bei Fehlern mit nächsten Schritten.
+  echo "[GATE][G1] Starte Syntaxprüfung: python -m compileall -q ." | tee -a "$SETUP_LOG"
+  if "$VENV_PY" -m compileall -q . >>"$SETUP_LOG" 2>&1; then
+    echo "[GATE][G1] ✅ Syntaxprüfung bestanden." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[GATE][G1] ⚠️ Syntaxprüfung fehlgeschlagen." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt 1: Protokoll öffnen: cat exports/setup_log.txt" | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt 2: Fehler beheben und erneut prüfen: python -m compileall -q ." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt 3: Danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+  return 1
+}
+
 run_mini_ux_gate() {
   # Führt das Mini-UX-Gate (G5) direkt in der Startroutine aus.
   # Output: 0 bei bestandenem Gate, 1 bei Warnungen oder technischen Fehlern.
@@ -960,6 +977,11 @@ echo "[CHECK] Führe Qualitätsprüfung aus"
 QUALITY_STATUS="OK"
 QUALITY_ICON="✅"
 QUALITY_HINT="Keine Aktion nötig."
+if ! run_gate_compileall; then
+  QUALITY_STATUS="WARN"
+  QUALITY_ICON="⚠️"
+  QUALITY_HINT="Syntaxprüfung fehlgeschlagen: zuerst compileall-Fehler beheben und danach erneut starten."
+fi
 run_auto_format_step "$ENABLE_AUTO_FORMAT" || true
 if ! run_a11y_theme_gate "$QUALITY_LOG"; then
   QUALITY_STATUS="WARN"

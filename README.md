@@ -24,6 +24,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+## 0.21) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Qualitätslauf nutzt jetzt einheitliche Schrittzählung 1/11 ohne Nummernfehler**  
+   `tools/run_quality_checks.sh` hat eine neue zentrale Schrittfunktion, die Schrittindexe validiert und konsistente Gate-Ausgaben erzeugt.
+2. **Start-Routine führt GATE 1 (Syntaxprüfung) jetzt explizit und verständlich aus**  
+   `start.sh` startet `python -m compileall -q .` als eigenen Startschritt mit klaren Next Steps bei Fehlern.
+3. **Qualitätsdialog akzeptiert jetzt laienfreundliche Aktionswörter (A11y/Text)**  
+   `tools/quality_gate_gui.py` versteht zusätzlich `repair`, `retry` und `protokoll` und erklärt „Erneut versuchen“ klarer in einfacher Sprache.
+
+### Zwei kurze Laienvorschläge
+- Bei einer roten Syntaxmeldung zuerst nur `python -m compileall -q .` ausführen und die erste Fehlzeile beheben.
+- Im Qualitätsdialog können Sie jetzt auch einfache Wörter nutzen: `repair` für Auto-Reparatur und `retry` für erneuten Qualitätslauf.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Öffnen Sie einmal gezielt `tools/quality_gate_gui.py` über einen absichtlich ausgelösten Qualitätsfehler und testen Sie nacheinander die Eingaben `protokoll`, `repair` und `retry`. Prüfen Sie danach im Report, ob der Ablauf für jede Eingabe klar und ohne Umwege dokumentiert wurde.
+
 ## 0.20) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Vorprüfung repariert jetzt fehlende Info-Dateien automatisch**  

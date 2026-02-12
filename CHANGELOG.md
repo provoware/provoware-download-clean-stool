@@ -1,3 +1,8 @@
+## 2026-02-12 (Iteration 0.21)
+- Was: Qualitätslauf-Schrittzählung vereinheitlicht, GATE-1-Syntaxprüfung in start.sh ergänzt und Qualitätsdialog um die Alias-Aktionen repair/retry/protokoll erweitert.
+- Warum: Die Startdiagnose sollte klarer und robuster sein, während laienfreundliche Bedienwörter direkte Folgeaktionen ohne Umweg ermöglichen.
+- Wirkung: Konsistentere Gate-Ausgaben, frühere Fehlererkennung bei Syntaxproblemen und besser verständliche UX-Texte im Qualitätsdialog.
+
 ## 2026-02-12 (Iteration 0.20)
 - Was: start.sh repariert fehlende Info-Dateien automatisch und integriert das Mini-UX-Gate als festen Startschritt.
 - Warum: Der Start sollte bei fehlender Begleitdoku stabil bleiben und UX-/A11y-Hinweise direkt prüfen.
