@@ -1,3 +1,8 @@
+## 2026-02-12 – Quality-Iteration: robustere Auto-Prüfung mit klarer Abschlusshilfe
+- **Was:** `tools/run_quality_checks.sh` nutzt für Tool-Installationen jetzt bevorzugt `venv/bin/python`, validiert alle zentralen 0/1-Flags strikt und ergänzt eine kurze Abschluss-Zusammenfassung mit klarer Reparatur-Reihenfolge.
+- **Warum:** Dadurch laufen automatische Abhängigkeitsauflösungen stabiler im Projektkontext, Fehlkonfigurationen werden früh abgefangen und Nutzer:innen erhalten besser verständliche Next Steps.
+- **Wirkung:** Höhere Zuverlässigkeit der vollautomatischen Qualitätsprüfung, bessere Barrierefreiheit durch einfache Sprache und weniger Support-Aufwand bei fehlerhaften Startparametern.
+
 
 ## 2026-02-12 – Release-Iteration: Restpunkte zu Tests und Validierungsstandard geschlossen
 - **Was:** `core/validation.py`, `tools/smoke_test.py` und `tools/run_quality_checks.sh` um verpflichtende Input-/Output-Validierung plus automatische Prüfungen erweitert.
