@@ -15,7 +15,8 @@ from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
                                QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
                                QLabel, QListWidget, QListWidgetItem,
                                QMainWindow, QMenu, QMessageBox, QPushButton,
-                               QStackedWidget, QVBoxLayout, QWidget)
+                               QScrollArea, QStackedWidget, QVBoxLayout,
+                               QWidget)
 
 from core.executor import execute_move_plan, undo_last
 from core.history import append_history, clear_history, read_history
@@ -89,6 +90,44 @@ class MainWindow(QMainWindow):
         QComboBox QAbstractItemView {
             selection-background-color: #1d4ed8;
             selection-color: #ffffff;
+        }
+        QScrollArea {
+            border: 1px solid #6b7280;
+            border-radius: 10px;
+            background: transparent;
+        }
+        QScrollBar:vertical {
+            width: 28px;
+            background: #dbe3ef;
+            margin: 4px;
+            border-radius: 12px;
+        }
+        QScrollBar::handle:vertical {
+            min-height: 64px;
+            background: #1d4ed8;
+            border-radius: 12px;
+            border: 3px solid #93c5fd;
+        }
+        QScrollBar:horizontal {
+            height: 28px;
+            background: #dbe3ef;
+            margin: 4px;
+            border-radius: 12px;
+        }
+        QScrollBar::handle:horizontal {
+            min-width: 64px;
+            background: #1d4ed8;
+            border-radius: 12px;
+            border: 3px solid #93c5fd;
+        }
+        QScrollBar::add-line,
+        QScrollBar::sub-line {
+            width: 0px;
+            height: 0px;
+        }
+        QSizeGrip {
+            width: 34px;
+            height: 34px;
         }
     """
     GRAPHICS_IMPROVEMENT_TIPS = [
@@ -583,6 +622,10 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.stack)
         self._create_pages()
         self.apply_theme(self.settings.theme, self.settings.large_text)
+        self.statusBar().showMessage(
+            "Tipp: Nutzen Sie die große Ecke unten rechts oder die großen Scrollleisten für bessere Skalierung.",
+            12000,
+        )
 
     def _load_ui_texts(self) -> None:
         """
@@ -1103,6 +1146,7 @@ class MainWindow(QMainWindow):
             field_name="Vorschau-Position",
         )
         self._sync_theme_preview()
+        self._apply_responsive_welcome_layout()
 
     def _sync_theme_preview(self) -> None:
         """Aktualisiert die Live-Vorschau des Themes mit klarer Validierung."""
@@ -1295,20 +1339,50 @@ class MainWindow(QMainWindow):
                 "Vorschau-Positionierung fehlgeschlagen. Nächster Schritt: Bitte Position erneut auswählen."
             )
 
+    def _build_scroll_page(self) -> tuple[QScrollArea, QWidget]:
+        """Erzeugt eine Seite mit großen Scrollleisten für kleine Bildschirme."""
+
+        content = QWidget()
+        scroll = QScrollArea(self)
+        scroll.setWidgetResizable(True)
+        scroll.setWidget(content)
+        scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        return scroll, content
+
+    def _apply_responsive_welcome_layout(self) -> None:
+        """Schaltet die Start-Vorschau je Fensterbreite um, damit nichts abgeschnitten wird."""
+
+        if not hasattr(self, "preview_shell"):
+            return
+
+        compact_mode = self.width() < 1220
+        self.preview_shell.setDirection(
+            QBoxLayout.TopToBottom if compact_mode else QBoxLayout.LeftToRight
+        )
+        if compact_mode:
+            self.list_category_nav.setMaximumWidth(16777215)
+            self.list_category_nav.setMinimumWidth(180)
+            self.list_category_nav.setMaximumHeight(170)
+        else:
+            self.list_category_nav.setMinimumWidth(220)
+            self.list_category_nav.setMaximumWidth(260)
+            self.list_category_nav.setMaximumHeight(16777215)
+
     def _create_pages(self) -> None:
-        self.page_welcome = QWidget()
+        self.page_welcome, self.page_welcome_content = self._build_scroll_page()
         self._setup_welcome_page()
         self.stack.addWidget(self.page_welcome)
 
-        self.page_options = QWidget()
+        self.page_options, self.page_options_content = self._build_scroll_page()
         self._setup_options_page()
         self.stack.addWidget(self.page_options)
 
-        self.page_scan = QWidget()
+        self.page_scan, self.page_scan_content = self._build_scroll_page()
         self._setup_scan_page()
         self.stack.addWidget(self.page_scan)
 
-        self.page_plan = QWidget()
+        self.page_plan, self.page_plan_content = self._build_scroll_page()
         self._setup_plan_page()
         self.stack.addWidget(self.page_plan)
 
@@ -1329,11 +1403,12 @@ class MainWindow(QMainWindow):
         )
         if auto_scale_active or auto_position_active:
             self._sync_theme_preview()
+        self._apply_responsive_welcome_layout()
 
     # ---------------------------
     # Page 1: Welcome & Folder/Theme
     def _setup_welcome_page(self) -> None:
-        layout = QVBoxLayout(self.page_welcome)
+        layout = QVBoxLayout(self.page_welcome_content)
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(14)
         title = QLabel("<h2>Schritt 1/4 – Ordner und Anzeige</h2>")
@@ -1398,8 +1473,8 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(self.lbl_mode_hint)
 
-        preview_shell = QHBoxLayout()
-        preview_shell.setSpacing(12)
+        self.preview_shell = QBoxLayout(QBoxLayout.LeftToRight)
+        self.preview_shell.setSpacing(12)
 
         self.list_category_nav = QListWidget()
         self.list_category_nav.setAccessibleName("Kategorie-Leiste")
@@ -1422,7 +1497,7 @@ class MainWindow(QMainWindow):
             ]
         )
         self.list_category_nav.setCurrentRow(0)
-        preview_shell.addWidget(self.list_category_nav)
+        self.preview_shell.addWidget(self.list_category_nav)
 
         cards_wrap = QVBoxLayout()
         cards_wrap.setSpacing(10)
@@ -1458,8 +1533,8 @@ class MainWindow(QMainWindow):
             self.preview_action_cards.append(card)
             cards_wrap.addWidget(card)
 
-        preview_shell.addLayout(cards_wrap, stretch=1)
-        layout.addLayout(preview_shell)
+        self.preview_shell.addLayout(cards_wrap, stretch=1)
+        layout.addLayout(self.preview_shell)
 
         self.lbl_dashboard_info = QLabel()
         self.lbl_dashboard_info.setWordWrap(True)
@@ -2013,6 +2088,10 @@ class MainWindow(QMainWindow):
                 ],
             )
         self.apply_theme(self.settings.theme, self.settings.large_text)
+        self.statusBar().showMessage(
+            "Tipp: Nutzen Sie die große Ecke unten rechts oder die großen Scrollleisten für bessere Skalierung.",
+            12000,
+        )
         self._refresh_dashboard_info()
         # Ensure folder selected
         if not self.root_path:
@@ -2054,7 +2133,7 @@ class MainWindow(QMainWindow):
     # ---------------------------
     # Page 2: Options
     def _setup_options_page(self) -> None:
-        layout = QVBoxLayout(self.page_options)
+        layout = QVBoxLayout(self.page_options_content)
         layout.setSpacing(14)
         title = QLabel("<h2>Schritt 2/4 – Optionen</h2>")
         layout.addWidget(title)
@@ -2452,7 +2531,7 @@ class MainWindow(QMainWindow):
     # ---------------------------
     # Page 3: Scan & Summary
     def _setup_scan_page(self) -> None:
-        layout = QVBoxLayout(self.page_scan)
+        layout = QVBoxLayout(self.page_scan_content)
         self.lbl_scan_title = QLabel("<h2>Schritt 3/4 – Analyse</h2>")
         layout.addWidget(self.lbl_scan_title)
         self.lbl_scan_status = QLabel("Noch nicht gestartet.")
@@ -2901,7 +2980,7 @@ class MainWindow(QMainWindow):
     # ---------------------------
     # Page 4: Plan & Execute
     def _setup_plan_page(self) -> None:
-        layout = QVBoxLayout(self.page_plan)
+        layout = QVBoxLayout(self.page_plan_content)
         self.lbl_plan_title = QLabel("<h2>Schritt 4/4 – Plan und Ausführung</h2>")
         layout.addWidget(self.lbl_plan_title)
         self.lbl_plan_summary = QLabel("Plan ist noch nicht erstellt.")
