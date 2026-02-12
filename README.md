@@ -30,6 +30,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+## 0.31) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Neues Soft-Neon-Theme ergänzt und als Schnellwahl verfügbar gemacht**  
+   `app/main.py` enthält jetzt das Theme **neon** mit dunklen Blau-Schwarz-Flächen, weichen Radien und leuchtenden Rot/Violett/Blau-Akzenten.
+2. **Dashboard-Vorschau auf Soft-Neon-Layoutstruktur umgestellt**  
+   Die Schnellübersicht rendert jetzt eine visuelle Mockup-Struktur mit linker Icon-Leiste, KPI-Karten, rechter Spalte und breiter Unterkarte.
+3. **Barrierearme Hilfetexte und Kontrast-Hinweise im Theme-Flow erweitert (A11y/Text)**  
+   Theme-Hinweise enthalten jetzt explizite Neon-Lesbarkeit, klare Wechsel-Empfehlungen und zusätzliche Tastenkürzel bis `Alt+6`.
+
+### Zwei kurze Laienvorschläge
+- Nutzen Sie zuerst die Schnellwahl **neon** (Alt+3) und prüfen Sie danach kurz, ob Sie alle Texte klar lesen können.
+- Wenn die leuchtenden Farben zu stark wirken, wechseln Sie direkt auf **senior** oder **kontrast**.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänzen Sie im nächsten Mini-Schritt eine kleine Theme-Umschaltprüfung, die nacheinander `dunkel`, `neon` und `kontrast` auswählt und jedes Mal prüft, ob der Vorschau-Hinweis sichtbar gefüllt ist. So erkennen Sie sofort, ob die Theme-Ausgabe weiterhin stabil und verständlich bleibt.
+
 ## 0.30) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Schreibrechte-Selbsttest für Laufzeitordner ergänzt**  

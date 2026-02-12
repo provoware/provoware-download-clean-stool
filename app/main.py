@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
     THEME_A11Y_HINTS = {
         "light": "Helles Standardschema mit guter Lesbarkeit für normale Raumbeleuchtung.",
         "dark": "Dunkles Schema für blendfreie Nutzung am Abend oder in dunklen Räumen.",
+        "neon": "Soft-Neon-Schema mit dunklen Flächen, klaren Glow-Akzenten und hoher Lesbarkeit.",
         "kontrast": "Maximaler Kontrast mit sehr klaren Fokusrahmen für Sehunterstützung.",
         "blau": "Ruhiges blaues Schema mit klaren Konturen und guter Erkennbarkeit.",
         "senior": "Extra große Schrift und starke Umrandungen für ruhiges Lesen.",
@@ -48,6 +49,11 @@ class MainWindow(QMainWindow):
             "Gut",
             "Kontrastwert 4.5/5 – blendarm mit klaren Fokusrahmen.",
             "Für maximale Lesbarkeit: Schnellwahl 'Kontrast' testen.",
+        ),
+        "neon": (
+            "Sehr gut",
+            "Kontrastwert 4.7/5 – dunkler Soft-Neon-Look mit ruhigen Kanten und klaren Akzenten.",
+            "Für empfindliche Augen: Bei Bedarf auf 'Senior' oder 'Kontrast' wechseln.",
         ),
         "kontrast": (
             "Maximal",
@@ -1044,6 +1050,13 @@ class MainWindow(QMainWindow):
             QCheckBox {
                 spacing: 10px;
             }
+            QPushButton:focus,
+            QCheckBox:focus,
+            QComboBox:focus,
+            QListWidget:focus {
+                border: 3px solid #61e1ff;
+                outline: none;
+            }
         """,
         "dark": """
             QWidget {
@@ -1090,6 +1103,53 @@ class MainWindow(QMainWindow):
             }
             QCheckBox {
                 spacing: 8px;
+            }
+        """,
+        "neon": """
+            QWidget {
+                background-color: #222b58;
+                color: #e8edf8;
+                selection-background-color: #4f46e5;
+                selection-color: #f8fbff;
+            }
+            QMainWindow, QStackedWidget {
+                background-color: #111a2f;
+                border: 1px solid #27345d;
+                border-radius: 24px;
+            }
+            QLabel {
+                color: #e8edf8;
+            }
+            QPushButton {
+                background-color: #17243f;
+                color: #f3f7ff;
+                border: 1px solid #4f5fa3;
+                border-radius: 16px;
+                padding: 10px 14px;
+                font-weight: 600;
+                min-height: 38px;
+            }
+            QPushButton:hover {
+                background-color: #1f2f52;
+                border-color: #64d7ff;
+            }
+            QPushButton:pressed {
+                background-color: #101a30;
+            }
+            QComboBox, QListWidget {
+                background-color: #142139;
+                color: #e8edf8;
+                border: 1px solid #3c4f82;
+                border-radius: 14px;
+                padding: 8px;
+                min-height: 34px;
+            }
+            QCheckBox {
+                spacing: 10px;
+            }
+            QPushButton:focus, QCheckBox:focus, QComboBox:focus, QListWidget:focus {
+                border: 3px solid #61e1ff;
+                outline: none;
             }
         """,
         "kontrast": """
@@ -1179,6 +1239,7 @@ class MainWindow(QMainWindow):
     THEME_DISPLAY_TO_KEY = {
         "hell": "light",
         "dunkel": "dark",
+        "neon": "neon",
         "kontrast": "kontrast",
         "blau": "blau",
         "senior": "senior",
@@ -1186,6 +1247,7 @@ class MainWindow(QMainWindow):
     THEME_KEY_TO_DISPLAY = {
         "light": "hell",
         "dark": "dunkel",
+        "neon": "neon",
         "kontrast": "kontrast",
         "blau": "blau",
         "senior": "senior",
@@ -1650,6 +1712,10 @@ class MainWindow(QMainWindow):
             ]
         )
         self.list_category_nav.setCurrentRow(0)
+        self.list_category_nav.setStyleSheet(
+            "border: 1px solid #394b79; border-radius: 22px; padding: 10px;"
+            "background: #0a1324;"
+        )
         self.preview_shell.addWidget(self.list_category_nav)
 
         cards_wrap = QVBoxLayout()
@@ -1677,7 +1743,8 @@ class MainWindow(QMainWindow):
             card.setTextFormat(Qt.RichText)
             card.setMinimumHeight(68)
             card.setStyleSheet(
-                "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+                "border: 1px solid #374a7a; border-radius: 24px; padding: 14px;"
+                "background: #111d34;"
             )
             card.setAccessibleName("Aktionskarte Vorschau")
             card.setAccessibleDescription(
@@ -1697,7 +1764,8 @@ class MainWindow(QMainWindow):
             "Zeigt aktuelle Einstellungen und Hilfehinweise"
         )
         self.lbl_dashboard_info.setStyleSheet(
-            "border: 1px solid #6b7280; border-radius: 10px; padding: 10px;"
+            "border: 1px solid #384c7f; border-radius: 24px; padding: 14px;"
+            "background: #0f182c;"
         )
         layout.addWidget(self.lbl_dashboard_info)
         # Folder selection
@@ -1723,7 +1791,9 @@ class MainWindow(QMainWindow):
         lbl_theme = QLabel("Farbschema:")
         hl_theme.addWidget(lbl_theme)
         self.combo_theme = QComboBox()
-        self.combo_theme.addItems(["hell", "dunkel", "kontrast", "blau", "senior"])
+        self.combo_theme.addItems(
+            ["hell", "dunkel", "neon", "kontrast", "blau", "senior"]
+        )
         self.combo_theme.setToolTip("Wählen Sie ein Farbschema mit guter Lesbarkeit")
         self.combo_theme.setAccessibleName("Farbschema")
         self.combo_theme.setMinimumWidth(160)
@@ -1743,9 +1813,10 @@ class MainWindow(QMainWindow):
         for shortcut, theme_key in [
             ("Alt+1", "light"),
             ("Alt+2", "dark"),
-            ("Alt+3", "kontrast"),
-            ("Alt+4", "blau"),
-            ("Alt+5", "senior"),
+            ("Alt+3", "neon"),
+            ("Alt+4", "kontrast"),
+            ("Alt+5", "blau"),
+            ("Alt+6", "senior"),
         ]:
             theme_display = self.THEME_KEY_TO_DISPLAY[theme_key]
             quick_button = QPushButton(theme_display)
@@ -2087,7 +2158,10 @@ class MainWindow(QMainWindow):
         persistence_icon = escape(self.persistence_status_icon)
         persistence_text = escape(self.persistence_status_text)
 
+        neon_mockup = self._build_soft_neon_dashboard_mockup()
+
         self.lbl_dashboard_info.setText(
+            f"{neon_mockup}<br/><br/>"
             "<b>Haupt-Dashboard (Schnellübersicht)</b><br/>"
             f"• System: {system_text}<br/>"
             "• Offline-Betrieb: aktiv (keine Internetverbindung nötig)<br/>"
@@ -2117,6 +2191,67 @@ class MainWindow(QMainWindow):
         # Wenn ein Verlauf angezeigt wird, diesen ebenfalls aktualisieren
         if getattr(self, "list_history", None) is not None:
             self._refresh_history_display()
+
+    def _build_soft_neon_dashboard_mockup(self) -> str:
+        """Erstellt eine barrierearme Soft-Neon-Mockup-Vorschau mit validiertem Output."""
+
+        header_segments = ["Segment A", "Segment B", "Segment C"]
+        if len(header_segments) != 3:
+            raise ValueError(
+                "Mockup-Segmente fehlen. Nächster Schritt: Genau drei Kopf-Segmente setzen."
+            )
+
+        icon_col = "".join(
+            (
+                "<div style='margin:8px 0;color:#9db0d8;'>●</div>"
+                if index != 1
+                else "<div style='margin:8px 0;padding:6px 10px;border-radius:14px;background:#ff2d5f;color:#ffffff;box-shadow:0 0 8px #ff2d5f;'>◆</div>"
+            )
+            for index in range(6)
+        )
+        if not icon_col.strip():
+            raise RuntimeError(
+                "Mockup-Navigation leer. Nächster Schritt: Linke Symbolleiste erneut aufbauen."
+            )
+
+        mockup = (
+            "<div style='background:#0a1020;border-radius:30px;padding:16px;border:1px solid #2a3f68;'>"
+            "<div style='display:flex;gap:12px;align-items:center;margin-bottom:12px;'>"
+            "<div style='flex:1;background:#121f37;border-radius:999px;padding:10px 16px;color:#7f93bf;'>🔎 Suche</div>"
+            "<div style='display:flex;gap:10px;'>"
+            + "".join(
+                "<span style='display:inline-block;width:44px;height:6px;border-radius:999px;background:#7d57ff;'></span>"
+                for _ in header_segments
+            )
+            + "</div></div>"
+            "<table width='100%' cellspacing='10'><tr>"
+            f"<td width='72' style='vertical-align:top;background:#050b19;border-radius:22px;padding:10px;text-align:center;'>{icon_col}</td>"
+            "<td style='vertical-align:top;'>"
+            "<div style='display:flex;gap:10px;margin-bottom:10px;'>"
+            "<div style='flex:1;background:#14233d;border-radius:20px;padding:10px;'>"
+            "<span style='color:#f0f4ff;'>Product Sales</span><br/><b style='color:#ff2d5f;'>$983.080</b></div>"
+            "<div style='flex:1;background:#14233d;border-radius:20px;padding:10px;'>"
+            "<span style='color:#f0f4ff;'>Revenue</span><br/><b style='color:#4b7bff;'>$983.080</b></div>"
+            "<div style='flex:1;background:#ff1f58;border-radius:20px;padding:10px;color:#ffffff;'>"
+            "<span>Total Profit</span><br/><b>$715.803</b></div></div>"
+            "<div style='background:#132239;border-radius:24px;padding:12px;color:#e7ecff;'>"
+            "Soft-Neon-Layering: große Kartenradien, weiche Schatten, rote/violette/blau-cyan Akzente.</div>"
+            "</td>"
+            "<td width='230' style='vertical-align:top;'>"
+            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#f0f4ff;text-align:center;margin-bottom:10px;'>"
+            "Profil · Glow-Rahmen · klare Typografie</div>"
+            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;margin-bottom:10px;'>Rechte Karten-Spalte mit Balken/Illustration</div>"
+            "<div style='background:#111d33;border-radius:24px;padding:12px;color:#9fb2d8;'>Kontrast-Hinweis: Akzente sparsam einsetzen.</div>"
+            "</td></tr></table>"
+            "<div style='background:#102039;border-radius:28px;padding:12px;color:#dbe7ff;'>"
+            "Untere Hauptkarte: breite Linie mit blau/roten Kurven und Marker; Legende oben rechts.</div>"
+            "</div>"
+        )
+        if not mockup.strip():
+            raise RuntimeError(
+                "Mockup-Ausgabe leer. Nächster Schritt: Soft-Neon-Layout erneut generieren."
+            )
+        return mockup
 
     def _refresh_history_display(self) -> None:
         """
