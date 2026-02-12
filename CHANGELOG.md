@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: Optional-Kurzbericht + Status-Validierung + Debug-Hilfe
+- **Was:** `start.sh` ergänzt einen einheitlichen Kurzbericht für optionale Checks, validiert optionalen Status strikt auf `OK/WARN` und protokolliert im Debug-Modus den genauen Prüf-Befehl.
+- **Warum:** Optionale Warnungen sollten ohne Fachwissen sofort in einer klaren Reihenfolge lösbar sein, während fehlerhafte Statuswerte technisch abgefangen werden.
+- **Wirkung:** Robustere Startausgabe, bessere Nachvollziehbarkeit im Debug-Log und barriereärmere Next Steps für Web-/AppImage-Ausbaupfade.
+
 ## 2026-02-12 – A11y/Quality/Start-Iteration: Zustandskontrast, Registry-Gate und Debug-Hilfe
 - **Was:** `tools/a11y_theme_check.py` prüft nun Standard-, Auswahl- und Disabled-Kontrast; `tools/run_quality_checks.sh` ergänzt einen 8/8-Check für `data/version_registry.json`; `start.sh` validiert `DEBUG_LOG_MODE` strikt und protokolliert im Debug-Modus zusätzliche Hinweise.
 - **Warum:** Kontrastprobleme entstehen oft in Zuständen (ausgewählt/deaktiviert), Registry-Fehler sollen früh auffallen und Debug-Ausgaben sollen ohne Fachsprache klar steuerbar sein.
