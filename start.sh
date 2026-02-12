@@ -273,6 +273,68 @@ try_install_python_venv() {
   return 0
 }
 
+
+requirement_to_import_name() {
+  # Leitet aus einem requirements-Eintrag einen wahrscheinlichen Importnamen ab.
+  # Beispiel: PySide6>=6.5 -> PySide6
+  local requirement_text="${1:-}"
+  local normalized
+  normalized="$(printf '%s' "$requirement_text" | sed -E 's/[[:space:]]*\[.*\]//g' | sed -E 's/[<>=!~].*$//' | tr -d '[:space:]')"
+  case "$normalized" in
+    Pillow)
+      printf '%s' "PIL"
+      return 0
+      ;;
+    pyyaml|PyYAML)
+      printf '%s' "yaml"
+      return 0
+      ;;
+    *)
+      printf '%s' "$normalized"
+      return 0
+      ;;
+  esac
+}
+
+collect_missing_python_modules() {
+  # Prüft alle requirement-Einträge per Import-Test und gibt fehlende Module zeilenweise aus.
+  local req_file="${1:-requirements.txt}"
+  local venv_python="${2:-python3}"
+
+  if [ ! -f "$req_file" ]; then
+    return 0
+  fi
+
+  "$venv_python" - "$req_file" <<'PYCODE'
+from __future__ import annotations
+
+import importlib
+import re
+import sys
+from pathlib import Path
+
+req_path = Path(sys.argv[1])
+module_aliases = {"Pillow": "PIL", "PyYAML": "yaml"}
+missing: list[str] = []
+for raw in req_path.read_text(encoding="utf-8").splitlines():
+    cleaned = re.sub(r"#.*$", "", raw).strip()
+    if not cleaned or cleaned.startswith("-"):
+        continue
+    package = re.split(r"[<>=!~]", cleaned, maxsplit=1)[0].strip()
+    package = re.sub(r"\[.*\]", "", package)
+    module_name = module_aliases.get(package, package)
+    if not module_name:
+        continue
+    try:
+        importlib.import_module(module_name)
+    except Exception:
+        missing.append(cleaned)
+
+if missing:
+    print("\n".join(missing))
+PYCODE
+}
+
 print_accessibility_next_steps() {
   # Zeigt kurze, feste Hilfe zu Tastatur und Kontrast an.
   # Hilft beim barrierearmen Einstieg direkt nach der Startprüfung.
@@ -434,6 +496,30 @@ if [ -f requirements.txt ]; then
   done < requirements.txt
 fi
 
+MISSING_MODULES_RAW="$(collect_missing_python_modules "requirements.txt" "$VENV_PY" || true)"
+if [ -n "$MISSING_MODULES_RAW" ]; then
+  AUTOREPAIR_STATUS="läuft"
+  AUTOREPAIR_ICON="🔧"
+  AUTOREPAIR_MESSAGE="Automatische Reparatur für fehlende Module wurde gestartet."
+  echo "[WARN] Fehlende Python-Module erkannt. Starte automatische Reparatur." | tee -a "$SETUP_LOG"
+  while IFS= read -r missing_req || [ -n "$missing_req" ]; do
+    [ -z "$missing_req" ] && continue
+    import_name="$(requirement_to_import_name "$missing_req")"
+    echo "[SETUP] Auto-Reparatur fehlendes Modul: $missing_req (Import: $import_name)" | tee -a "$SETUP_LOG"
+    if "$VENV_PIP" install --upgrade --no-cache-dir "$missing_req" >>"$SETUP_LOG" 2>&1; then
+      if "$VENV_PY" -c "import importlib; importlib.import_module('$import_name')" >>"$SETUP_LOG" 2>&1; then
+        echo "[OK] Modul-Reparatur erfolgreich: $missing_req" | tee -a "$SETUP_LOG"
+      else
+        echo "[WARN] Modul installiert, Import weiter fehlgeschlagen: $missing_req" | tee -a "$SETUP_LOG"
+        INSTALL_ERRORS=$((INSTALL_ERRORS + 1))
+      fi
+    else
+      echo "[WARN] Modul-Reparatur fehlgeschlagen: $missing_req" | tee -a "$SETUP_LOG"
+      INSTALL_ERRORS=$((INSTALL_ERRORS + 1))
+    fi
+  done <<< "$MISSING_MODULES_RAW"
+fi
+
 if ! "$VENV_PIP" check >>"$SETUP_LOG" 2>&1; then
   INSTALL_CONFLICTS=1
   AUTOREPAIR_STATUS="läuft"
@@ -469,6 +555,18 @@ echo "[SETUP] - Quelle online/pip: $INSTALL_SOURCE_ONLINE"
 echo "[SETUP] - Offene Versionskonflikte: $INSTALL_CONFLICTS"
 echo "[SETUP] - Auto-Reparatur-Status: $AUTOREPAIR_STATUS"
 echo "[STATUS] $AUTOREPAIR_ICON $AUTOREPAIR_MESSAGE"
+
+if [ "$AUTOREPAIR_STATUS" = "läuft" ]; then
+  if [ "$INSTALL_ERRORS" -eq 0 ] && [ "$INSTALL_CONFLICTS" -eq 0 ]; then
+    AUTOREPAIR_STATUS="erfolgreich"
+    AUTOREPAIR_ICON="✅"
+    AUTOREPAIR_MESSAGE="Automatische Reparatur für fehlende Module/Konflikte erfolgreich abgeschlossen."
+  else
+    AUTOREPAIR_STATUS="nicht möglich"
+    AUTOREPAIR_ICON="⚠️"
+    AUTOREPAIR_MESSAGE="Automatische Reparatur war nicht möglich. Bitte die Hilfeschritte ausführen."
+  fi
+fi
 
 if [ "$INSTALL_ERRORS" -gt 0 ] || [ "$INSTALL_CONFLICTS" -gt 0 ]; then
   OVERALL_STATUS="WARN"
