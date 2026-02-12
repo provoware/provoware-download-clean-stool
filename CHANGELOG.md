@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: Qualitäts-Kompaktblock + Zähler-Validierung + klare Auto-Fix-Hilfe
+- **Was:** `start.sh` ergänzt einen kompakten Qualitätsblock mit Warn-/Hinweiszähler, validiert diese Werte als nicht-negative Ganzzahlen und zeigt klare Auto-Fix-Befehle in richtiger Reihenfolge.
+- **Warum:** Nutzer:innen sollten Warnungen ohne Rätselraten und ohne fehlerhafte Statusanzeige direkt beheben können.
+- **Wirkung:** Stabilere Startausgabe, bessere Barrierefreiheit durch einfache Sprache und schnellere Selbstreparatur mit kopierbaren Befehlen.
+
 ## 2026-02-12 – Quality-Iteration: Schrittzählung + Typvalidierung + klarere Hilfe
 - **Was:** `tools/run_quality_checks.sh` nutzt jetzt eine konsistente 6/6-Schrittanzeige, prüft bei JSON-Dateien zusätzlich zentrale Datentypen und gibt bei Typfehlern verständlichere Next Steps aus.
 - **Warum:** Pflichtfelder allein reichen nicht aus; falsche Werttypen führen sonst erst später zu schwerer verständlichen Laufzeitproblemen.

@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **96%**
- - **Abgeschlossene Punkte:** **95**
+ - **Entwicklungsfortschritt:** **97%**
+ - **Abgeschlossene Punkte:** **98**
  - **Offene Punkte:** **0**
- - **Nächster Schritt:** Startzusammenfassung um einen kompakten Qualitätsblock mit klaren Auto-Fix-Befehlen erweitern, damit Warnungen noch schneller behoben werden.
+ - **Nächster Schritt:** Optional-Checks in start.sh um einen kompakten Reparatur-Status je Werkzeug erweitern, damit Web/AppImage-Hürden direkt mit einem Klickpfad gelöst werden.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -66,6 +66,23 @@ bash start.sh
 Teste die Startroutine einmal auf einem System ohne `python3-venv`. Prüfe dann in `exports/setup_log.txt`, ob der richtige Paketmanager erkannt wurde, die Installation versucht wurde und danach der Venv-Aufbau erfolgreich lief.
 
 
+
+
+## 0.7) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Startzusammenfassung zeigt jetzt einen kompakten Qualitätsblock mit Auto-Fix-Befehlen**  
+   Nach jedem Start stehen Warnungen/Hinweise und direkte Befehle (`AUTO_FIX=1 ...`, erneute Prüfung, erneuter Start) sichtbar im Abschlussblock.
+2. **Qualitätszähler werden vor der Ausgabe strikt validiert (Input/Output-Schutz)**  
+   Warn- und Info-Werte werden nur als nicht-negative Ganzzahlen akzeptiert; bei ungültigen Werten greift sicher `0`, damit keine irreführende Anzeige entsteht.
+3. **Hilfeausgabe in einfacher Sprache für schnellere Selbsthilfe erweitert (A11y/Text)**  
+   Der neue Qualitätsblock nutzt kurze, klare Next Steps, damit auch ohne Fachwissen eine Reparatur in der richtigen Reihenfolge möglich ist.
+
+### Zwei kurze Laienvorschläge
+- Wenn Warnungen auftauchen, genau in dieser Reihenfolge ausführen: `AUTO_FIX=1 bash tools/run_quality_checks.sh`, danach `bash tools/run_quality_checks.sh`, danach `bash start.sh`.
+- Öffne bei Unsicherheit immer zuerst den Qualitätsbericht: `cat exports/quality_report.txt`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänze als Nächstes im Optional-Bereich (Web/AppImage) je einen kleinen Status „Auto-Reparatur versucht: ja/nein + Ergebnis“, damit auch diese Ausbaupfade dieselbe klare Hilfe-Struktur wie der Qualitätsblock bekommen.
 
 ## 0.6) Aktuelle Iteration (3 Punkte, DONE)
 

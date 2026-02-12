@@ -100,6 +100,41 @@ normalize_status_value() {
   esac
 }
 
+validate_non_negative_int() {
+  # Prüft, ob ein Wert eine nicht-negative Ganzzahl ist.
+  # Input: beliebiger Text. Output: Zahl oder 0 als sicherer Fallback.
+  local raw_value="${1:-0}"
+  if [[ "$raw_value" =~ ^[0-9]+$ ]]; then
+    printf '%s' "$raw_value"
+    return 0
+  fi
+  printf '%s' "0"
+  return 1
+}
+
+print_quality_quickfix_block() {
+  # Zeigt einen kompakten Qualitätsblock mit klaren Auto-Fix-Befehlen.
+  # Input: Warnzahl, Infozahl, Logpfad. Output: laienfreundliche Next Steps.
+  local warn_count="${1:-0}"
+  local info_count="${2:-0}"
+  local quality_log_path="${3:-exports/quality_report.txt}"
+  local validated_warn_count
+  local validated_info_count
+  validated_warn_count="$(validate_non_negative_int "$warn_count")"
+  validated_info_count="$(validate_non_negative_int "$info_count")"
+
+  echo "[QUALITÄT] ===== Kompaktblock ====="
+  echo "[QUALITÄT] Warnungen: $validated_warn_count | Hinweise: $validated_info_count"
+  echo "[QUALITÄT] Protokoll: $quality_log_path"
+  if [ "$validated_warn_count" -gt 0 ]; then
+    echo "[QUALITÄT] Nächster Schritt (Auto-Fix): AUTO_FIX=1 bash tools/run_quality_checks.sh"
+    echo "[QUALITÄT] Danach neu prüfen: bash tools/run_quality_checks.sh"
+    echo "[QUALITÄT] Danach Start wiederholen: bash start.sh"
+  else
+    echo "[QUALITÄT] Keine Warnungen erkannt. Für Kontrolle optional: bash tools/run_quality_checks.sh"
+  fi
+}
+
 print_start_summary_for_humans() {
   # Zeigt eine laienfreundliche Abschluss-Übersicht mit klaren Next Steps.
   local dep_status_input="${1:-WARN}"
@@ -107,6 +142,9 @@ print_start_summary_for_humans() {
   local autorepair_status_input="${3:-nicht möglich}"
   local web_status_input="${4:-WARN}"
   local appimage_status_input="${5:-WARN}"
+  local quality_warn_count="${6:-0}"
+  local quality_info_count="${7:-0}"
+  local quality_log_path="${8:-exports/quality_report.txt}"
 
   local dep_status
   local quality_status
@@ -139,6 +177,8 @@ print_start_summary_for_humans() {
     echo "[HILFE] 2) Qualität prüfen: bash tools/run_quality_checks.sh"
     echo "[HILFE] 3) Start erneut ausführen: bash start.sh"
   fi
+
+  print_quality_quickfix_block "$quality_warn_count" "$quality_info_count" "$quality_log_path"
 }
 
 run_with_sudo() {
@@ -601,7 +641,7 @@ Details: exports/setup_log.txt" "Smoke-Test"
   exit 1
 fi
 
-print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS"
+print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS" "$QUALITY_WARN_COUNT" "$QUALITY_INFO_COUNT" "$QUALITY_LOG"
 print_accessibility_next_steps
 
 # 8) GUI starten
