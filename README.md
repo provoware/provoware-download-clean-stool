@@ -6,6 +6,10 @@ Der Fokus liegt auf:
 - **stabiler Startroutine** (automatische Prüfungen und Reparaturversuche)
 - **einheitlichen Qualitätsstandards** (Syntax, Tests, Qualitätschecks)
 
+## Benutzerhandbuch
+
+Für eine Schritt‑für‑Schritt‑Anleitung zur Nutzung des Werkzeugs, einschließlich Start, Bedienung der Oberfläche, Theme‑Auswahl und Fehlertoleranz, lesen Sie bitte das **Benutzerhandbuch** in [docs/user_manual.md](docs/user_manual.md). Das Handbuch ist in einfacher Sprache verfasst und erläutert die wichtigsten Funktionen für Einsteigerinnen und Einsteiger.
+
 
 ## 0) Release-Status (jede Iteration aktualisieren)
 
@@ -15,6 +19,10 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
  - **Abgeschlossene Punkte:** **21**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
+
+## Release-Plan
+
+Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befindet sich in `docs/release_plan__v2026.02.12__draft.md`. Dieses Dokument beschreibt den geplanten Weg zum finalen Release, inklusive Plugin‑System, Barrierefreiheit und Versionierungsstrategie.
 
 
 

@@ -1,5 +1,10 @@
 DONE: start.sh prüft jetzt Schreibrechte für logs/exports per Probe, versucht Auto-Reparatur und zeigt klare Next Steps bei Rechtefehlern. (2026-02-12)
 NEXT: Schreibrechte-Selbsttest als nächsten Mini-Schritt auch für den Arbeitsordner unter ~/.local/share erweitern und im Startbericht separat anzeigen. (2026-02-12)
+
+# Neue Iteration (2026-02-12):
+DONE: Alte Datei `baumstruktur.txt` entfernt, da sie nicht mehr benötigt wird. Das Repository ist damit aufgeräumter.
+DONE: Benutzerhandbuch `docs/user_manual.md` erstellt. Es erklärt den Start des Programms, die Bedienung der Oberfläche, Themes, Barrierefreiheit sowie Fehlertoleranz in einfacher Sprache.
+NEXT: README um einen Hinweis auf das neue Benutzerhandbuch erweitert (siehe oben) und die Versionsnummern in `data/version_registry.json` aktualisiert.
 DONE: Abhängigkeits-Manifest vollständig strukturiert, Start-Report ergänzt und Design-Thumbnail mit Gegenprüfung eingeführt. (2026-02-12)
 NEXT: Dependency-Report um konkrete Paket-Versionen erweitern und im Quality-Gate als Pflichtausgabe validieren. (2026-02-12)
 

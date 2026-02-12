@@ -132,7 +132,10 @@ class MainWindow(QMainWindow):
             height: 0px;
         }
         QPushButton[quickTile="true"] {
-            border-width: 2px;
+            /* Karten im Schnellstart-Raster orientieren sich an der Domotic-Referenz:
+               1px Rahmen in dezenter Farbe, große Radien, großzügiges Padding. */
+            border-width: 1px;
+            border-color: #4b6698;
             border-radius: 12px;
             padding: 12px 14px;
             min-height: 96px;
@@ -2584,7 +2587,8 @@ class MainWindow(QMainWindow):
         )
         quick_grid = QGridLayout(quick_grid_host)
         quick_grid.setHorizontalSpacing(14)
-        quick_grid.setVerticalSpacing(12)
+        # Laut Design-Referenz sollten Zeilen- und Spaltenabstände identisch 14px betragen
+        quick_grid.setVerticalSpacing(14)
 
         media_header = self._create_quick_section_header("Medien")
         cleanup_header = self._create_quick_section_header("Aufräumen")
@@ -3490,6 +3494,28 @@ class MainWindow(QMainWindow):
 
 
 def main() -> int:
+    """Starte die GUI und lade optionale Plugins.
+
+    Vor dem Erstellen der Qt-Anwendung wird das Plugin-Verzeichnis
+    durchsucht. Gefundene Plugins werden initialisiert, dürfen aber
+    nicht zu einem Startabbruch führen. Dies ermöglicht eine
+    flexible Erweiterung, ohne dass Nutzer die Kernanwendung
+    modifizieren müssen.
+    """
+    # Optional vorhandene Plugins laden
+    from pathlib import Path
+    from core.plugins import discover_plugins
+
+    plugins_dir = Path(__file__).resolve().parent.parent / "plugins"
+    for plugin in discover_plugins(plugins_dir):
+        try:
+            # Initialisiere Plugin ohne spezifische Einstellungen;
+            # zukünftige Plugins können hier Einstellungen entgegennehmen
+            plugin.init(None)
+        except Exception:
+            # Fehler im Plugin dürfen die Anwendung nicht blockieren
+            continue
+
     app = QApplication(sys.argv)
     win = MainWindow()
     win.show()
