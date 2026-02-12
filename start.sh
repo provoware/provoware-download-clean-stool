@@ -10,6 +10,8 @@ ERR_LOG="exports/last_start_error.txt"
 QUALITY_LOG="exports/quality_report.txt"
 DEPENDENCY_REPORT="exports/dependency_manifest_report.json"
 TOOL_WORKDIR_SLUG="provoware-clean-tool-2026"
+QUALITY_DURATION_SECONDS="0"
+RUNTIME_ACCESS_STATUS="WARN"
 
 normalize_enable_auto_format_flag() {
   # Validiert das Format-Flag (0/1) und liefert bei Fehlern einen sicheren Fallback.
@@ -498,11 +500,13 @@ ensure_tool_workdir() {
   if printf '%s\n' "workdir-write-check $(date +%Y-%m-%dT%H:%M:%S)" > "$probe_file" 2>/dev/null; then
     rm -f "$probe_file"
     echo "[CHECK] Schreibtest OK: Arbeitsordner $default_workdir" | tee -a "$SETUP_LOG"
+    RUNTIME_ACCESS_STATUS="OK"
   else
     echo "[WARN] Schreibtest fehlgeschlagen: Arbeitsordner $default_workdir" | tee -a "$SETUP_LOG"
     echo "[HILFE] Nächster Schritt: Eigentümer prüfen: ls -ld $default_workdir" | tee -a "$SETUP_LOG"
     echo "[HILFE] Nächster Schritt: Rechte setzen: chmod u+rwx $default_workdir" | tee -a "$SETUP_LOG"
     echo "[HILFE] Nächster Schritt: Start erneut ausführen: bash start.sh" | tee -a "$SETUP_LOG"
+    RUNTIME_ACCESS_STATUS="WARN"
     return 1
   fi
   return 0
@@ -734,13 +738,19 @@ print_start_summary_for_humans() {
   local quality_warn_count="${6:-0}"
   local quality_info_count="${7:-0}"
   local quality_log_path="${8:-exports/quality_report.txt}"
+  local quality_runtime_seconds_input="${9:-0}"
+  local runtime_access_status_input="${10:-WARN}"
 
   local dep_status
   local quality_status
   local autorepair_status
+  local quality_runtime_seconds
+  local runtime_access_status
   dep_status="$(normalize_status_value "$dep_status_input")"
   quality_status="$(normalize_status_value "$quality_status_input")"
   autorepair_status="$(normalize_status_value "$autorepair_status_input")"
+  quality_runtime_seconds="$(validate_non_negative_int "$quality_runtime_seconds_input")"
+  runtime_access_status="$(normalize_status_value "$runtime_access_status_input")"
 
   case "$web_status_input" in
     OK|WARN) ;;
@@ -757,6 +767,8 @@ print_start_summary_for_humans() {
   echo "[ÜBERSICHT] Auto-Reparatur: $autorepair_status"
   echo "[ÜBERSICHT] Optional Web-Frontend: $web_status_input"
   echo "[ÜBERSICHT] Optional AppImage: $appimage_status_input"
+  echo "[ÜBERSICHT] Schreibtest Nutzerordner (~/.local/share): $runtime_access_status"
+  echo "[ÜBERSICHT] Qualitätslauf Dauer: ${quality_runtime_seconds}s"
 
   if [ "$dep_status" = "OK" ] && [ "$quality_status" = "OK" ]; then
     echo "[HILFE] Alles Wichtige ist grün. Sie können normal weiterarbeiten."
@@ -768,6 +780,10 @@ print_start_summary_for_humans() {
   fi
 
   print_quality_quickfix_block "$quality_warn_count" "$quality_info_count" "$quality_log_path"
+
+  if [ "$quality_runtime_seconds" -gt 30 ]; then
+    echo "[HILFE] Qualitätslauf war länger als 30 Sekunden. Tipp: Für schnellen Vorab-Check FAST_MODE=1 bash tools/run_quality_checks.sh"
+  fi
 }
 
 run_with_sudo() {
@@ -992,6 +1008,7 @@ run_quality_with_autofix() {
   # Output: 0 wenn Abschluss ohne Warn-Exitcode möglich, 1 bei weiterhin rotem Ergebnis.
   local quality_log_path="${1:-exports/quality_report.txt}"
   local prepared_quality_log_path
+  local quality_start_ts
 
   prepared_quality_log_path="$(prepare_quality_log_path "$quality_log_path")"
   if [ -z "$prepared_quality_log_path" ]; then
@@ -1000,8 +1017,11 @@ run_quality_with_autofix() {
   fi
   quality_log_path="$prepared_quality_log_path"
   echo "[CHECK] Qualitätslauf protokolliert nach: $quality_log_path" | tee -a "$SETUP_LOG"
+  quality_start_ts="$(date +%s)"
 
   if bash tools/run_quality_checks.sh > "$quality_log_path" 2>&1; then
+    QUALITY_DURATION_SECONDS="$(( $(date +%s) - quality_start_ts ))"
+    echo "[CHECK] Qualitätslauf Dauer: ${QUALITY_DURATION_SECONDS}s" | tee -a "$SETUP_LOG"
     echo "[OK] Qualitätsprüfung ohne Warn-Exitcode abgeschlossen."
     return 0
   fi
@@ -1014,10 +1034,14 @@ run_quality_with_autofix() {
   fi
 
   if bash tools/run_quality_checks.sh >> "$quality_log_path" 2>&1; then
+    QUALITY_DURATION_SECONDS="$(( $(date +%s) - quality_start_ts ))"
+    echo "[CHECK] Qualitätslauf Dauer: ${QUALITY_DURATION_SECONDS}s" | tee -a "$SETUP_LOG"
     echo "[OK] Kontrolllauf nach Auto-Fix ist grün." | tee -a "$SETUP_LOG"
     return 0
   fi
 
+  QUALITY_DURATION_SECONDS="$(( $(date +%s) - quality_start_ts ))"
+  echo "[CHECK] Qualitätslauf Dauer: ${QUALITY_DURATION_SECONDS}s" | tee -a "$SETUP_LOG"
   echo "[WARN] Qualitätswarnungen bleiben nach Auto-Fix bestehen." | tee -a "$SETUP_LOG"
   echo "[HILFE] Nächster Schritt: quality_report lesen, erste Warnung beheben, dann bash start.sh erneut starten." | tee -a "$SETUP_LOG"
   return 1
@@ -1558,7 +1582,7 @@ Details: exports/setup_log.txt" "Smoke-Test"
   exit 1
 fi
 
-print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS" "$QUALITY_WARN_COUNT" "$QUALITY_INFO_COUNT" "$QUALITY_LOG"
+print_start_summary_for_humans "$OVERALL_STATUS" "$QUALITY_STATUS" "$AUTOREPAIR_STATUS" "$WEB_OPTIONAL_STATUS" "$APPIMAGE_OPTIONAL_STATUS" "$QUALITY_WARN_COUNT" "$QUALITY_INFO_COUNT" "$QUALITY_LOG" "$QUALITY_DURATION_SECONDS" "$RUNTIME_ACCESS_STATUS"
 print_accessibility_next_steps
 if [ "$DEBUG_LOG_MODE" = "1" ]; then
   echo "[HILFE] Debug ist aktiv. Bei Problemen zuerst öffnen: cat exports/setup_log.txt"

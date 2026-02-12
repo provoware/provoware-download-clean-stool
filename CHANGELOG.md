@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: Laufzeittransparenz & Workdir-Status
+- **Was:** `start.sh` misst jetzt die Qualitätslaufzeit in Sekunden, zeigt den Status des Nutzerordner-Schreibtests in der Abschlussübersicht und ergänzt einen klaren Fast-Mode-Hinweis bei langen Läufen.
+- **Warum:** Nutzer:innen sollen sofort sehen, ob Qualitätsprüfungen ungewöhnlich lange dauern und ob der Arbeitsordner in `~/.local/share` wirklich schreibbar ist.
+- **Wirkung:** Höhere Transparenz, bessere Barrierefreiheit durch klare Sprache und schnellere Fehlerdiagnose ohne manuelle Logsuche.
+
 - Was: `start.sh` validiert jetzt den Quality-Logpfad vor dem Lauf, protokolliert den aktiven Pfad sichtbar und ergänzt A11y-Theme-Hilfe bei Blendung. (2026-02-12)
 - Warum: Fehler durch ungültige Logpfade sollten früh, verständlich und reproduzierbar abgefangen werden; zusätzlich brauchte die Start-Hilfe einen klaren Blendungs-Hinweis.
 - Wirkung: Stabilerer Qualitätslauf mit klarerem Debug-Pfad und bessere barrierearme Bedienhilfe durch direkte Theme-Next-Steps.
