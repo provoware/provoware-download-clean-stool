@@ -288,6 +288,38 @@ def run_gui_status_filter_checks(main_module: object) -> None:
         )
 
 
+def run_gui_debug_snapshot_checks(main_module: object) -> None:
+    """Prüft den HTML-Debug-Snapshot der GUI ohne Eventloop."""
+    if main_module is None:
+        raise AssertionError("GUI-Modul fehlt. Bitte app.main-Import prüfen.")
+
+    main_window_cls = getattr(main_module, "MainWindow", None)
+    if main_window_cls is None:
+        raise AssertionError("MainWindow fehlt im GUI-Modul app.main.")
+
+    window = main_window_cls.__new__(main_window_cls)
+    window.THEME_A11Y_HINTS = dict(main_window_cls.THEME_A11Y_HINTS)
+    window.PROJECT_STATUS_ITEMS = list(main_window_cls.PROJECT_STATUS_ITEMS)
+
+    context = {
+        "timestamp": "2026-02-12 12:00:00",
+        "mode": "Laien-Modus (empfohlen)",
+        "theme": "kontrast",
+        "folder": "/tmp/downloads",
+        "dashboard_html": "<b>Dashboard bereit</b>",
+        "gate_html": "• ✅ G1",
+    }
+    html = main_window_cls._build_debug_gui_snapshot_html(window, context)
+    if "Optischer Debug-Stand der GUI" not in html:
+        raise AssertionError("Debug-HTML sollte eine klare Überschrift enthalten.")
+    if "A11y-Theme-Hinweise" not in html:
+        raise AssertionError("Debug-HTML sollte A11y-Hinweise enthalten.")
+    if "Implementiert" not in html or "Geplant" not in html:
+        raise AssertionError(
+            "Debug-HTML sollte den Projektstatus mit Implementiert/Geplant enthalten."
+        )
+
+
 def main() -> int:
     repo_root = Path(__file__).resolve().parents[1]
     if str(repo_root) not in sys.path:
@@ -348,6 +380,12 @@ def main() -> int:
         run_gui_status_filter_checks(main_module)
     except Exception as e:
         print("GUI status filter checks failed:", e)
+        return 1
+
+    try:
+        run_gui_debug_snapshot_checks(main_module)
+    except Exception as e:
+        print("GUI debug snapshot checks failed:", e)
         return 1
 
     print("Smoke test passed")

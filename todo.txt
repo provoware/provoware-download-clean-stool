@@ -1,3 +1,5 @@
+DONE: Debugging-HTML-Datei für aktuellen GUI-Zustand automatisch erzeugt, inklusive Button „Debug-HTML öffnen“ und Smoke-Test-Check. (2026-02-12)
+NEXT: Im nächsten Schritt den HTML-Snapshot um echte Vorher/Nachher-Visualisierung (Plan vs. Ergebnis) erweitern und zusätzlich als PNG-Artefakt exportieren. (2026-02-12)
 DONE: Start-Routine erweitert: automatischer A11y-Theme-Check, ein einmaliger Auto-Fix-Qualitätslauf mit Kontrolllauf und klarere A11y-Hilfe mit Theme-Auswahl/Prüfbefehl. (2026-02-12)
 NEXT: Mini-UX-Gate als eigenes Skript (`tools/mini_ux_gate.py`) automatisieren und Ergebnis im Qualitätsbericht als festen Block anzeigen. (2026-02-12)
 

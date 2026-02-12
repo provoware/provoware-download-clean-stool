@@ -11,11 +11,19 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **97%**
- - **Abgeschlossene Punkte:** **26**
+ - **Entwicklungsfortschritt:** **98%**
+ - **Abgeschlossene Punkte:** **27**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
 
+
+
+### Neuer optischer Debug-Export (HTML-Live-Stand)
+
+Neu in dieser Iteration:
+- Die GUI schreibt automatisch eine Datei `docs/debugging_gui_state.html` mit dem **aktuellen optischen Zustand** (Dashboard, Gates, Theme-Hinweise, Statusliste).
+- Im Startbereich gibt es den Button **„Debug-HTML öffnen“** für direkten Zugriff.
+- Die Datei wird bei Dashboard-Updates neu erzeugt und dient als visuelle Test-/Debug-Basis.
 
 ### Neue UX-Iteration: Zwei Modi + Tool-Bibel + Gate-Dashboard
 

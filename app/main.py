@@ -343,6 +343,134 @@ class MainWindow(QMainWindow):
 
         return "<br/>".join(rows)
 
+    def _build_debug_gui_snapshot_html(self, context: dict[str, str]) -> str:
+        """Erstellt eine visuelle HTML-Debugansicht des aktuellen GUI-Zustands."""
+
+        required_keys = [
+            "timestamp",
+            "mode",
+            "theme",
+            "folder",
+            "dashboard_html",
+            "gate_html",
+        ]
+        safe_context: dict[str, str] = {}
+        for key in required_keys:
+            value = str(context.get(key, "")).strip()
+            if not value:
+                raise ValueError(
+                    f"Debug-HTML Kontext '{key}' fehlt. Nächster Schritt: Zustand erneut laden und Export wiederholen."
+                )
+            safe_context[key] = value
+
+        status_rows = "".join(
+            (
+                "<li><span class='state done'>✅ Implementiert</span>"
+                if entry["state"] == "done"
+                else "<li><span class='state open'>🟡 Geplant</span>"
+            )
+            + f" <strong>{escape(entry['title'])}</strong> – {escape(entry['detail'])}</li>"
+            for entry in self._get_project_status_entries()
+        )
+        if not status_rows.strip():
+            raise RuntimeError(
+                "Debug-HTML enthält keine Statuspunkte. Nächster Schritt: Projektstatus prüfen und erneut exportieren."
+            )
+
+        theme_rows = "".join(
+            f"<li><strong>{escape(name)}</strong>: {escape(desc)}</li>"
+            for name, desc in self.THEME_A11Y_HINTS.items()
+        )
+        if not theme_rows.strip():
+            raise RuntimeError(
+                "Theme-Hinweise fehlen. Nächster Schritt: Theme-Liste prüfen und Export erneut starten."
+            )
+
+        return (
+            "<!doctype html><html lang='de'><head><meta charset='utf-8'/>"
+            "<meta name='viewport' content='width=device-width,initial-scale=1'/>"
+            "<title>GUI Debug Snapshot</title>"
+            "<style>body{font-family:Arial,sans-serif;margin:0;background:#0b1220;color:#e5e7eb;}"
+            ".wrap{max-width:1040px;margin:0 auto;padding:20px;}"
+            ".card{background:#111827;border:2px solid #3b82f6;border-radius:14px;padding:16px;margin-bottom:14px;}"
+            ".state{font-weight:700;} .done{color:#34d399;} .open{color:#fbbf24;}"
+            "a{color:#93c5fd;} h1,h2{margin:0 0 10px;} ul{line-height:1.6;}"
+            "code{background:#1f2937;padding:2px 6px;border-radius:6px;}"
+            "</style></head><body><main class='wrap'>"
+            "<h1>Optischer Debug-Stand der GUI</h1>"
+            f"<p><strong>Zeit:</strong> {escape(safe_context['timestamp'])}<br/>"
+            f"<strong>Modus:</strong> {escape(safe_context['mode'])}<br/>"
+            f"<strong>Theme:</strong> {escape(safe_context['theme'])}<br/>"
+            f"<strong>Ordner:</strong> {escape(safe_context['folder'])}</p>"
+            "<section class='card'><h2>Dashboard (Live-Text)</h2>"
+            f"<div>{safe_context['dashboard_html']}</div></section>"
+            "<section class='card'><h2>Gate-Status (G1–G4)</h2>"
+            f"<div>{safe_context['gate_html']}</div></section>"
+            "<section class='card'><h2>Projektstatus</h2><ul>"
+            f"{status_rows}</ul></section>"
+            "<section class='card'><h2>A11y-Theme-Hinweise</h2><ul>"
+            f"{theme_rows}</ul><p>Hinweis: Diese Datei wird bei jedem Dashboard-Update neu geschrieben.</p></section>"
+            "</main></body></html>"
+        )
+
+    def _write_debug_gui_snapshot(self) -> Path:
+        """Schreibt den aktuellen GUI-Zustand in eine HTML-Debugdatei."""
+
+        dashboard_html = getattr(self.lbl_dashboard_info, "text", lambda: "")()
+        if not dashboard_html.strip():
+            raise RuntimeError(
+                "Dashboard-Text ist leer. Nächster Schritt: Dashboard laden und Export erneut versuchen."
+            )
+
+        mode = self.combo_experience_mode.currentText().strip()
+        theme = self.settings.theme.strip()
+        folder = (
+            str(self.root_path) if self.root_path else "Noch kein Ordner ausgewählt"
+        )
+        gate_html = self._build_gate_status_html()
+        snapshot_html = self._build_debug_gui_snapshot_html(
+            {
+                "timestamp": __import__("datetime")
+                .datetime.now()
+                .strftime("%Y-%m-%d %H:%M:%S"),
+                "mode": mode,
+                "theme": theme,
+                "folder": folder,
+                "dashboard_html": dashboard_html,
+                "gate_html": gate_html,
+            }
+        )
+
+        target = (
+            Path(__file__).resolve().parent.parent / "docs" / "debugging_gui_state.html"
+        )
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(snapshot_html, encoding="utf-8")
+        if not target.exists() or target.stat().st_size <= 0:
+            raise RuntimeError(
+                "Debug-HTML konnte nicht gespeichert werden. Nächster Schritt: Schreibrechte im Projektordner prüfen."
+            )
+        return target
+
+    def _open_debug_gui_snapshot(self) -> None:
+        """Öffnet die zuletzt erzeugte HTML-Debugansicht für den aktuellen GUI-Stand."""
+
+        try:
+            file_path = self._write_debug_gui_snapshot()
+        except Exception as exc:
+            self._show_error_with_mini_help(
+                title="Debug-HTML nicht verfügbar",
+                happened_text=str(exc),
+                next_clicks=[
+                    "Erneut versuchen: Dashboard neu laden und noch einmal auf 'Debug-HTML öffnen' klicken.",
+                    "Reparatur: Mit 'bash start.sh' die automatische Prüfung ausführen.",
+                    "Protokoll: logs/app.log öffnen und den letzten Fehler prüfen.",
+                ],
+            )
+            return
+
+        QDesktopServices.openUrl(QUrl.fromLocalFile(str(file_path)))
+
     def _show_tool_bible(self) -> None:
         """Öffnet einen Dialog mit schnellen Einstiegen in die technische Tool-Bibel."""
 
@@ -1505,6 +1633,14 @@ class MainWindow(QMainWindow):
         btn_graphics_tips.setAccessibleName("Grafik Verbesserungs-Tipps")
         btn_graphics_tips.clicked.connect(self._show_graphics_improvement_help)
         hl_accessibility_quick.addWidget(btn_graphics_tips)
+
+        btn_debug_html = QPushButton("Debug-HTML öffnen")
+        btn_debug_html.setToolTip(
+            "Erzeugt eine visuelle HTML-Datei mit dem aktuellen GUI-Status und öffnet sie"
+        )
+        btn_debug_html.setAccessibleName("Debug HTML des aktuellen GUI-Zustands öffnen")
+        btn_debug_html.clicked.connect(self._open_debug_gui_snapshot)
+        hl_accessibility_quick.addWidget(btn_debug_html)
         layout.addLayout(hl_accessibility_quick)
 
         self.combo_theme.currentTextChanged.connect(
@@ -1741,6 +1877,14 @@ class MainWindow(QMainWindow):
             "<b>Gate-Übersicht:</b><br/>"
             f"{self._build_gate_status_html()}"
         )
+
+        try:
+            self._write_debug_gui_snapshot()
+        except Exception as exc:
+            LOGGER.warning(
+                "Debug-HTML Snapshot konnte nicht aktualisiert werden: %s",
+                exc,
+            )
 
         # Wenn ein Verlauf angezeigt wird, diesen ebenfalls aktualisieren
         if getattr(self, "list_history", None) is not None:
