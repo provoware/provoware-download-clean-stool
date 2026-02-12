@@ -1,3 +1,8 @@
+## 2026-02-12 – Debug-Iteration: Optischer GUI-HTML-Snapshot
+- **Was:** `app/main.py` erzeugt jetzt automatisch `docs/debugging_gui_state.html`, ergänzt den Button „Debug-HTML öffnen“ und erweitert den Smoke-Test in `tools/smoke_test.py` um Snapshot-Prüfungen.
+- **Warum:** Der aktuelle GUI-Zustand soll jederzeit visuell nachvollziehbar und als einfache Testdatei nutzbar sein.
+- **Wirkung:** Bessere Debug-Transparenz, direkter Zugriff auf den Live-Stand und robustere Qualitätsabsicherung für den HTML-Snapshot.
+
 ## 2026-02-12 – UX-Iteration: Modus-Trennung + Tool-Bibel + Gate-Übersicht
 - **Was:** `app/main.py` ergänzt eine Modus-Auswahl (Laien/Entwickler), einen Tool-Bibel-Dialog mit schnellen Dokumentpfaden und eine kompakte Gate-Übersicht (G1–G4) im Dashboard.
 - **Warum:** Laien sollen weniger kognitive Last haben, während fortgeschrittene Nutzer technische Transparenz direkt im Tool erhalten.
