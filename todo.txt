@@ -1,3 +1,6 @@
+DONE: Design-Referenzbild als JSON-Zielvorgabe dokumentiert, automatischen Design-Check ergänzt und Quality-Gate auf 12 Schritte erweitert. (2026-02-12)
+NEXT: Genau eine sichtbare Startseiten-Komponente gemäß Design-Referenz umsetzen (z. B. Kartenabstand oder aktive Kartenkontur) und mit Screenshot gegenprüfen. (2026-02-12)
+
 DONE: UI passt Startfenster jetzt automatisch an die Bildschirmfläche an, schaltet Scrollleisten je Fensterhöhe robust und ergänzt klare Bildschirm-Hilfe im Schritt 1. (2026-02-12)
 NEXT: Responsive Feinschliff als nächste 3-Punkte-Iteration: (1) feste Testmatrix 1366x768/1920x1080, (2) je Schritt genau eine Engstelle korrigieren, (3) interaktive Mini-UX-Prüfung für Scroll-Erreichbarkeit ergänzen. (2026-02-12)
 DONE: Mini-UX-Gate als eigenes Skript ergänzt, in Quality-Check als fester Schritt integriert und Modul-Reparatur-Log auch für den Fall „nicht nötig“ vervollständigt. (2026-02-12)

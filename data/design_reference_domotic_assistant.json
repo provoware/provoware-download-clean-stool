@@ -1,0 +1,132 @@
+{
+  "reference": {
+    "name": "Domotic Assistant UI Target",
+    "source": "Nutzer-Referenzbild 2026-02-12",
+    "image_ratio": "16:10",
+    "goal": "Dunkles, ruhiges Dashboard mit klarer Kartenstruktur und hoher Lesbarkeit für das Clean-Tool-Frontend"
+  },
+  "visual_language": {
+    "style_keywords": [
+      "futuristisch",
+      "ruhig",
+      "kartenbasiert",
+      "präzise Linien",
+      "neon-akzentuiert"
+    ],
+    "overall_density": "mittel",
+    "corner_radius_px": {
+      "outer_shell": 24,
+      "cards": 10,
+      "buttons": 8
+    },
+    "stroke_width_px": {
+      "default": 1,
+      "active": 2
+    }
+  },
+  "palette": {
+    "background_outer": "#f86578",
+    "surface_primary": "#162e5c",
+    "surface_secondary": "#213f70",
+    "surface_panel": "#1b3362",
+    "accent_primary": "#61e1ff",
+    "accent_secondary": "#7ec9ff",
+    "text_primary": "#ffffff",
+    "text_secondary": "#b9c9ef",
+    "status_active": "#57f1ff",
+    "status_muted": "#8aa1c9",
+    "focus_ring": "#f59e0b"
+  },
+  "layout_blueprint": {
+    "shell": {
+      "max_width_px": 960,
+      "content_height_px": 560,
+      "padding_px": 14
+    },
+    "columns": [
+      {
+        "name": "navigation",
+        "width_percent": 5
+      },
+      {
+        "name": "workspace",
+        "width_percent": 65
+      },
+      {
+        "name": "inspector",
+        "width_percent": 30
+      }
+    ],
+    "spacing_scale_px": [
+      4,
+      8,
+      12,
+      16,
+      24,
+      32
+    ],
+    "card_grid": {
+      "columns": 2,
+      "row_gap_px": 14,
+      "column_gap_px": 14,
+      "min_card_height_px": 98
+    }
+  },
+  "typography": {
+    "font_family": "Inter, Segoe UI, sans-serif",
+    "title_size_px": 42,
+    "section_title_size_px": 14,
+    "body_size_px": 13,
+    "meta_size_px": 11,
+    "line_height": 1.4,
+    "case_strategy": "section labels uppercase, content sentence case"
+  },
+  "component_targets": {
+    "sidebar": {
+      "left_icon_column_px": 44,
+      "device_list_item_height_px": 40,
+      "active_item_fill": "#61e1ff",
+      "active_item_text": "#0c2448"
+    },
+    "main_cards": {
+      "card_padding_px": 12,
+      "card_border_default": "1px solid #4b6698",
+      "card_border_active": "2px solid #61e1ff",
+      "status_position": "title centered, status text beneath"
+    },
+    "right_controls": {
+      "toggle_width_px": 44,
+      "toggle_height_px": 24,
+      "stepper_button_px": 24,
+      "section_spacing_px": 20
+    }
+  },
+  "accessibility_targets": {
+    "contrast_ratio_text_min": 4.5,
+    "contrast_ratio_ui_min": 3.0,
+    "focus_visible": true,
+    "min_click_target_px": 36,
+    "language": "de-einfach",
+    "error_dialog_next_steps_required": true,
+    "screen_reader_labels_required": true
+  },
+  "view_questions_checklist": [
+    "Sind linke Navigationsicons immer auf gleicher X-Position ausgerichtet?",
+    "Bleibt zwischen Karten mindestens 14px Abstand bei kleiner Fenstergröße?",
+    "Ist aktive Karte eindeutig über Farbe UND Rand markiert?",
+    "Bleiben Sektionstitel im rechten Panel auch bei 125% Zoom lesbar?",
+    "Ist die Fokusmarkierung per Tastatur auf dunklem Theme überall sichtbar?",
+    "Wird Text sekundärer Hinweise nicht unter 11px reduziert?",
+    "Bleiben Kippschalter-Status (an/aus) zusätzlich sprachlich beschriftet?",
+    "Verhindert das Layout horizontales Scrollen bis 1280px Breite?"
+  ],
+  "project_mapping": {
+    "target_area": "app/main.py Startseite + Live-Vorschau",
+    "adoption_rules": [
+      "Desktop-first mit responsivem Fallback auf gestapelte Karten",
+      "Kartenabstände und Radius auf bestehende Theme-Quick-Preview übertragen",
+      "Statuszustände in Dashboard und Verlauf farblich konsistent halten",
+      "Alle Hinweise in einfacher deutscher Sprache mit nächstem Schritt"
+    ]
+  }
+}
