@@ -65,3 +65,6 @@ NEXT: Zwei verbleibende Release-Punkte in einer neuen 3-Punkte-Iteration schlie�
 DONE: Kernmodul-Tests erweitert (core.validation im Smoke-Test) und Validierungsstandard technisch im Quality-Check erzwungen. (2026-02-12)
 DONE: Release-Checkliste auf 100% (18/18) synchronisiert und Doku-Status in README aktualisiert. (2026-02-12)
 NEXT: Nächste 3-Punkte-Iteration planen: UX-Feinschliff mit klareren Hilfetexten, Theme-Voreinstellungen und zusätzlichem Tastaturfokus-Check. (2026-02-12)
+
+DONE: Quality-Check robust gemacht: venv-Python für Auto-Installationen, strikte 0/1-Flag-Validierung und laienfreundliche Abschluss-Zusammenfassung ergänzt. (2026-02-12)
+NEXT: Optional-Checks (Web/AppImage) auf denselben Kurzbericht-Stil mit klarer 3-Schritt-Reihenfolge umstellen und im Start-Log vereinheitlichen. (2026-02-12)

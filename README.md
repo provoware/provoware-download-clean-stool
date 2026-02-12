@@ -12,9 +12,9 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
  - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **18**
+ - **Abgeschlossene Punkte:** **19**
  - **Offene Punkte:** **0**
- - **Nächster Schritt:** Release-Artefakte final verifizieren und anschließend das nächste 3-Punkte-UX-Paket planen.
+ - **Nächster Schritt:** Qualitätslauf mit AUTO_FIX in CI-ähnlicher Reihenfolge testen und den neuen Kurzbericht als Support-Standard nutzen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -50,6 +50,23 @@ bash start.sh
 - Alle vier Befehle laufen grün oder sind mit klarem Grund als NEXT ITERATION dokumentiert.
 
 
+
+
+## 0.9) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Quality-Tool-Installation nutzt jetzt bevorzugt das Projekt-venv**  
+   `tools/run_quality_checks.sh` wählt für Auto-Installationen zuerst `venv/bin/python` und fällt nur bei Bedarf auf `python3` zurück.
+2. **Flag-Werte werden strikt validiert (Input-Schutz)**  
+   Die Schalter `AUTO_FIX`, `AUTO_FIX_ON_WARN`, `FAST_MODE` und `AUTO_INSTALL_TOOLS` akzeptieren nur noch `0` oder `1`; ungültige Werte werden mit klarer Hilfe abgefangen.
+3. **Neue Kurz-Zusammenfassung in einfacher Sprache (A11y/Text)**  
+   Am Ende des Qualitätslaufs erscheint jetzt eine klare Reihenfolge mit drei nächsten Schritten, damit auch ohne Fachwissen die richtige Reparatur-Reihenfolge sichtbar ist.
+
+### Zwei kurze Laienvorschläge
+- Nutze zuerst `AUTO_FIX=1 bash tools/run_quality_checks.sh`, bevor du einzelne Warnungen manuell bearbeitest.
+- Wenn ein Schalter komisch wirkt, setze ihn bewusst auf `0` oder `1` und starte den Check erneut.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führe den Qualitätslauf einmal mit absichtlich falschem Flag aus (z. B. `FAST_MODE=ja`), prüfe den Hinweistext, und starte danach den empfohlenen Folgeablauf (`AUTO_FIX`, dann Vollprüfung, dann `bash start.sh`), damit der Support-Workflow einmal komplett verifiziert ist.
 
 ## 0.8) Aktuelle Iteration (3 Punkte, DONE)
 

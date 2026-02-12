@@ -14,11 +14,71 @@ say() {
   printf '%s\n' "$1"
 }
 
+resolve_quality_python() {
+  # Liefert den besten Python-Interpreter für automatische Tool-Installation.
+  # Priorität: venv-Python im Projekt, danach System-python3.
+  local venv_python="$ROOT_DIR/venv/bin/python"
+  if [ -x "$venv_python" ]; then
+    printf '%s' "$venv_python"
+    return 0
+  fi
+  if command -v python3 >/dev/null 2>&1; then
+    command -v python3
+    return 0
+  fi
+  printf '%s' ""
+  return 1
+}
+
+normalize_binary_flag() {
+  # Akzeptiert nur 0 oder 1 für Konfigurations-Flags.
+  # Bei ungültigem Wert folgt ein sicherer Fallback auf 1 inkl. Hilfehinweis.
+  local raw_value="${1:-1}"
+  local label="${2:-FLAG}"
+  if [ "$raw_value" = "0" ] || [ "$raw_value" = "1" ]; then
+    printf '%s' "$raw_value"
+    return 0
+  fi
+  say "[QUALITY][WARN] $label hat einen ungültigen Wert: '$raw_value'. Erlaubt sind nur 0 oder 1."
+  say "[QUALITY][HILFE] Nächster Schritt: $label=1 bash tools/run_quality_checks.sh"
+  WARNINGS=$((WARNINGS + 1))
+  printf '%s' "1"
+  return 1
+}
+
+print_quality_summary_for_humans() {
+  # Zeigt eine kurze, laienfreundliche Abschlusshilfe in klarer Reihenfolge.
+  local warnings_count="${1:-0}"
+  say "[QUALITY][ÜBERSICHT] ===== Kurzfassung in einfacher Sprache ====="
+  say "[QUALITY][ÜBERSICHT] Gefundene Warnungen: $warnings_count"
+  if [ "$warnings_count" -eq 0 ]; then
+    say "[QUALITY][ÜBERSICHT] Alles grün. Sie können direkt mit dem Tool arbeiten."
+    say "[QUALITY][HILFE] Optionaler Kontrolllauf: FAST_MODE=0 bash tools/run_quality_checks.sh"
+    return 0
+  fi
+  say "[QUALITY][ÜBERSICHT] Bitte führen Sie diese Reihenfolge aus:"
+  say "[QUALITY][HILFE] 1) Auto-Korrektur starten: AUTO_FIX=1 bash tools/run_quality_checks.sh"
+  say "[QUALITY][HILFE] 2) Vollprüfung starten: FAST_MODE=0 bash tools/run_quality_checks.sh"
+  say "[QUALITY][HILFE] 3) Danach Startprüfung laufen lassen: bash start.sh"
+}
+
+QUALITY_PYTHON="$(resolve_quality_python)"
+if [ -z "$QUALITY_PYTHON" ]; then
+  say "[QUALITY][WARN] Kein Python-Interpreter verfügbar. Auto-Installation von Tools ist nicht möglich."
+  say "[QUALITY][HILFE] Nächster Schritt: python3 installieren und dann erneut starten."
+  WARNINGS=$((WARNINGS + 1))
+fi
+
+AUTO_FIX="$(normalize_binary_flag "$AUTO_FIX" "AUTO_FIX")"
+AUTO_FIX_ON_WARN="$(normalize_binary_flag "$AUTO_FIX_ON_WARN" "AUTO_FIX_ON_WARN")"
+FAST_MODE="$(normalize_binary_flag "$FAST_MODE" "FAST_MODE")"
+AUTO_INSTALL_TOOLS="$(normalize_binary_flag "$AUTO_INSTALL_TOOLS" "AUTO_INSTALL_TOOLS")"
+
 run_optional() {
   local tool_name="$1"
   local check_cmd="$2"
   local fix_cmd="$3"
-  local install_cmd="python3 -m pip install $tool_name"
+  local install_cmd="$QUALITY_PYTHON -m pip install $tool_name"
 
   if ! command -v "$tool_name" >/dev/null 2>&1; then
     say "[QUALITY][WARN] $tool_name fehlt. Dieser Qualitäts-Check konnte nicht laufen."
@@ -297,3 +357,5 @@ else
   say "[QUALITY][WARN] Qualitätslauf beendet mit $WARNINGS Warnung(en)."
   say "[QUALITY][HILFE] Nächster Schritt: AUTO_FIX=1 bash tools/run_quality_checks.sh und verbleibende Warnungen einzeln beheben."
 fi
+
+print_quality_summary_for_humans "$WARNINGS"
