@@ -3,7 +3,7 @@
   "files": {
     "app/main.py": "2026.02.12.8",
     "core/settings.py": "2026.02.11",
-    "start.sh": "2026.02.12.9",
+    "start.sh": "2026.02.12.10",
     "AGENTS.md": "2.4",
     "data/ui_texts.json": "2026.02.11.1",
     "data/presets/quick_docs.json": "2026.02.11.1",
@@ -12,7 +12,7 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.3",
-    "README.md": "2026.02.12.21",
+    "README.md": "2026.02.12.22",
     "CHANGELOG.md": "2026.02.12.22",
     "todo.txt": "2026.02.12.22",
     "data/version_registry.json": "2026.02.12.22",

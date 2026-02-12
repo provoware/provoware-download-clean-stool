@@ -1,3 +1,7 @@
+## 2026-02-12 – Start/Release-Iteration: AppImage-Auto-Fix für Laien
+- **Was:** `tools/release_gap_report.py` bietet jetzt `--auto-fix-appimage` für automatische Basis-Reparatur (Werkzeug + AppDir), und `start.sh` nutzt diesen Pfad als direkten Optional-Check-Hinweis.
+- **Warum:** AppImage-Vorbereitung sollte ohne manuelle Einzelrecherche reproduzierbar und laienfreundlich ablaufen.
+- **Wirkung:** Weniger manuelle Schritte, klarere Next Steps bei Fehlern und konsistenter JA/NEIN-Check nach dem Auto-Fix.
 ## 2026-02-12 (Quality-Dialog Folgeaktionen)
 - Was: `tools/quality_gate_gui.py` unterstützt jetzt direkte Aktionen (`auto_fix`, `quality`, `restart`) plus sicheren `report`-Fallback.
 - Warum: Nach einem fehlgeschlagenen Qualitätslauf sollen Nutzende ohne Umweg den nächsten sinnvollen Schritt starten können.
