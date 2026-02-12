@@ -12,9 +12,27 @@ Der Fokus liegt auf:
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
  - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **22**
+ - **Abgeschlossene Punkte:** **23**
  - **Offene Punkte:** **0**
- - **Nächster Schritt:** Qualitätslauf mit AUTO_FIX in CI-ähnlicher Reihenfolge testen und den neuen Kurzbericht als Support-Standard nutzen.
+ - **Nächster Schritt:** README-Bild mit echter Live-Screenshot-Datei aus der GUI ergänzen und bei UI-Änderungen automatisch aktualisieren.
+
+### Standards-Check (Info-Dateien, kurz und verbindlich)
+
+| Standardbereich | Datei | Status |
+|---|---|---|
+| Iterationsregeln, 3-Punkte-Flow, A11y-Pflicht | `AGENTS.md` | ✅ Festgehalten |
+| Release-Reifegrad (Fortschritt/Offen/Abgeschlossen) | `RELEASE_CHECKLIST.md` | ✅ Festgehalten |
+| Entwickler-Details für nächsten Technikschritt | `docs/developer_manual.md` | ✅ Festgehalten |
+| Versionsnachweis aller Änderungen | `data/version_registry.json` | ✅ Festgehalten |
+
+**Kurzfazit (Refactoring):** Die globalen Standards sind in den zentralen Info-Dateien dokumentiert. Für „optimales Refactoring“ fehlt als nächster kleiner Schritt nur noch eine feste Zuordnung „Standard → konkrete Prüfroutine“ als separate Tabelle im Entwicklerhandbuch.
+
+### Kleines Bild der Tool-Oberfläche in README
+
+Ja, das geht. Unten ist eine kleine, barrierearme Vorschau direkt in der README eingebettet (Alt-Text vorhanden):
+
+![Kleine schematische Vorschau der Tool-Oberfläche](data:image/svg+xml;utf8,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='480'%20height='220'%20viewBox='0%200%20480%20220'%3E%3Crect%20width='480'%20height='220'%20fill='%230f172a'/%3E%3Crect%20x='18'%20y='18'%20width='444'%20height='184'%20rx='12'%20fill='%231e293b'/%3E%3Ctext%20x='36'%20y='52'%20font-size='18'%20fill='%23e2e8f0'%20font-family='Arial,sans-serif'%3EProvoware%20Clean%20Tool%3C/text%3E%3Crect%20x='36'%20y='72'%20width='182'%20height='32'%20rx='8'%20fill='%232563eb'/%3E%3Ctext%20x='52'%20y='93'%20font-size='14'%20fill='white'%20font-family='Arial,sans-serif'%3EAnalyse%20starten%3C/text%3E%3Crect%20x='230'%20y='72'%20width='212'%20height='32'%20rx='8'%20fill='%2310b981'/%3E%3Ctext%20x='246'%20y='93'%20font-size='14'%20fill='white'%20font-family='Arial,sans-serif'%3EPlan%20anzeigen%3C/text%3E%3Crect%20x='36'%20y='120'%20width='406'%20height='58'%20rx='8'%20fill='%230b1220'/%3E%3Ctext%20x='48'%20y='144'%20font-size='13'%20fill='%23cbd5e1'%20font-family='Arial,sans-serif'%3EHilfe:%20Tab%20f%C3%BCr%20Fokus,%20Enter%20zum%20Start.%3C/text%3E%3Ctext%20x='48'%20y='164'%20font-size='13'%20fill='%23cbd5e1'%20font-family='Arial,sans-serif'%3ENext%20Step:%20Bei%20Fehler%20%E2%80%9EReparatur%E2%80%9C%20nutzen.%3C/text%3E%3C/svg%3E)
+
 
 ### Schnellüberblick (laienfreundlich)
 

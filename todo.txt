@@ -77,3 +77,5 @@ DONE: Optional-Checks in start.sh um einheitlichen Kurzbericht mit 3 klaren Next
 DONE: Optional-Status in start.sh strikt auf OK/WARN validiert, damit die Startausgabe robust bleibt. (2026-02-12)
 DONE: Debug-Hilfe für optionale Checks erweitert (Prüfbefehl im Log + erneuter Start als klare Folgeaktion). (2026-02-12)
 NEXT: Die gleiche Kurzbericht-Logik in tools/quality_gate_gui.py sichtbar machen, damit GUI und Terminal identische Hilfe-Texte liefern. (2026-02-12)
+DONE: Standards-Abgleich in den Info-Dateien dokumentiert, README um kleines eingebettetes UI-Bild erweitert und Refactoring-Kurzfazit in einfacher Sprache ergänzt. (2026-02-12)
+NEXT: Echte GUI-Live-Screenshot-Datei (PNG/SVG) automatisiert erzeugen und bei jedem UI-Release in README referenzieren. (2026-02-12)
