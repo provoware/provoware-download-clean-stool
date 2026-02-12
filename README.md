@@ -43,6 +43,18 @@ python3 tools/release_gap_report.py
 
 **Kurzfazit (Refactoring):** Die globalen Standards sind in den zentralen Info-Dateien dokumentiert. Für „optimales Refactoring“ fehlt als nächster kleiner Schritt nur noch eine feste Zuordnung „Standard → konkrete Prüfroutine“ als separate Tabelle im Entwicklerhandbuch.
 
+
+### Manifest-Abdeckung (Standards-Manifest 1.1)
+
+Der technische Manifest-Stand liegt in `data/standards_manifest.json` und enthält jetzt zusätzlich:
+
+- Gate **G5 Mini-UX-Check** (deutsche Dialoge, Next Steps, Kontrast)
+- Pflicht für **auto Formatierung + auto Qualitätslauf** in der Startroutine
+- Pflicht für **Doku-Updates** (`README.md`, `CHANGELOG.md`, `todo.txt`, Registry)
+- Pflicht für **Hilfeelement pro Iteration** und klare Next Steps in Fehlermeldungen
+
+Kurz gesagt: Die zentralen Vorgaben sind jetzt im Manifest abgebildet; offen bleibt nur die laufende technische Umsetzung pro Iteration (über die Gates).
+
 ### Kleines Bild der Tool-Oberfläche in README
 
 Ja, das geht. Unten ist eine kleine, barrierearme Vorschau direkt in der README eingebettet (Alt-Text vorhanden):

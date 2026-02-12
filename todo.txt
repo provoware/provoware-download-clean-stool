@@ -85,3 +85,5 @@ DONE: Standards-Abgleich in den Info-Dateien dokumentiert, README um kleines ein
 NEXT: Echte GUI-Live-Screenshot-Datei (PNG/SVG) automatisiert erzeugen und bei jedem UI-Release in README referenzieren. (2026-02-12)
 DONE: Neuer Release-Lücken-Report (tools/release_gap_report.py) ergänzt und in Quality-Gate sowie Start-Routine mit klaren Next Steps eingebunden. (2026-02-12)
 NEXT: Die zwei offenen UX-Release-Punkte aus docs/developer_manual.md umsetzen und danach den Release-Status in allen drei Statusdateien synchron auf 100% setzen. (2026-02-12)
+DONE: standards_manifest auf v1.1 erweitert (G5 Mini-UX, Doku-Pflichten, Auto-Qualität/Formatierung, Hilfeelement-Pflicht) und README-Abdeckung ergänzt. (2026-02-12)
+NEXT: Mini-UX-Gate als kleines automatisches Prüfskript technisch ausführen und Ergebnis im Quality-Report protokollieren. (2026-02-12)

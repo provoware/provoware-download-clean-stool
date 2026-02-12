@@ -1,6 +1,6 @@
 {
-  "manifest_version": "1.0",
-  "updated_on": "2026-02-10",
+  "manifest_version": "1.1",
+  "updated_on": "2026-02-12",
   "language_policy": {
     "default": "de-DE",
     "style": "einfache_sprache",
@@ -19,7 +19,8 @@
       "Erneut versuchen",
       "Reparatur",
       "Protokoll"
-    ]
+    ],
+    "help_element_required_per_iteration": true
   },
   "quality_gates": [
     {
@@ -41,6 +42,11 @@
       "id": "G4",
       "command": "bash start.sh",
       "required": true
+    },
+    {
+      "id": "G5",
+      "command": "mini_ux_check_de_dialoge_next_steps_kontrast",
+      "required": true
     }
   ],
   "autostart_requirements": {
@@ -50,7 +56,9 @@
       "nicht möglich",
       "nicht nötig"
     ],
-    "debug_mode_env": "LOG_LEVEL=DEBUG"
+    "debug_mode_env": "LOG_LEVEL=DEBUG",
+    "auto_quality_and_formatting": true,
+    "user_feedback_after_each_check": true
   },
   "validation_policy": {
     "input_validation_required": true,
@@ -60,12 +68,20 @@
       "INFO",
       "WARN",
       "ERROR"
-    ]
+    ],
+    "next_steps_in_error_messages": "required_in_plain_language"
   },
   "structure_policy": {
     "app": "GUI/Oberfläche",
     "core": "Kernlogik",
     "tools": "Qualitäts- und Reparaturskripte",
-    "data": "Variable Daten und Konfiguration"
+    "data": "Variable Daten und Konfiguration",
+    "system_vs_variable_separation": "required"
+  },
+  "documentation_policy": {
+    "readme_status_required": true,
+    "changelog_mini_3_lines_required": true,
+    "todo_update_required": true,
+    "registry_update_required": true
   }
 }
