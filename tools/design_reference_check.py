@@ -130,6 +130,85 @@ def _validate_view_questions(questions: list[str]) -> None:
         )
 
 
+def _validate_main_window_preview_mapping(project_mapping: dict) -> None:
+    _require_type(
+        project_mapping,
+        dict,
+        "Projekt-Mapping fehlt. Nächster Schritt: project_mapping als Objekt ergänzen.",
+    )
+    preview_targets = project_mapping.get("main_window_preview_targets")
+    _require_type(
+        preview_targets,
+        dict,
+        "Preview-Mapping fehlt. Nächster Schritt: main_window_preview_targets ergänzen.",
+    )
+
+    required_keys = [
+        "theme_similarity_score_label",
+        "target_layout_modes",
+        "target_scale_labels",
+        "next_step_message_required",
+    ]
+    missing = [key for key in required_keys if key not in preview_targets]
+    if missing:
+        raise ValueError(
+            "Preview-Mapping unvollständig: "
+            + ", ".join(missing)
+            + ". Nächster Schritt: Felder in project_mapping.main_window_preview_targets ergänzen."
+        )
+
+    score_label = _require_non_empty_text(
+        preview_targets.get("theme_similarity_score_label"),
+        "Design-Nähe Label fehlt. Nächster Schritt: theme_similarity_score_label als Klartext setzen.",
+    )
+    if "Design-Nähe" not in score_label:
+        raise ValueError(
+            "Design-Nähe Label unklar. Nächster Schritt: Label muss 'Design-Nähe' enthalten."
+        )
+
+    layout_modes = preview_targets.get("target_layout_modes")
+    _require_type(
+        layout_modes,
+        list,
+        "target_layout_modes fehlt. Nächster Schritt: mindestens zwei Layout-Modi als Liste eintragen.",
+    )
+    if len(layout_modes) < 2:
+        raise ValueError(
+            "Zu wenige Layout-Modi. Nächster Schritt: mindestens zwei Layout-Modi dokumentieren."
+        )
+    for mode in layout_modes:
+        _require_non_empty_text(
+            mode,
+            "Leerer Layout-Modus gefunden. Nächster Schritt: nur klare Layout-Bezeichnungen verwenden.",
+        )
+
+    scale_labels = preview_targets.get("target_scale_labels")
+    _require_type(
+        scale_labels,
+        list,
+        "target_scale_labels fehlt. Nächster Schritt: mindestens zwei Skalierungswerte als Liste eintragen.",
+    )
+    if len(scale_labels) < 2:
+        raise ValueError(
+            "Zu wenige Skalierungswerte. Nächster Schritt: mindestens zwei Prozentwerte dokumentieren."
+        )
+
+    for label in scale_labels:
+        text = _require_non_empty_text(
+            label,
+            "Leerer Skalierungswert gefunden. Nächster Schritt: Werte wie '115 %' oder '130 %' eintragen.",
+        )
+        if "%" not in text:
+            raise ValueError(
+                "Skalierungswert ohne Prozentzeichen gefunden. Nächster Schritt: Prozentangaben in target_scale_labels nutzen."
+            )
+
+    if preview_targets.get("next_step_message_required") is not True:
+        raise ValueError(
+            "Next-Step-Pflicht fehlt. Nächster Schritt: next_step_message_required auf true setzen."
+        )
+
+
 def _validate_thumbnail_reference(path: Path) -> None:
     _require_type(
         path,
@@ -167,6 +246,7 @@ def main() -> int:
     _validate_a11y_targets(payload["accessibility_targets"])
     _validate_spacing_scale(payload["layout_blueprint"])
     _validate_view_questions(payload["view_questions_checklist"])
+    _validate_main_window_preview_mapping(payload["project_mapping"])
     _validate_thumbnail_reference(THUMBNAIL_FILE)
 
     _require_output(

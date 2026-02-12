@@ -127,6 +127,20 @@
       "Kartenabstände und Radius auf bestehende Theme-Quick-Preview übertragen",
       "Statuszustände in Dashboard und Verlauf farblich konsistent halten",
       "Alle Hinweise in einfacher deutscher Sprache mit nächstem Schritt"
-    ]
+    ],
+    "main_window_preview_targets": {
+      "theme_similarity_score_label": "Design-Nähe zur Vorgabe",
+      "target_layout_modes": [
+        "Aktion links · Liste rechts",
+        "Untereinander",
+        "Liste links · Aktion rechts"
+      ],
+      "target_scale_labels": [
+        "115 %",
+        "130 %",
+        "150 %"
+      ],
+      "next_step_message_required": true
+    }
   }
 }

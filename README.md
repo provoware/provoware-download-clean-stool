@@ -40,6 +40,23 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+## 0.36) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Live-Vorschau misst jetzt die Design-Nähe gegen die Zielvorgabe**  
+   `app/main.py` zeigt im Theme-Vorschaublock einen Prozentwert („Design-Nähe zur Vorgabe“) inklusive klarem Next Step für die nächste Annäherung.
+2. **Theme-Vorschau-Hilfe wurde konsistent für Design-Review erweitert**  
+   Der Vorschauhinweis wurde für Screenreader und Tooltip so ergänzt, dass Kontrast, Layout und Design-Nähe verständlich geprüft werden können.
+3. **Design-Referenz erzwingt jetzt Preview-Mapping als festen Qualitätsstandard (Hilfe/A11y)**  
+   `data/design_reference_domotic_assistant.json` enthält neue Pflichtfelder für Preview-Zielwerte; `tools/design_reference_check.py` validiert diese automatisch mit klaren Next Steps.
+
+### Zwei kurze Laienvorschläge
+- Wechseln Sie nacheinander auf **kontrast** und **senior** und prüfen Sie, ob die Design-Nähe hoch bleibt.
+- Wenn die Design-Nähe sinkt, stellen Sie die Vorschau-Position zuerst auf **Untereinander** und prüfen dann erneut.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänzen Sie als nächsten Mini-Schritt eine kleine Verlaufsliste für die Design-Nähe (z. B. letzter Wert pro Theme). So sehen Sie sofort, ob neue Änderungen die Zielvorgabe verbessern oder verschlechtern.
+
 ## 0.35) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Start-Routine hat jetzt ein planbares Iterationsprofil (`safe`/`turbo`)**  

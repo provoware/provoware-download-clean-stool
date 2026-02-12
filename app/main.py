@@ -71,6 +71,14 @@ class MainWindow(QMainWindow):
             "Für schnelle Bedienung: Mit Alt+K direkt den Lesbarkeitsmodus aktivieren.",
         ),
     }
+    DESIGN_SIMILARITY_TARGETS = {
+        "light": {"contrast": 4.8, "layout": "Aktion links · Liste rechts"},
+        "dark": {"contrast": 4.7, "layout": "Liste links · Aktion rechts"},
+        "neon": {"contrast": 4.7, "layout": "Aktion links · Liste rechts"},
+        "kontrast": {"contrast": 5.0, "layout": "Untereinander"},
+        "blau": {"contrast": 4.7, "layout": "Aktion links · Liste rechts"},
+        "senior": {"contrast": 4.9, "layout": "Untereinander"},
+    }
     GLOBAL_A11Y_STYLE = """
         QPushButton:focus,
         QComboBox:focus,
@@ -1320,6 +1328,59 @@ class MainWindow(QMainWindow):
             )
         return output
 
+    def _build_design_similarity_hint(
+        self,
+        *,
+        theme_key: str,
+        contrast_label: str,
+        selected_layout: str,
+        selected_scale: str,
+    ) -> str:
+        """Erzeugt eine nachvollziehbare Design-Ähnlichkeitsbewertung zur Referenzvorgabe."""
+
+        clean_theme_key = theme_key.strip().lower()
+        clean_contrast_label = contrast_label.strip()
+        clean_layout = selected_layout.strip()
+        clean_scale = selected_scale.strip()
+        if (
+            clean_theme_key not in self.DESIGN_SIMILARITY_TARGETS
+            or not clean_contrast_label
+            or not clean_layout
+            or not clean_scale
+        ):
+            raise ValueError(
+                "Design-Ähnlichkeit kann nicht berechnet werden. Nächster Schritt: Theme, Layout und Skalierung sichtbar auswählen."
+            )
+
+        target = self.DESIGN_SIMILARITY_TARGETS[clean_theme_key]
+        target_layout = target["layout"]
+        target_contrast = float(target["contrast"])
+
+        # Basis-Score auf Referenznähe: Theme + Kontrast + Layout + Schriftgröße.
+        score = 55
+        if clean_layout == target_layout:
+            score += 20
+        if clean_scale in {"115 %", "130 %", "150 %"}:
+            score += 10
+        if clean_contrast_label in {"Sehr gut", "Maximal"}:
+            score += 15
+
+        score = min(score, 100)
+        support_hint = (
+            "Nächster Schritt: Für maximale Nähe zur Referenz jetzt auf "
+            f"'{target_layout}' wechseln und Kontraststatus 'Sehr gut' oder 'Maximal' halten."
+        )
+        output = (
+            f"Design-Nähe zur Vorgabe: <b>{score}%</b> "
+            f"(Ziel-Kontrast {target_contrast:.1f}/5, Ziel-Layout: {target_layout}). "
+            f"{support_hint}"
+        )
+        if not output.strip():
+            raise RuntimeError(
+                "Design-Nähe fehlt. Nächster Schritt: Vorschau erneut öffnen und prüfen."
+            )
+        return output
+
     def _apply_accessibility_quick_mode(self, mode: str) -> None:
         """Aktiviert schnelle, barrierearme Presets für sofort bessere Lesbarkeit."""
 
@@ -1399,6 +1460,12 @@ class MainWindow(QMainWindow):
                 "Interaktionsprofil fehlt. Nächster Schritt: Bitte Theme-Daten prüfen."
             )
         contrast_level, contrast_text, next_click_hint = profile
+        design_similarity_hint = self._build_design_similarity_hint(
+            theme_key=resolved_theme,
+            contrast_label=contrast_level,
+            selected_layout=resolved_position_label,
+            selected_scale=resolved_scale_label,
+        )
         preview_text = (
             "<b>Live-Vorschau aktiv</b><br/>"
             f"Theme: <b>{preview_title}</b> · Großer Text: "
@@ -1407,6 +1474,7 @@ class MainWindow(QMainWindow):
             f"Auto-Anpassung: {auto_layout_hint}<br/>"
             f"A11y-Hinweis (Zugänglichkeit): {a11y_hint}<br/>"
             f"Interaktivitäts-/Kontraststatus: <b>{contrast_level}</b> – {contrast_text}<br/>"
+            f"{design_similarity_hint}<br/>"
             f"Empfohlener nächster Klick: {next_click_hint}<br/>"
             "Beispiel unten zeigt Button, Liste und Kontrast in Echtzeit."
         )
@@ -1874,7 +1942,10 @@ class MainWindow(QMainWindow):
         self.lbl_theme_preview_info.setWordWrap(True)
         self.lbl_theme_preview_info.setAccessibleName("Theme Live-Vorschau Hinweis")
         self.lbl_theme_preview_info.setAccessibleDescription(
-            "Zeigt den aktiven Vorschau-Status für Theme und großen Text"
+            "Zeigt den aktiven Vorschau-Status für Theme, Kontrast und Design-Nähe zur Vorgabe"
+        )
+        self.lbl_theme_preview_info.setToolTip(
+            "Vergleichen Sie die aktuelle Ansicht mit der Zielvorgabe. Höhere Prozentwerte bedeuten höhere Design-Ähnlichkeit."
         )
         layout.addWidget(self.lbl_theme_preview_info)
 
@@ -3504,6 +3575,7 @@ def main() -> int:
     """
     # Optional vorhandene Plugins laden
     from pathlib import Path
+
     from core.plugins import discover_plugins
 
     plugins_dir = Path(__file__).resolve().parent.parent / "plugins"

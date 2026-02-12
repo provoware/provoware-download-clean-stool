@@ -1,3 +1,8 @@
+## 2026-02-12 – Design-Vervollständigung: Näheprüfung in der Live-Vorschau
+- **Was:** `app/main.py` ergänzt eine validierte Design-Nähe-Anzeige in der Theme-Vorschau; `data/design_reference_domotic_assistant.json` und `tools/design_reference_check.py` definieren/prüfen dazu feste Preview-Zielfelder.
+- **Warum:** Design-Anpassungen sollen dauerhaft und messbar gegen die Vorgabe geprüft werden, statt nur visuell geschätzt zu werden.
+- **Wirkung:** Höhere Design-Konsistenz, klarere A11y-Hilfetexte und ein robuster Qualitäts-Gate für Layout-/Skalierungsnähe.
+
 ## 2026-02-12 – Iterations-Disziplin: planbarer SAFE/TURBO-Ablauf
 - **Was:** `start.sh` unterstützt jetzt `ITERATION_SPEED_PROFILE` (`safe`/`turbo`) inkl. validierter Vorab-Plananzeige; `tools/run_quality_checks.sh` erklärt FAST_MODE klar als Zwischenstand vs. Abschlusslauf.
 - **Warum:** Iterationen sollen schneller werden, ohne den finalen Qualitätslauf und robuste Gates zu verlieren.
