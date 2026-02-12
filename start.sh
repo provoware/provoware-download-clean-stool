@@ -152,19 +152,33 @@ print_module_repair_status_block() {
   local repaired_count=0
   local failed_count=0
   local module_name
+  local module_priority
+  local compact_report="[SETUP] Modul-Reparatur kompakt (Priorität):"
 
   for module_name in "${raw_modules[@]}"; do
     [ -z "$module_name" ] && continue
+    case "$module_name" in
+      PySide6*|Pillow*|PIL*|numpy*|pandas*)
+        module_priority="kritisch"
+        ;;
+      *)
+        module_priority="mittel"
+        ;;
+    esac
+
     if "$VENV_PY" -c "import importlib; importlib.import_module('$module_name')" >>"$SETUP_LOG" 2>&1; then
-      echo "[SETUP] Import jetzt OK: $module_name"
+      echo "[SETUP] Import jetzt OK: $module_name (Priorität: $module_priority)"
+      compact_report+="\n[SETUP] - $module_name => OK ($module_priority)"
       repaired_count=$((repaired_count + 1))
     else
-      echo "[SETUP] Import weiterhin FEHLER: $module_name"
+      echo "[SETUP] Import weiterhin FEHLER: $module_name (Priorität: $module_priority)"
+      compact_report+="\n[SETUP] - $module_name => FEHLER ($module_priority)"
       failed_count=$((failed_count + 1))
     fi
   done
 
   echo "[SETUP] Ergebnis: OK=$repaired_count | FEHLER=$failed_count"
+  printf '%b\n' "$compact_report" | tee -a "$SETUP_LOG"
   if [ "$failed_count" -gt 0 ]; then
     echo "[HILFE] Nächster Schritt 1: Modulwarnungen im Log lesen: cat exports/setup_log.txt"
     echo "[HILFE] Nächster Schritt 2: Ein Modul nach dem anderen reparieren (nicht alles gleichzeitig)."
@@ -378,10 +392,27 @@ print_accessibility_next_steps() {
   # Zeigt kurze, feste Hilfe zu Tastatur und Kontrast an.
   # Hilft beim barrierearmen Einstieg direkt nach der Startprüfung.
   echo "[A11Y] Kurze Hilfe (barrierearm):"
-  echo "[A11Y] - Tastatur: Mit Tab vor/zurück durch Schaltflächen gehen, Enter zum Bestätigen nutzen."
-  echo "[A11Y] - Theme-Auswahl: Bei schlechter Lesbarkeit zwischen Dark, Light und High-Contrast wechseln."
-  echo "[A11Y] - Kontrast-Check: Mit python3 tools/a11y_theme_check.py die Theme-Kontraste automatisch prüfen."
-  echo "[A11Y] - Nächster Klick: Erst Scan starten, dann die Vorschau prüfen, danach Aufräumen ausführen."
+  echo "[A11Y] 1) Tastatur: Mit Tab navigieren, Shift+Tab zurück, Enter zum Ausführen."
+  echo "[A11Y] 2) Lesbarkeit: Bei zu wenig Kontrast Theme wechseln (Dark/Light/High-Contrast)."
+  echo "[A11Y] 3) Schnelltest: python3 tools/a11y_theme_check.py"
+  echo "[A11Y] 4) Klarer Ablauf: Scan starten → Vorschau prüfen → Aufräumen ausführen."
+  echo "[A11Y] 5) Bei Unsicherheit: DEBUG_LOG_MODE=1 bash start.sh für detaillierte Hilfe starten."
+}
+
+extract_quality_count() {
+  # Liest die Anzahl eines Quality-Patterns robust aus dem Qualitätsprotokoll.
+  # Input: Pattern und Logpfad. Output: nicht-negative Ganzzahl.
+  local pattern="${1:-}"
+  local quality_log_path="${2:-exports/quality_report.txt}"
+  local raw_count="0"
+
+  if [ -z "$pattern" ] || [ ! -f "$quality_log_path" ]; then
+    printf '%s' "0"
+    return 0
+  fi
+
+  raw_count="$(rg -c "$pattern" "$quality_log_path" 2>/dev/null | head -n 1 || echo "0")"
+  validate_non_negative_int "$raw_count"
 }
 
 
@@ -799,8 +830,8 @@ if ! run_quality_with_autofix "$QUALITY_LOG"; then
   python3 tools/quality_gate_gui.py || true
 fi
 
-QUALITY_WARN_COUNT="$(rg -c "\[QUALITY\]\[WARN\]" "$QUALITY_LOG" 2>/dev/null || echo "0")"
-QUALITY_INFO_COUNT="$(rg -c "\[QUALITY\]\[INFO\]" "$QUALITY_LOG" 2>/dev/null || echo "0")"
+QUALITY_WARN_COUNT="$(extract_quality_count "\[QUALITY\]\[WARN\]" "$QUALITY_LOG")"
+QUALITY_INFO_COUNT="$(extract_quality_count "\[QUALITY\]\[INFO\]" "$QUALITY_LOG")"
 if [ "$QUALITY_WARN_COUNT" -gt 0 ]; then
   QUALITY_HINT="Warnungen gefunden: Öffnen Sie den Qualitätsbericht und beheben Sie zuerst die erste Warnung. Danach erneut starten."
 elif [ "$QUALITY_INFO_COUNT" -gt 0 ]; then

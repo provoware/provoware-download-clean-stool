@@ -1,3 +1,5 @@
+DONE: Start-Routine ergänzt priorisierten Modul-Reparatur-Kompaktblock (kritisch/mittel), robuste Qualitätszähler-Funktion und klar strukturierte A11y-Start-Hilfe (1–5). (2026-02-12)
+NEXT: Prioritätsregeln für Modul-Reparatur im nächsten Schritt aus settings/manifest ableiten statt fest im Skript zu pflegen. (2026-02-12)
 DONE: Validierungen erweitert (Auswahl/Pfad), Start-Routine zeigt Modul-Reparaturstatus je Import und gibt klare 2-Schritt-Laienhilfe bei offenen Modulen. (2026-02-12)
 NEXT: Modul-Reparaturstatus zusätzlich als kompakten Abschnitt in exports/setup_log.txt mit Priorität (kritisch/mittel) pro Modul ausgeben. (2026-02-12)
 DONE: Qualitätsdialog kann jetzt Folgeaktionen direkt ausführen (Auto-Fix, Qualitätslauf, Start), validiert DEBUG_LOG_MODE robust und zeigt Tastatur-Hilfe für bessere Barrierefreiheit. (2026-02-12)

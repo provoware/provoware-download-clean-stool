@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: Priorisierter Modul-Reparaturblock + robuster Qualitätszähler + klare A11y-Startführung
+- **Was:** `start.sh` ergänzt einen priorisierten Modul-Reparaturblock (kritisch/mittel) im Setup-Log, kapselt Warn-/Info-Zähler in `extract_quality_count` und strukturiert die A11y-Start-Hilfe als 5 klare Schritte.
+- **Warum:** Startprobleme sollten schneller priorisiert lösbar sein, Qualitätszähler nicht durch ungültige Werte kippen und Hilfetexte für Einsteiger:innen klarer werden.
+- **Wirkung:** Bessere autonome Selbstreparatur, stabilere Qualitätsausgabe und barriereärmere Nutzerführung in einfacher Sprache.
+
 ## 2026-02-12 – Responsive-UX-Iteration: Dynamische Seitenhöhe + große Scrollleisten
 - **Was:** `app/main.py` nutzt pro Hauptseite jetzt `QScrollArea`, schaltet die Startvorschau je Fensterbreite automatisch um und erweitert die A11y-Styles um breite, kontraststarke Scrollleisten plus größere Skalier-Ecke.
 - **Warum:** Auf kleineren Displays waren untere Inhalte, Auswahlfelder und Aktionen teils abgeschnitten und dadurch für Laien schwer erreichbar.
