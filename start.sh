@@ -394,6 +394,70 @@ validate_non_negative_int() {
 }
 
 
+get_module_priority_from_manifest() {
+  # Liest die Modul-Priorität aus dem Standards-Manifest statt aus fester Logik.
+  # Input: Modulname. Output: kritisch oder mittel.
+  local module_name="${1:-}"
+  if [ -z "$module_name" ]; then
+    printf '%s' "mittel"
+    return 1
+  fi
+
+  local manifest_path="data/standards_manifest.json"
+  if [ ! -f "$manifest_path" ]; then
+    printf '%s' "mittel"
+    return 1
+  fi
+
+  local priority
+  priority="$($VENV_PY - "$manifest_path" "$module_name" <<'PYCODE'
+import json
+import pathlib
+import sys
+
+manifest = pathlib.Path(sys.argv[1])
+module_name = sys.argv[2].strip()
+if not module_name or not manifest.exists():
+    print("mittel")
+    raise SystemExit(0)
+
+try:
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+except Exception:
+    print("mittel")
+    raise SystemExit(0)
+
+policy = data.get("module_priority_policy")
+if not isinstance(policy, dict):
+    print("mittel")
+    raise SystemExit(0)
+
+critical = policy.get("critical")
+default = policy.get("medium_default", "mittel")
+if not isinstance(default, str) or not default.strip():
+    default = "mittel"
+default = default.strip()
+
+if isinstance(critical, list):
+    lowered = {str(item).strip().lower() for item in critical if str(item).strip()}
+    if module_name.lower() in lowered:
+        print("kritisch")
+        raise SystemExit(0)
+
+print(default)
+PYCODE
+)"
+
+  case "$priority" in
+    kritisch|mittel)
+      printf '%s' "$priority"
+      ;;
+    *)
+      printf '%s' "mittel"
+      ;;
+  esac
+}
+
 print_module_repair_status_block() {
   # Zeigt je fehlendem Python-Modul den Reparaturstatus in einfacher Sprache.
   # Input: kommaseparierte Modulliste. Output: Statusblock mit klaren Next Steps.
@@ -418,14 +482,7 @@ print_module_repair_status_block() {
 
   for module_name in "${raw_modules[@]}"; do
     [ -z "$module_name" ] && continue
-    case "$module_name" in
-      PySide6*|Pillow*|PIL*|numpy*|pandas*)
-        module_priority="kritisch"
-        ;;
-      *)
-        module_priority="mittel"
-        ;;
-    esac
+    module_priority="$(get_module_priority_from_manifest "$module_name")"
 
     if "$VENV_PY" -c "import importlib; importlib.import_module('$module_name')" >>"$SETUP_LOG" 2>&1; then
       echo "[SETUP] Import jetzt OK: $module_name (Priorität: $module_priority)"
@@ -447,6 +504,7 @@ print_module_repair_status_block() {
   fi
   return 0
 }
+
 
 print_quality_quickfix_block() {
   # Zeigt einen kompakten Qualitätsblock mit klaren Auto-Fix-Befehlen.

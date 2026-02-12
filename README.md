@@ -11,8 +11,8 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **95%**
- - **Abgeschlossene Punkte:** **19**
+ - **Entwicklungsfortschritt:** **96%**
+ - **Abgeschlossene Punkte:** **20**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
 
@@ -25,6 +25,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+
+## 0.26) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Modul-Prioritäten aus zentralem Manifest statt fester Skriptliste**  
+   `start.sh` liest die Einstufung fehlender Module jetzt aus `data/standards_manifest.json` und bleibt damit wartbarer.
+2. **Manifest um klare Prioritätsregeln für kritische Module erweitert**  
+   `data/standards_manifest.json` enthält nun `module_priority_policy` mit kritischen Modulen und Standard-Fallback.
+3. **Start-Hilfe bleibt laienfreundlich und barrierearm (A11y/Text)**  
+   Der Reparaturblock in `start.sh` meldet weiterhin pro Modul klare Zustände und verständliche Next Steps.
+
+### Zwei kurze Laienvorschläge
+- Wenn Module fehlen: zuerst `bash start.sh` laufen lassen und dann nur die erste Warnung im `exports/setup_log.txt` beheben.
+- Wenn Sie eine Priorität ändern möchten: Eintrag in `data/standards_manifest.json` anpassen und den Start erneut ausführen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitern Sie als nächste Mini-Iteration den Mini-UX-Check um einen interaktiven Klickpfad für den Qualitätsdialog. Starten Sie danach `python tools/mini_ux_gate.py` und `bash tools/run_quality_checks.sh`, damit Bedienfluss und Qualitätsregeln zusammen geprüft werden.
 
 ## 0.25) Aktuelle Iteration (3 Punkte, DONE)
 
