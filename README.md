@@ -150,6 +150,22 @@ bash start.sh
 ### Detaillierter nächster Schritt (einfach erklärt)
 Öffne bei einer Warnung die gemeldete Datei, ergänze direkt am Exit-Pfad einen Satz mit „Nächster Schritt …“, führe dann den Audit und den Quality-Check erneut aus. So ist jeder Abbruch für Nutzer:innen sofort lösbar.
 
+## 0.14) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **AppImage-Basis kann jetzt vollautomatisch vorbereitet werden**  
+   `tools/release_gap_report.py` unterstützt den neuen Schalter `--auto-fix-appimage` und legt Build-Werkzeug + AppDir-Basis automatisch an.
+2. **Start-Routine nutzt den neuen Auto-Fix direkt als laienfreundlichen Reparaturpfad**  
+   `start.sh` prüft lokal vorhandene AppImage-Tools und zeigt als direkten Reparaturschritt jetzt den Auto-Fix-Befehl mit anschließendem JA/NEIN-Check.
+3. **Fehlertexte für Auto-Fix robuster und klarer (A11y/Text)**  
+   Bei Laufzeitfehlern enthält der AppImage-Auto-Fix jetzt einen klaren Satz mit „Nächster Schritt …“, damit auch bei Abbruch sofort eine einfache Folgeaktion sichtbar ist.
+
+### Zwei kurze Laienvorschläge
+- Wenn AppImage noch auf `WARN` steht, starte genau diesen Befehl: `python3 tools/release_gap_report.py --auto-fix-appimage`.
+- Prüfe danach sofort den Status mit `python3 tools/release_gap_report.py --appimage-only`, damit du direkt `JA` oder `NEIN` siehst.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führe zuerst den Auto-Fix aus und lies die erste `WARN`-Zeile vollständig. Wenn danach noch ein Punkt offen ist, führe nur den dort genannten Befehl aus und starte den AppImage-Check erneut. So arbeitest du Schritt für Schritt ohne unnötige Fehlerquellen.
+
 ## 0.13) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **JSON-Qualitätscheck kann jetzt Min/Max-Bereiche prüfen**  

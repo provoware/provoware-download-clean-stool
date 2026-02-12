@@ -658,9 +658,9 @@ fi
 
 if check_optional_toolchain \
   "AppImage-Build (linuxdeploy + appimagetool)" \
-  "command -v appimagetool >/dev/null || command -v linuxdeploy >/dev/null" \
-  "mkdir -p tools/appimage && cd tools/appimage && wget https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage && chmod +x appimagetool-x86_64.AppImage" \
-  "Sie können als nächsten Mini-Schritt ein AppDir vorbereiten und daraus eine portable AppImage-Datei bauen."; then
+  "test -x tools/appimage/appimagetool-x86_64.AppImage || test -x tools/appimage/linuxdeploy-x86_64.AppImage || command -v appimagetool >/dev/null || command -v linuxdeploy >/dev/null" \
+  "python3 tools/release_gap_report.py --auto-fix-appimage && python3 tools/release_gap_report.py --appimage-only" \
+  "Auto-Fix verfügbar: python3 tools/release_gap_report.py --auto-fix-appimage. Danach zeigt --appimage-only den klaren JA/NEIN-Status."; then
   APPIMAGE_OPTIONAL_STATUS="OK"
 fi
 

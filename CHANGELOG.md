@@ -1,3 +1,8 @@
+## 2026-02-12 – Start/Release-Iteration: AppImage-Auto-Fix für Laien
+- **Was:** `tools/release_gap_report.py` bietet jetzt `--auto-fix-appimage` für automatische Basis-Reparatur (Werkzeug + AppDir), und `start.sh` nutzt diesen Pfad als direkten Optional-Check-Hinweis.
+- **Warum:** AppImage-Vorbereitung sollte ohne manuelle Einzelrecherche reproduzierbar und laienfreundlich ablaufen.
+- **Wirkung:** Weniger manuelle Schritte, klarere Next Steps bei Fehlern und konsistenter JA/NEIN-Check nach dem Auto-Fix.
+
 ## 2026-02-12 – UX/Start-Iteration: Feste Hilfezeilen + Modul-Autoreparatur
 - **Was:** `app/main.py` ergänzt feste Hilfezeilen in „Analyse“ und „Plan“ (Tastaturweg, Kontrast-Hinweis, nächste Aktion); `start.sh` erkennt zusätzlich fehlende Python-Module per Importtest und versucht eine automatische Reparatur mit klarer Erfolgs-/Fehlerausgabe.
 - **Warum:** Nutzer:innen sollen in beiden Arbeitsschritten sofort barrierearme Orientierung erhalten und Startprobleme durch fehlende Module automatisch, nachvollziehbar und robust gelöst bekommen.

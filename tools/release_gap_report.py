@@ -164,6 +164,63 @@ def _collect_appimage_checks() -> list[AppImageCheckResult]:
     ]
 
 
+def _run_shell_step(label: str, command: str) -> tuple[bool, str]:
+    if not label.strip() or not command.strip():
+        return (
+            False,
+            "Ungültiger Auto-Fix-Schritt. Nächster Schritt: Skript mit gültigen Parametern erneut starten.",
+        )
+    exit_code = 0
+    output = ""
+    try:
+        import subprocess
+
+        result = subprocess.run(
+            ["bash", "-lc", command],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        exit_code = result.returncode
+        output = (result.stdout + "\n" + result.stderr).strip()
+    except Exception as exc:  # pragma: no cover - robust fallback for runtime envs
+        return (
+            False,
+            f"{label} konnte nicht gestartet werden: {exc}. Nächster Schritt: Python-Umgebung prüfen und den Befehl manuell im Terminal ausführen.",
+        )
+
+    if exit_code == 0:
+        return True, f"{label} erfolgreich ausgeführt."
+
+    short_output = output.splitlines()[-1] if output else "ohne Detailausgabe"
+    return (
+        False,
+        f"{label} fehlgeschlagen (Exitcode {exit_code}): {short_output}. Nächster Schritt: Befehl einzeln im Terminal ausführen.",
+    )
+
+
+def _auto_fix_appimage_basics() -> list[str]:
+    steps = [
+        (
+            "Build-Werkzeug laden",
+            "mkdir -p tools/appimage && cd tools/appimage && wget -q https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage && chmod +x appimagetool-x86_64.AppImage",
+        ),
+        (
+            "AppDir-Grundstruktur anlegen",
+            "mkdir -p AppDir/usr/bin && cp start.sh AppDir/AppRun && chmod +x AppDir/AppRun",
+        ),
+    ]
+    notes: list[str] = []
+    for label, command in steps:
+        ok, message = _run_shell_step(label, command)
+        prefix = "OK" if ok else "WARN"
+        notes.append(f"[{prefix}] {message}")
+        if not ok:
+            break
+    return notes
+
+
 def _print_appimage_report(checks: list[AppImageCheckResult]) -> int:
     missing = [check for check in checks if not check.ok]
     ready = not missing
@@ -193,7 +250,17 @@ def main() -> int:
         action="store_true",
         help="Prüft nur die AppImage-Bereitschaft in kompakter Form.",
     )
+    parser.add_argument(
+        "--auto-fix-appimage",
+        action="store_true",
+        help="Versucht fehlende AppImage-Basics automatisch zu erstellen und prüft danach erneut.",
+    )
     args = parser.parse_args()
+
+    if args.auto_fix_appimage:
+        print("[RELEASE][APPIMAGE] Starte Auto-Fix für Basisbausteine …")
+        for line in _auto_fix_appimage_basics():
+            print(f"[RELEASE][APPIMAGE] {line}")
 
     if args.appimage_only:
         return _print_appimage_report(_collect_appimage_checks())
