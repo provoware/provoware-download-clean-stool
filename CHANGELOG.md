@@ -1,3 +1,8 @@
+## 2026-02-12 – Design-Iteration: Referenzbild als prüfbare Zielvorgabe
+- Was: Neue Datei `data/design_reference_domotic_assistant.json` dokumentiert das Referenzbild mit Farbpalette, Layoutmaßen, Abständen, Typografie, Komponentenregeln und Ansichtsfragen; zusätzlich prüft `tools/design_reference_check.py` diese Vorgaben automatisch.
+- Warum: Die visuelle Zielrichtung sollte nicht nur beschrieben, sondern technisch reproduzierbar, barrierearm und als Qualitätsstandard erzwingbar sein.
+- Wirkung: Design-Entscheidungen sind jetzt eindeutig, automatisch testbar und im Quality-Gate als fester Schritt inklusive klarer Next Steps verankert.
+
 ## 2026-02-12 – Start-Iteration: robustere Vorprüfung + CLI-Autoreparatur
 - Was: `start.sh` erweitert die Pflichtdatei-Vorprüfung (inkl. Smoke-Test/Versions-Registry), ergänzt einen automatischen CLI-Tool-Check mit Reparaturpfad und nutzt für den A11y-Theme-Check das venv-Python.
 - Warum: Kritische Startbausteine und Werkzeuge sollen früh, verständlich und möglichst automatisch abgesichert werden.

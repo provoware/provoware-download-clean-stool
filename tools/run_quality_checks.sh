@@ -10,7 +10,7 @@ AUTO_INSTALL_TOOLS="${AUTO_INSTALL_TOOLS:-1}"
 STRICT_SMOKE="${STRICT_SMOKE:-0}"
 STATE_FILE="$ROOT_DIR/data/quality_state.json"
 WARNINGS=0
-TOTAL_STEPS=11
+TOTAL_STEPS=12
 
 say() {
   printf '%s\n' "$1"
@@ -368,7 +368,7 @@ calculate_signature() {
   (
     cd "$ROOT_DIR"
     if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-      git ls-files app core tools start.sh requirements.txt | while read -r file; do
+      git ls-files app core tools data/design_reference_domotic_assistant.json start.sh requirements.txt | while read -r file; do
         [ -f "$file" ] && sha256sum "$file"
       done | sha256sum | cut -d' ' -f1
     else
@@ -499,6 +499,7 @@ fi
 announce_quality_step 6 "JSON-Struktur-Check"
 validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
 validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
+validate_required_json "$ROOT_DIR/data/design_reference_domotic_assistant.json" "reference,visual_language,palette,layout_blueprint,typography,component_targets,accessibility_targets,view_questions_checklist,project_mapping" "reference:dict,visual_language:dict,palette:dict,layout_blueprint:dict,typography:dict,component_targets:dict,accessibility_targets:dict,view_questions_checklist:list,project_mapping:dict"
 validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
 validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
 validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number" "confirm_threshold:1:100"
@@ -556,7 +557,20 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-announce_quality_step 11 "Release-Lücken-Report"
+announce_quality_step 11 "Design-Referenz-Check"
+if [ -f "$ROOT_DIR/tools/design_reference_check.py" ]; then
+  if ! python3 "$ROOT_DIR/tools/design_reference_check.py"; then
+    say "[QUALITY][WARN] Design-Referenz-Check meldet Lücken bei Layout-, A11y- oder Fragen-Standards."
+    say "[QUALITY][HILFE] Nächster Schritt: data/design_reference_domotic_assistant.json anhand der Warnung ergänzen und Check erneut starten."
+    WARNINGS=$((WARNINGS + 1))
+  fi
+else
+  say "[QUALITY][WARN] Design-Referenz-Check fehlt (tools/design_reference_check.py)."
+  say "[QUALITY][HILFE] Nächster Schritt: Datei wiederherstellen oder aus Versionsverwaltung holen."
+  WARNINGS=$((WARNINGS + 1))
+fi
+
+announce_quality_step 12 "Release-Lücken-Report"
 if [ -f "$ROOT_DIR/tools/release_gap_report.py" ]; then
   if ! python3 "$ROOT_DIR/tools/release_gap_report.py"; then
     say "[QUALITY][WARN] Release-Lücken-Report zeigt noch offene oder widersprüchliche Punkte."

@@ -25,6 +25,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+## 0.25) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Design-Referenzbild vollständig als Zielvorgabe strukturiert**  
+   Neu ist `data/design_reference_domotic_assistant.json` mit exakten Angaben zu Stil, Farben, Layout-Raster, Abständen, Typografie, Komponenten und einem konkreten Fragenkatalog für die Sichtprüfung.
+2. **Automatischer Design-Referenz-Check ergänzt**  
+   `tools/design_reference_check.py` validiert jetzt verpflichtend die Zielvorgabe (inkl. Input-/Output-Validierung, A11y-Grenzwerte und klare Next Steps bei Fehlern).
+3. **Qualitäts-Gate bindet die Design-Vorgabe als festen Prüfschritt ein (A11y/Text)**  
+   `tools/run_quality_checks.sh` prüft die neue Design-Datei in JSON-Checks, führt den Design-Referenz-Check als Schritt 11/12 aus und meldet verständliche Hilfen.
+
+### Zwei kurze Laienvorschläge
+- Wenn das Layout später abweicht: zuerst `python3 tools/design_reference_check.py` ausführen und nur die erste Warnung beheben.
+- Wenn Farben unklar wirken: die Palette in `data/design_reference_domotic_assistant.json` als feste Quelle nutzen und dann Theme-Vorschau vergleichen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Übertragen Sie im nächsten Mini-Schritt genau **eine** sichtbare Komponente aus der Zielvorgabe in die Startseite, zum Beispiel den Kartenabstand (`14px`) oder den aktiven Kartenrand (`2px Akzentfarbe`). Prüfen Sie danach mit `python3 tools/design_reference_check.py` und `bash tools/run_quality_checks.sh`, ob technische Regeln und Dokumentation weiterhin grün sind.
+
 ## 0.24) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Start-Vorprüfung prüft jetzt zusätzlich Smoke- und Registry-Pflichtdateien**  

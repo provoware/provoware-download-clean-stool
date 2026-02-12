@@ -12,11 +12,11 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.4",
-    "README.md": "2026.02.12.35",
-    "CHANGELOG.md": "2026.02.12.33",
-    "todo.txt": "2026.02.12.33",
-    "data/version_registry.json": "2026.02.12.35",
-    "tools/run_quality_checks.sh": "2026.02.12.12",
+    "README.md": "2026.02.12.36",
+    "CHANGELOG.md": "2026.02.12.34",
+    "todo.txt": "2026.02.12.34",
+    "data/version_registry.json": "2026.02.12.36",
+    "tools/run_quality_checks.sh": "2026.02.12.13",
     "RELEASE_CHECKLIST.md": "2026.02.12.9",
     "core/history.py": "2026.02.12.5",
     "core/validation.py": "2026.02.12.7",
@@ -29,6 +29,8 @@
     "docs/debugging_gui_state.html": "2026.02.12.1",
     "core/selfcheck.py": "2026.02.12.1",
     "tools/exit_path_audit.py": "2026.02.12.1",
-    "tools/mini_ux_gate.py": "2026.02.12.2"
+    "tools/mini_ux_gate.py": "2026.02.12.2",
+    "data/design_reference_domotic_assistant.json": "2026.02.12.1",
+    "tools/design_reference_check.py": "2026.02.12.1"
   }
 }
