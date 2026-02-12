@@ -1,3 +1,8 @@
+## 2026-02-12 – UI-Iteration: Schnellstart als gruppiertes Raster
+- **Was:** `app/main.py` stellt die sechs Schnellstart-Befehle im Optionsschritt als Grid mit Bereichsüberschriften „Medien“ und „Aufräumen“ dar und nutzt eine zentrale Kachel-Fabrik mit Input-/Output-Validierung.
+- **Warum:** Die bisherige Zwei-Reihen-Anordnung war weniger klar gebündelt; Nutzer:innen sollen Aktionen schneller finden und mit Screenreader besser verstehen.
+- **Wirkung:** Strukturierteres Hauptfenster, bessere Orientierung durch Bereiche und klarere A11y-Hinweise in einfacher Sprache.
+
 ## 2026-02-12 – Start/Manifest-Iteration: Modul-Priorität aus Registry
 - **Was:** `start.sh` liest Modul-Prioritäten jetzt aus `data/standards_manifest.json`; das Manifest enthält dafür den neuen Block `module_priority_policy`.
 - **Warum:** Prioritätsregeln sollten zentral gepflegt werden statt direkt im Startskript, damit Änderungen konsistent und wartbar bleiben.

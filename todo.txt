@@ -1,3 +1,6 @@
+DONE: Schnellstart-Befehle im Hauptfenster als gridartiges Raster in die Bereiche „Medien“ und „Aufräumen“ gruppiert, inklusive neuer A11y-Hilfe und klarer Bereichsüberschriften. (2026-02-12)
+NEXT: Als nächsten Mini-Schritt pro Raster-Kachel eine kleine Statuszeile („Zuletzt genutzt“) ergänzen und per Mini-UX-Gate auf klare Sprache/Fokus prüfen. (2026-02-12)
+
 DONE: Start-Routine liest Modul-Prioritäten jetzt aus dem Manifest (`data/standards_manifest.json`) statt aus fest codierter Liste und protokolliert den Status weiterhin kompakt. (2026-02-12)
 NEXT: Mini-UX-Gate um interaktive Dialog-Klickpfade erweitern, damit Bedienfluss in `tools/quality_gate_gui.py` automatisch mitgeprüft wird. (2026-02-12)
 

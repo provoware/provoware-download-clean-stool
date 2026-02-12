@@ -12,11 +12,11 @@ from PySide6.QtCore import Qt, QUrl
 # QtGui: QDesktopServices öffnet Ordner/Dateien im Dateimanager
 from PySide6.QtGui import QColor, QDesktopServices, QGuiApplication
 from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
-                               QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
-                               QLabel, QListWidget, QListWidgetItem,
-                               QMainWindow, QMenu, QMessageBox, QPushButton,
-                               QScrollArea, QStackedWidget, QVBoxLayout,
-                               QWidget)
+                               QCheckBox, QComboBox, QFileDialog, QGridLayout,
+                               QHBoxLayout, QLabel, QListWidget,
+                               QListWidgetItem, QMainWindow, QMenu,
+                               QMessageBox, QPushButton, QScrollArea,
+                               QStackedWidget, QVBoxLayout, QWidget)
 
 from core.executor import execute_move_plan, undo_last
 from core.history import append_history, clear_history, read_history
@@ -2341,112 +2341,114 @@ class MainWindow(QMainWindow):
         )
         layout.addWidget(quick_label)
 
-        hl_quick = QHBoxLayout()
-        # Erzeuge die drei Schnellstart-Knöpfe und verwende Texte aus dem Katalog (mit Fallback).
-        self.btn_quick1 = QPushButton(
-            self.ui_texts.get("quick_button_1_label", "Fotos sortieren")
+        self.lbl_quick_grid_help = QLabel(
+            "Die Schnell-Aktionen sind jetzt als Raster (Grid) in zwei Bereiche gruppiert: "
+            "<b>Medien</b> und <b>Aufräumen</b>. Das hilft bei schneller Orientierung."
         )
-        self.btn_quick2 = QPushButton(
-            self.ui_texts.get("quick_button_2_label", "Große Dateien prüfen")
+        self.lbl_quick_grid_help.setWordWrap(True)
+        self.lbl_quick_grid_help.setAccessibleName("Schnellstart-Raster Hilfe")
+        self.lbl_quick_grid_help.setAccessibleDescription(
+            "Erklärt in einfacher Sprache die neue Gruppierung der Schnellstart-Aktionen"
         )
-        self.btn_quick3 = QPushButton(
-            self.ui_texts.get("quick_button_3_label", "Duplikate finden")
+        layout.addWidget(self.lbl_quick_grid_help)
+
+        quick_grid_host = QWidget()
+        quick_grid_host.setAccessibleName("Schnellstart Raster")
+        quick_grid_host.setAccessibleDescription(
+            "Grid-Hauptbereich mit gruppierten Schnellstart-Karten"
         )
-        # Tooltips (Zusatzinfos)
-        self.btn_quick1.setToolTip(
-            self.ui_texts.get(
+        quick_grid = QGridLayout(quick_grid_host)
+        quick_grid.setHorizontalSpacing(14)
+        quick_grid.setVerticalSpacing(12)
+
+        media_header = QLabel("<b>Bereich: Medien</b>")
+        media_header.setAccessibleName("Schnellstart Bereich Medien")
+        media_header.setAccessibleDescription(
+            "Überschrift für Medien-Aktionen wie Fotos, Dokumente und Musik"
+        )
+        cleanup_header = QLabel("<b>Bereich: Aufräumen</b>")
+        cleanup_header.setAccessibleName("Schnellstart Bereich Aufräumen")
+        cleanup_header.setAccessibleDescription(
+            "Überschrift für Aufräum-Aktionen wie große Dateien und Duplikate"
+        )
+
+        self.btn_quick1 = self._create_quick_action_tile(
+            label=self.ui_texts.get("quick_button_1_label", "Fotos sortieren"),
+            tooltip=self.ui_texts.get(
                 "quick_button_1_tooltip",
                 "Scannt nur nach Bilddateien (JPG, PNG) und erstellt eine Vorschau.",
-            )
+            ),
+            accessible_name="Schnellstart Fotos",
+            accessible_description="Startet sofort einen Scan mit dem Preset für Fotos",
+            section="Medien",
         )
-        self.btn_quick2.setToolTip(
-            self.ui_texts.get(
-                "quick_button_2_tooltip",
-                "Scannt nach Dateien größer als 100MB und erstellt eine Vorschau.",
-            )
-        )
-        self.btn_quick3.setToolTip(
-            self.ui_texts.get(
-                "quick_button_3_tooltip",
-                "Scannt nach möglichen Duplikaten und erstellt eine Vorschau.",
-            )
-        )
-        # Accessibility: klare Namen und Beschreibungen
-        self.btn_quick1.setAccessibleName("Schnellstart Fotos")
-        self.btn_quick1.setAccessibleDescription(
-            "Startet sofort einen Scan mit dem Preset für Fotos"
-        )
-        self.btn_quick2.setAccessibleName("Schnellstart Große Dateien")
-        self.btn_quick2.setAccessibleDescription(
-            "Startet sofort einen Scan mit dem Preset für große Dateien"
-        )
-        self.btn_quick3.setAccessibleName("Schnellstart Duplikate")
-        self.btn_quick3.setAccessibleDescription(
-            "Startet sofort einen Scan mit dem Preset für Duplikate"
-        )
-        # Größere Schaltflächen für bessere Bedienbarkeit
-        for btn in (self.btn_quick1, self.btn_quick2, self.btn_quick3):
-            btn.setMinimumHeight(48)
-            hl_quick.addWidget(btn)
-        # Verbindungen herstellen
-        self.btn_quick1.clicked.connect(lambda: self._quick_scan_preset("quick_photos"))
-        self.btn_quick2.clicked.connect(lambda: self._quick_scan_preset("quick_large"))
-        self.btn_quick3.clicked.connect(lambda: self._quick_scan_preset("quick_dups"))
-        layout.addLayout(hl_quick)
-
-        # Zweite Reihe Schnellstart-Buttons (4–6)
-        hl_quick2 = QHBoxLayout()
-        # Erzeuge weitere Schnellstart-Knöpfe (4–6) mit Katalog-Texten oder Fallbacks
-        self.btn_quick4 = QPushButton(
-            self.ui_texts.get("quick_button_4_label", "Dokumente sortieren")
-        )
-        self.btn_quick5 = QPushButton(
-            self.ui_texts.get("quick_button_5_label", "Musik sortieren")
-        )
-        self.btn_quick6 = QPushButton(
-            self.ui_texts.get("quick_button_6_label", "Alles sortieren")
-        )
-        # Tooltips für Buttons 4–6
-        self.btn_quick4.setToolTip(
-            self.ui_texts.get(
+        self.btn_quick2 = self._create_quick_action_tile(
+            label=self.ui_texts.get("quick_button_4_label", "Dokumente sortieren"),
+            tooltip=self.ui_texts.get(
                 "quick_button_4_tooltip",
                 "Scannt nur nach Dokumenten (PDF, DOC) und erstellt eine Vorschau.",
-            )
+            ),
+            accessible_name="Schnellstart Dokumente",
+            accessible_description="Startet sofort einen Scan mit dem Preset für Dokumente",
+            section="Medien",
         )
-        self.btn_quick5.setToolTip(
-            self.ui_texts.get(
+        self.btn_quick3 = self._create_quick_action_tile(
+            label=self.ui_texts.get("quick_button_5_label", "Musik sortieren"),
+            tooltip=self.ui_texts.get(
                 "quick_button_5_tooltip",
                 "Scannt nur nach Musikdateien (MP3, WAV) und erstellt eine Vorschau.",
-            )
+            ),
+            accessible_name="Schnellstart Musik",
+            accessible_description="Startet sofort einen Scan mit dem Preset für Musik",
+            section="Medien",
         )
-        self.btn_quick6.setToolTip(
-            self.ui_texts.get(
+        self.btn_quick4 = self._create_quick_action_tile(
+            label=self.ui_texts.get("quick_button_2_label", "Große Dateien prüfen"),
+            tooltip=self.ui_texts.get(
+                "quick_button_2_tooltip",
+                "Scannt nach Dateien größer als 100MB und erstellt eine Vorschau.",
+            ),
+            accessible_name="Schnellstart Große Dateien",
+            accessible_description="Startet sofort einen Scan mit dem Preset für große Dateien",
+            section="Aufräumen",
+        )
+        self.btn_quick5 = self._create_quick_action_tile(
+            label=self.ui_texts.get("quick_button_3_label", "Duplikate finden"),
+            tooltip=self.ui_texts.get(
+                "quick_button_3_tooltip",
+                "Scannt nach möglichen Duplikaten und erstellt eine Vorschau.",
+            ),
+            accessible_name="Schnellstart Duplikate",
+            accessible_description="Startet sofort einen Scan mit dem Preset für Duplikate",
+            section="Aufräumen",
+        )
+        self.btn_quick6 = self._create_quick_action_tile(
+            label=self.ui_texts.get("quick_button_6_label", "Alles sortieren"),
+            tooltip=self.ui_texts.get(
                 "quick_button_6_tooltip",
                 "Scannt alle Dateitypen und erstellt eine Vorschau.",
-            )
+            ),
+            accessible_name="Schnellstart Alles",
+            accessible_description="Startet sofort einen Scan mit dem Preset für alle Dateitypen",
+            section="Aufräumen",
         )
-        # Accessibility für Buttons 4–6
-        self.btn_quick4.setAccessibleName("Schnellstart Dokumente")
-        self.btn_quick4.setAccessibleDescription(
-            "Startet sofort einen Scan mit dem Preset für Dokumente"
-        )
-        self.btn_quick5.setAccessibleName("Schnellstart Musik")
-        self.btn_quick5.setAccessibleDescription(
-            "Startet sofort einen Scan mit dem Preset für Musik"
-        )
-        self.btn_quick6.setAccessibleName("Schnellstart Alles")
-        self.btn_quick6.setAccessibleDescription(
-            "Startet sofort einen Scan mit dem Preset für alle Dateitypen"
-        )
-        # Größere Schaltflächen für barrierearme Bedienbarkeit
-        for btn in (self.btn_quick4, self.btn_quick5, self.btn_quick6):
-            btn.setMinimumHeight(48)
-            hl_quick2.addWidget(btn)
-        # Verbindungen herstellen
-        self.btn_quick4.clicked.connect(lambda: self._quick_scan_preset("quick_docs"))
-        self.btn_quick5.clicked.connect(lambda: self._quick_scan_preset("quick_music"))
+
+        quick_grid.addWidget(media_header, 0, 0, 1, 3)
+        quick_grid.addWidget(self.btn_quick1, 1, 0)
+        quick_grid.addWidget(self.btn_quick2, 1, 1)
+        quick_grid.addWidget(self.btn_quick3, 1, 2)
+        quick_grid.addWidget(cleanup_header, 2, 0, 1, 3)
+        quick_grid.addWidget(self.btn_quick4, 3, 0)
+        quick_grid.addWidget(self.btn_quick5, 3, 1)
+        quick_grid.addWidget(self.btn_quick6, 3, 2)
+
+        self.btn_quick1.clicked.connect(lambda: self._quick_scan_preset("quick_photos"))
+        self.btn_quick2.clicked.connect(lambda: self._quick_scan_preset("quick_docs"))
+        self.btn_quick3.clicked.connect(lambda: self._quick_scan_preset("quick_music"))
+        self.btn_quick4.clicked.connect(lambda: self._quick_scan_preset("quick_large"))
+        self.btn_quick5.clicked.connect(lambda: self._quick_scan_preset("quick_dups"))
         self.btn_quick6.clicked.connect(lambda: self._quick_scan_preset("quick_all"))
-        layout.addLayout(hl_quick2)
+        layout.addWidget(quick_grid_host)
 
         # Im Einsteiger-/Button‑Only‑Modus blenden wir komplexe Filter aus und heben Schnellstart hervor.
         if self.settings.novice_mode:
@@ -3158,6 +3160,48 @@ class MainWindow(QMainWindow):
             except Exception:
                 # Fehler beim Speichern des Verlaufs ignorieren – Verlauf ist optional
                 pass
+
+    def _create_quick_action_tile(
+        self,
+        *,
+        label: str,
+        tooltip: str,
+        accessible_name: str,
+        accessible_description: str,
+        section: str,
+    ) -> QPushButton:
+        """Erstellt eine barrierearme Schnellstart-Kachel für das Raster mit validierten Eingaben."""
+
+        clean_label = label.strip()
+        clean_tooltip = tooltip.strip()
+        clean_name = accessible_name.strip()
+        clean_desc = accessible_description.strip()
+        clean_section = section.strip()
+        if not clean_label:
+            raise ValueError(
+                "Schnellstart-Label fehlt. Nächster Schritt: Bitte sichtbare Beschriftung setzen."
+            )
+        if not clean_tooltip:
+            raise ValueError(
+                "Schnellstart-Hilfe fehlt. Nächster Schritt: Bitte Tooltip in einfacher Sprache ergänzen."
+            )
+        if clean_section not in {"Medien", "Aufräumen"}:
+            raise ValueError(
+                "Schnellstart-Bereich ist ungültig. Nächster Schritt: 'Medien' oder 'Aufräumen' verwenden."
+            )
+
+        tile = QPushButton(clean_label)
+        tile.setToolTip(f"Bereich {clean_section}: {clean_tooltip}")
+        tile.setAccessibleName(clean_name)
+        tile.setAccessibleDescription(clean_desc)
+        tile.setMinimumHeight(52)
+        tile.setProperty("quickSection", clean_section.lower())
+
+        if tile.minimumHeight() < 48:
+            raise RuntimeError(
+                "Schnellstart-Kachel zu klein. Nächster Schritt: Mindesthöhe auf mindestens 48 setzen."
+            )
+        return tile
 
     def _create_standard_button(
         self,
