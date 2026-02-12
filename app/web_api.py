@@ -19,10 +19,10 @@ verwendet werden.
 
 from __future__ import annotations
 
-from fastapi import FastAPI
 from pathlib import Path
 from typing import Dict
 
+from fastapi import FastAPI
 
 app = FastAPI(title="Provoware Clean Tool 2026 API")
 
@@ -37,10 +37,7 @@ def get_status() -> Dict[str, str]:
         Ein Wörterbuch mit einem Statusfeld und einer laienfreundlichen
         Nachricht. Der Status ist "bereit", sobald der Dienst läuft.
     """
-    return {
-        "status": "bereit",
-        "message": "Der Dienst läuft und wartet auf Anfragen."
-    }
+    return {"status": "bereit", "message": "Der Dienst läuft und wartet auf Anfragen."}
 
 
 @app.get("/dry_run", summary="Trockenlauf durchführen")
@@ -64,16 +61,16 @@ def dry_run(path: str | None = None) -> Dict[str, str]:
     if not path:
         return {
             "status": "fehler",
-            "message": "Pfad darf nicht leer sein. Bitte geben Sie einen gültigen Ordner an."
+            "message": "Pfad darf nicht leer sein. Bitte geben Sie einen gültigen Ordner an.",
         }
     p = Path(path)
     if not p.exists():
         return {
             "status": "fehler",
-            "message": f"Pfad {path} existiert nicht. Bitte prüfen Sie die Eingabe."
+            "message": f"Pfad {path} existiert nicht. Bitte prüfen Sie die Eingabe.",
         }
     # Platzhalter: In späteren Versionen wird hier der Scanner/Planner genutzt
     return {
         "status": "ok",
-        "message": f"Trockenlauf für {path} ist noch nicht implementiert, folgt in späteren Versionen."
+        "message": f"Trockenlauf für {path} ist noch nicht implementiert, folgt in späteren Versionen.",
     }

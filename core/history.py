@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """
 core.history – verwaltet den Verlauf früherer Aufräumläufe.
 
@@ -9,15 +7,15 @@ den Verlauf als Liste einzulesen und den Verlauf zu leeren.
 Die Daten werden in einer JSON‑Datei im Ordner ``data`` gespeichert.
 """
 
+from __future__ import annotations
+
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 # Datei, in der der Verlauf gespeichert wird
-HISTORY_FILE: Path = (
-    Path(__file__).resolve().parent.parent / "data" / "history.json"
-)
+HISTORY_FILE: Path = Path(__file__).resolve().parent.parent / "data" / "history.json"
 
 
 def read_history() -> List[Dict[str, object]]:

@@ -9,31 +9,16 @@ from pathlib import Path
 
 # QtCore: erweitern um QUrl für Datei-URLs
 from PySide6.QtCore import Qt, QUrl
-from PySide6.QtWidgets import (
-    QAbstractItemView,
-    QApplication,
-    QBoxLayout,
-    QCheckBox,
-    QComboBox,
-    QFileDialog,
-    QHBoxLayout,
-    QLabel,
-    QListWidget,
-    QListWidgetItem,
-    QMainWindow,
-    QMessageBox,
-    QPushButton,
-    QStackedWidget,
-    QVBoxLayout,
-    QWidget,
-    QMenu,
-)
-
 # QtGui: QDesktopServices öffnet Ordner/Dateien im Dateimanager
-from PySide6.QtGui import QDesktopServices, QColor
+from PySide6.QtGui import QColor, QDesktopServices
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QBoxLayout,
+                               QCheckBox, QComboBox, QFileDialog, QHBoxLayout,
+                               QLabel, QListWidget, QListWidgetItem,
+                               QMainWindow, QMenu, QMessageBox, QPushButton,
+                               QStackedWidget, QVBoxLayout, QWidget)
 
 from core.executor import execute_move_plan, undo_last
-from core.history import read_history, append_history, clear_history
+from core.history import append_history, clear_history, read_history
 from core.logger import setup_logger
 from core.planner import ActionPlan, build_plan
 from core.scanner import (_parse_age, _parse_size, detect_duplicates,
@@ -364,9 +349,7 @@ class MainWindow(QMainWindow):
         """
         try:
             file_path = (
-                Path(__file__).resolve().parent.parent
-                / "data"
-                / "ui_texts.json"
+                Path(__file__).resolve().parent.parent / "data" / "ui_texts.json"
             )
             if file_path.exists():
                 import json
@@ -1640,9 +1623,7 @@ class MainWindow(QMainWindow):
             history_entries = []
         if not history_entries:
             QMessageBox.information(
-                self,
-                "Verlauf exportieren",
-                "Keine Einträge im Verlauf vorhanden."
+                self, "Verlauf exportieren", "Keine Einträge im Verlauf vorhanden."
             )
             return
         export_dir = Path(__file__).resolve().parent.parent / "exports"
@@ -1658,14 +1639,10 @@ class MainWindow(QMainWindow):
             QMessageBox.information(
                 self,
                 "Verlauf exportieren",
-                f"Der Verlauf wurde erfolgreich exportiert nach:\n{csv_path}"
+                f"Der Verlauf wurde erfolgreich exportiert nach:\n{csv_path}",
             )
         except Exception as exc:
-            QMessageBox.warning(
-                self,
-                "Export-Fehler",
-                f"Export nicht möglich: {exc}"
-            )
+            QMessageBox.warning(self, "Export-Fehler", f"Export nicht möglich: {exc}")
 
     def _clear_history(self) -> None:
         """
@@ -1684,15 +1661,11 @@ class MainWindow(QMainWindow):
             if self.list_history is not None:
                 self._refresh_history_display()
             QMessageBox.information(
-                self,
-                "Verlauf gelöscht",
-                "Der Verlauf wurde erfolgreich gelöscht."
+                self, "Verlauf gelöscht", "Der Verlauf wurde erfolgreich gelöscht."
             )
         except Exception as exc:
             QMessageBox.warning(
-                self,
-                "Fehler beim Löschen",
-                f"Löschen nicht möglich: {exc}"
+                self, "Fehler beim Löschen", f"Löschen nicht möglich: {exc}"
             )
 
     def _choose_folder(self) -> None:
@@ -1963,15 +1936,9 @@ class MainWindow(QMainWindow):
             btn.setMinimumHeight(48)
             hl_quick.addWidget(btn)
         # Verbindungen herstellen
-        self.btn_quick1.clicked.connect(
-            lambda: self._quick_scan_preset("quick_photos")
-        )
-        self.btn_quick2.clicked.connect(
-            lambda: self._quick_scan_preset("quick_large")
-        )
-        self.btn_quick3.clicked.connect(
-            lambda: self._quick_scan_preset("quick_dups")
-        )
+        self.btn_quick1.clicked.connect(lambda: self._quick_scan_preset("quick_photos"))
+        self.btn_quick2.clicked.connect(lambda: self._quick_scan_preset("quick_large"))
+        self.btn_quick3.clicked.connect(lambda: self._quick_scan_preset("quick_dups"))
         layout.addLayout(hl_quick)
 
         # Zweite Reihe Schnellstart-Buttons (4–6)
@@ -2023,15 +1990,9 @@ class MainWindow(QMainWindow):
             btn.setMinimumHeight(48)
             hl_quick2.addWidget(btn)
         # Verbindungen herstellen
-        self.btn_quick4.clicked.connect(
-            lambda: self._quick_scan_preset("quick_docs")
-        )
-        self.btn_quick5.clicked.connect(
-            lambda: self._quick_scan_preset("quick_music")
-        )
-        self.btn_quick6.clicked.connect(
-            lambda: self._quick_scan_preset("quick_all")
-        )
+        self.btn_quick4.clicked.connect(lambda: self._quick_scan_preset("quick_docs"))
+        self.btn_quick5.clicked.connect(lambda: self._quick_scan_preset("quick_music"))
+        self.btn_quick6.clicked.connect(lambda: self._quick_scan_preset("quick_all"))
         layout.addLayout(hl_quick2)
 
         # Im Einsteiger-/Button‑Only‑Modus blenden wir komplexe Filter aus und heben Schnellstart hervor.
@@ -2195,7 +2156,6 @@ class MainWindow(QMainWindow):
         self.lbl_scan_status.setWordWrap(True)
         layout.addWidget(self.lbl_scan_status)
 
-
         # Hinweis, wie die Trefferliste genutzt wird
         self.lbl_scan_help = QLabel(
             "<b>Trefferliste:</b> Wählen Sie die gefundenen Dateien aus, die in den Plan übernommen werden sollen. "
@@ -2210,14 +2170,18 @@ class MainWindow(QMainWindow):
         sort_layout = QHBoxLayout()
         lbl_sort = QLabel("Sortieren nach:")
         lbl_sort.setAccessibleName("Sortierlabel")
-        lbl_sort.setAccessibleDescription("Beschriftung für die Sortierauswahl der Trefferliste")
+        lbl_sort.setAccessibleDescription(
+            "Beschriftung für die Sortierauswahl der Trefferliste"
+        )
         self.combo_scan_sort = QComboBox()
         self.combo_scan_sort.addItems(["Name", "Größe"])
         self.combo_scan_sort.setAccessibleName("Sortierauswahl")
         self.combo_scan_sort.setAccessibleDescription(
             "Sortieroptionen für die Trefferliste: alphabetisch oder nach Dateigröße"
         )
-        self.combo_scan_sort.setToolTip("Sortiert die Trefferliste entweder nach Dateiname oder nach Größe")
+        self.combo_scan_sort.setToolTip(
+            "Sortiert die Trefferliste entweder nach Dateiname oder nach Größe"
+        )
         # Beim Wechsel der Sortieroption die Liste neu aufbauen
         self.combo_scan_sort.currentTextChanged.connect(self._sort_scan_results)
         # Größere Schaltfläche für bessere Bedienbarkeit
@@ -2285,7 +2249,13 @@ class MainWindow(QMainWindow):
         btn_select_all_types.clicked.connect(lambda: self._select_scan_by_type("all"))
 
         # Buttons zum Layout hinzufügen
-        for btn in (btn_only_images, btn_only_videos, btn_only_archives, btn_only_other, btn_select_all_types):
+        for btn in (
+            btn_only_images,
+            btn_only_videos,
+            btn_only_archives,
+            btn_only_other,
+            btn_select_all_types,
+        ):
             type_select_layout.addWidget(btn)
         layout.addLayout(type_select_layout)
 
@@ -2629,9 +2599,7 @@ class MainWindow(QMainWindow):
         )
         # Aktiviert das benutzerdefinierte Kontextmenü
         self.list_plan.setContextMenuPolicy(Qt.CustomContextMenu)
-        self.list_plan.customContextMenuRequested.connect(
-            self._show_plan_context_menu
-        )
+        self.list_plan.customContextMenuRequested.connect(self._show_plan_context_menu)
         layout.addWidget(self.list_plan)
         # Buttons
         btns = QHBoxLayout()

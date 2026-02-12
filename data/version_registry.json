@@ -1,7 +1,7 @@
 {
   "global_version": "2026.02.12",
   "files": {
-    "app/main.py": "2026.02.11.3",
+    "app/main.py": "2026.02.12.5",
     "core/settings.py": "2026.02.11",
     "start.sh": "2026.02.12.3",
     "AGENTS.md": "2.3",
@@ -9,13 +9,15 @@
     "data/presets/quick_docs.json": "2026.02.11.1",
     "data/presets/quick_music.json": "2026.02.11.1",
     "data/presets/quick_all.json": "2026.02.11.1",
-    "app/web_api.py": "2026.02.11.1",
+    "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.11.1",
-    "README.md": "2026.02.12.4",
-    "CHANGELOG.md": "2026.02.12.4",
-    "todo.txt": "2026.02.12.4",
-    "data/version_registry.json": "2026.02.12.4",
-    "tools/run_quality_checks.sh": "2026.02.12.2"
+    "README.md": "2026.02.12.5",
+    "CHANGELOG.md": "2026.02.12.5",
+    "todo.txt": "2026.02.12.5",
+    "data/version_registry.json": "2026.02.12.5",
+    "tools/run_quality_checks.sh": "2026.02.12.2",
+    "RELEASE_CHECKLIST.md": "2026.02.12.5",
+    "core/history.py": "2026.02.12.5"
   }
 }
