@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **93%**
- - **Abgeschlossene Punkte:** **86**
- - **Offene Punkte:** **2**
- - **Nächster Schritt:** Start-Routine weiter in Richtung Themen-Check + Web-Startpfad ausbauen und danach den finalen Release-Check schließen.
+ - **Entwicklungsfortschritt:** **94%**
+ - **Abgeschlossene Punkte:** **89**
+ - **Offene Punkte:** **1**
+ - **Nächster Schritt:** Start-Routine auf vollständige paketmanager-neutrale Reparaturpfade (apt/dnf/pacman) ausbauen und danach den finalen Release-Check schließen.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -49,21 +49,21 @@ bash start.sh
 - Alle vier Befehle laufen grün oder sind mit klarem Grund als NEXT ITERATION dokumentiert.
 
 
-## 0.4) Aktuelle Iteration (3 abgeschlossene Text-Punkte)
+## 0.4) Aktuelle Iteration (3 abgeschlossene Punkte)
 
-1. **README-Status geschärft (klar, kurz, messbar)**  
-   Fortschritt und nächste Schritte sind jetzt kompakt und laienfreundlich formuliert.
-2. **Changelog-Eintrag im 3-Zeilen-Format ergänzt**  
-   Was/Warum/Wirkung wurde als Mini-Protokoll ergänzt.
-3. **todo.txt auf DONE/NEXT aktualisiert**  
-   Abschluss und nächster kleiner Schritt sind mit Datum nachgeführt.
+1. **Venv-Autoreparatur in der Startroutine erweitert**  
+   Wenn `python3 -m venv` fehlschlägt, versucht die Startroutine jetzt automatisch eine Reparatur über den verfügbaren Paketmanager (`apt-get`, `dnf` oder `pacman`) und startet danach den Venv-Aufbau erneut.
+2. **Quality-Checks installieren fehlende Werkzeuge vollautomatisch**  
+   `tools/run_quality_checks.sh` kann fehlende Qualitätswerkzeuge wie `black`, `isort` oder `ruff` automatisch nachinstallieren und dokumentiert den Status klar.
+3. **A11y-Hilfe (Barrierefreiheit) nach dem Start fest ergänzt**  
+   Nach der Startzusammenfassung wird eine feste, kurze Hilfe zu Tastaturbedienung, Kontrast-Thema und nächster Aktion angezeigt.
 
 ### Zwei kurze Laienvorschläge
-- Öffne zuerst `README.md` und arbeite nur die vier Prüf-Befehle der Reihe nach ab.
-- Wenn ein Schritt fehlschlägt, nutze zuerst den dort genannten „Next Step“, statt alles gleichzeitig zu ändern.
+- Starte mit `bash start.sh` und lies danach die `[A11Y]`-Hinweise direkt im Terminal.
+- Wenn ein Quality-Tool fehlt, starte `bash tools/run_quality_checks.sh` erneut – die automatische Installation läuft jetzt direkt mit.
 
 ### Detaillierter nächster Schritt (einfach erklärt)
-Führe `bash start.sh` aus und prüfe danach in `exports/setup_log.txt`, ob fehlende Pakete automatisch erkannt und gelöst wurden. Wenn dort noch Warnungen stehen, behebe nur **einen** Warnpunkt und starte den Ablauf erneut.
+Teste die Startroutine einmal auf einem System ohne `python3-venv`. Prüfe dann in `exports/setup_log.txt`, ob der richtige Paketmanager erkannt wurde, die Installation versucht wurde und danach der Venv-Aufbau erfolgreich lief.
 
 ## 0.3) Vollständige Analyse: nächste offene Punkte und Optimierungen
 

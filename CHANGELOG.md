@@ -1,3 +1,8 @@
+## 2026-02-12 – Start/Quality-Iteration: Venv-Autoreparatur + Auto-Tool-Install + A11y-Kurzhilfe
+- **Was:** `start.sh` erkennt jetzt den verfügbaren Paketmanager (`apt-get`/`dnf`/`pacman`) für eine automatische Venv-Reparatur, `tools/run_quality_checks.sh` installiert fehlende Qualitätswerkzeuge optional automatisch, und die Startausgabe ergänzt feste A11y-Hinweise.
+- **Warum:** Abhängigkeiten und Qualitätswerkzeuge sollen ohne manuelle Hürden nachgezogen werden, während Nutzer:innen klare Hilfe zu Tastatur und Kontrast direkt beim Start sehen.
+- **Wirkung:** Höhere Autonomie der Startroutine, weniger Setup-Abbrüche und besser verständliche, barrierearme Next Steps im Standardablauf.
+
 ## 2026-02-12 – Text-Iteration: Status, Hilfe, Aufgabenpflege
 - **Was:** README-Status (Fortschritt/Abgeschlossen/Offen/Nächster Schritt) präzisiert, zwei Laienvorschläge ergänzt und `todo.txt` konsistent mit DONE/NEXT aktualisiert.
 - **Warum:** Reine Textdateien sollten den aktuellen Stand ohne Umwege verständlich, barrierearm und direkt ausführbar zeigen.

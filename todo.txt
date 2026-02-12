@@ -47,3 +47,8 @@ DONE: Nächste logische Schritte als klare 3-Punkte-Iteration in README ergänzt
 NEXT: Umsetzung starten: (1) feste Hilfezeile in Analyse/Plan, (2) Modul-Autoreparatur mit klarem Endstatus, (3) automatisches Format+Lint im Quality-Check. (2026-02-11)
 DONE: Reine Textpflege-Iteration abgeschlossen: README-Status geschärft, Laienhinweise ergänzt und Changelog-Mini-Eintrag im 3-Zeilen-Format ergänzt. (2026-02-12)
 NEXT: Nächste 3 Mini-Punkte planen: Start-Log verständlicher machen, Theme-/Kontrast-Checks in Startausgabe bündeln, finalen Release-Check auf 95% heben. (2026-02-12)
+
+DONE: Start-Routine repariert fehlendes venv jetzt automatisch paketmanager-neutral (apt-get/dnf/pacman) und versucht den Venv-Aufbau danach erneut. (2026-02-12)
+DONE: Qualitätslauf installiert fehlende Tools (black/isort/ruff) jetzt optional automatisch und meldet den Installstatus klar. (2026-02-12)
+DONE: Feste A11y-Kurzhilfe (Tastatur, Kontrast, nächster Klick) wird nach der Start-Zusammenfassung ausgegeben. (2026-02-12)
+NEXT: Paketmanager-neutrale Reparatur auch für Linux-Systembibliotheken (libGL/libEGL/libxkbcommon) in kleiner 3-Punkte-Iteration erweitern. (2026-02-12)
