@@ -1,3 +1,8 @@
+## 2026-02-12 – Manifest-Iteration: Vorgabenabdeckung ergänzt und Lücken geschlossen
+- **Was:** `data/standards_manifest.json` auf v1.1 erweitert (G5 Mini-UX-Gate, Doku-Pflichten, Auto-Qualität/Formatierung, Hilfeelement- und Next-Step-Pflichten) und README-Abschnitt zur Manifest-Abdeckung ergänzt.
+- **Warum:** Die Frage „Sind alle Vorgaben im Manifest?“ sollte direkt mit klarer, prüfbarer Struktur beantwortbar sein.
+- **Wirkung:** Fehlende Manifest-Punkte sind jetzt explizit dokumentiert; offene Arbeit ist auf die laufende technische Ausführung pro Iteration begrenzt.
+
 ## 2026-02-12 – Qualitäts-Iteration: GUI-Kurzbericht an Start-Log angeglichen
 - **Was:** `tools/quality_gate_gui.py` enthält jetzt eine robuste Warn-/Hinweis-Erkennung aus dem Report, Input-Validierung und denselben Kompaktblock mit Auto-Fix-Schritten wie `start.sh`.
 - **Warum:** GUI- und Terminal-Nutzer sollten identische, laienfreundliche Next Steps erhalten, damit die Fehlerbehebung konsistent bleibt.
