@@ -1,3 +1,7 @@
+- Was: `tools/run_quality_checks.sh` steuert Auto-Fix jetzt transparent über `AUTO_FIX_ON_WARN=auto` und verhindert stille Standard-Umformatierung. (2026-02-12)
+- Warum: Ein reiner Qualitätscheck sollte den Arbeitsstand nicht unerwartet ändern und in CI reproduzierbar bleiben.
+- Wirkung: Nutzer:innen erhalten planbare Prüfungen, klare Fix-Hinweise und sichere Rückgängig-Schritte nach Auto-Korrekturen.
+
 - Was: `app/main.py` ergänzt ein neues Soft-Neon-Theme, erweitert die Theme-Schnellwahl und zeigt eine strukturierte Neon-Dashboard-Mockup-Vorschau. (2026-02-12)
 - Warum: Die gewünschte Gesamtästhetik (Dark-UI mit weichen Neon-Akzenten) sollte sofort sichtbar, auswählbar und nachvollziehbar umgesetzt werden.
 - Wirkung: Die Startansicht entspricht stärker der vorgegebenen Designsprache, bleibt barrierearm nutzbar und bietet klare Kontrast-Wechselpfade.

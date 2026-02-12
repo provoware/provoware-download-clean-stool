@@ -38,6 +38,23 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+## 0.32) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Qualitätslauf verhindert jetzt stille Auto-Formatierung im Standardmodus**  
+   `tools/run_quality_checks.sh` setzt `AUTO_FIX_ON_WARN` standardmäßig auf `auto` und entscheidet transparent auf `0` (nur prüfen), damit ein normaler Check den Arbeitsstand nicht unerwartet ändert.
+2. **CI-/Auto-Fix-Entscheidung wurde robust und validiert gekapselt**  
+   Neue Funktion `resolve_auto_fix_on_warn_flag` validiert Eingaben (`0/1/auto`), berücksichtigt `AUTO_FIX` und CI-Umgebungen und gibt klare, laienverständliche Next Steps aus.
+3. **Hilfetexte nach Auto-Korrektur erweitert (A11y/Text)**  
+   Nach jedem angewendeten Fix meldet der Qualitätslauf jetzt direkt verständliche Prüf- und Rückgängig-Befehle (`git diff --stat`, `git restore <datei>`), damit Änderungen sicher nachvollziehbar bleiben.
+
+### Zwei kurze Laienvorschläge
+- Nutzen Sie zuerst `bash tools/run_quality_checks.sh`, um nur zu prüfen und keine Dateien unbemerkt umzuschreiben.
+- Wenn Sie automatische Korrektur möchten, starten Sie bewusst mit `AUTO_FIX=1 bash tools/run_quality_checks.sh`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Fügen Sie als nächsten Mini-Schritt einen kleinen Status-Hinweis in `start.sh` hinzu, der vor dem Qualitätslauf die aktive Fix-Strategie ausgibt (nur prüfen oder automatisch reparieren). So wissen Nutzer:innen schon vorab, ob Dateien geändert werden können.
+
 ## 0.31) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Neues Soft-Neon-Theme ergänzt und als Schnellwahl verfügbar gemacht**  

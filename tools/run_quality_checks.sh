@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )"/.. && pwd )"
 AUTO_FIX="${AUTO_FIX:-0}"
-AUTO_FIX_ON_WARN="${AUTO_FIX_ON_WARN:-1}"
+AUTO_FIX_ON_WARN="${AUTO_FIX_ON_WARN:-auto}"
 FAST_MODE="${FAST_MODE:-1}"
 AUTO_INSTALL_TOOLS="${AUTO_INSTALL_TOOLS:-1}"
 STRICT_SMOKE="${STRICT_SMOKE:-0}"
@@ -60,6 +60,36 @@ normalize_binary_flag() {
   return 1
 }
 
+resolve_auto_fix_on_warn_flag() {
+  # Erlaubt 0/1/auto. "auto" verhindert stilles Umformatieren in Standardläufen.
+  # Output: 0 oder 1, immer mit klarer Rückmeldung für den nächsten Schritt.
+  local raw_value="${1:-auto}"
+
+  if [ "$raw_value" = "0" ] || [ "$raw_value" = "1" ]; then
+    printf '%s' "$raw_value"
+    return 0
+  fi
+
+  if [ "$raw_value" != "auto" ]; then
+    say "[QUALITY][WARN] AUTO_FIX_ON_WARN hat einen ungültigen Wert: '$raw_value'. Erlaubt sind 0, 1 oder auto."
+    say "[QUALITY][HILFE] Nächster Schritt: AUTO_FIX_ON_WARN=0 bash tools/run_quality_checks.sh"
+    WARNINGS=$((WARNINGS + 1))
+  fi
+
+  if [ "$AUTO_FIX" = "1" ]; then
+    printf '%s' "1"
+    return 0
+  fi
+
+  if [ -n "${CI:-}" ]; then
+    printf '%s' "0"
+    return 0
+  fi
+
+  printf '%s' "0"
+  return 0
+}
+
 print_quality_summary_for_humans() {
   # Zeigt eine kurze, laienfreundliche Abschlusshilfe in klarer Reihenfolge.
   local warnings_count="${1:-0}"
@@ -84,7 +114,15 @@ if [ -z "$QUALITY_PYTHON" ]; then
 fi
 
 AUTO_FIX="$(normalize_binary_flag "$AUTO_FIX" "AUTO_FIX")"
-AUTO_FIX_ON_WARN="$(normalize_binary_flag "$AUTO_FIX_ON_WARN" "AUTO_FIX_ON_WARN")"
+AUTO_FIX_ON_WARN="$(resolve_auto_fix_on_warn_flag "$AUTO_FIX_ON_WARN")"
+if [ "$AUTO_FIX" = "1" ]; then
+  say "[QUALITY][INFO] AUTO_FIX=1 aktiv: AUTO_FIX_ON_WARN ist auf 1 gesetzt."
+elif [ -n "${CI:-}" ]; then
+  say "[QUALITY][INFO] CI-Umgebung erkannt: AUTO_FIX_ON_WARN=0, damit keine stillen Codeänderungen entstehen."
+else
+  say "[QUALITY][INFO] Standardlauf ohne AUTO_FIX: AUTO_FIX_ON_WARN=0 (nur prüfen, keine stillen Änderungen)."
+  say "[QUALITY][HILFE] Optional: AUTO_FIX_ON_WARN=1 bash tools/run_quality_checks.sh für automatische Korrektur bei Warnungen."
+fi
 FAST_MODE="$(normalize_binary_flag "$FAST_MODE" "FAST_MODE")"
 AUTO_INSTALL_TOOLS="$(normalize_binary_flag "$AUTO_INSTALL_TOOLS" "AUTO_INSTALL_TOOLS")"
 STRICT_SMOKE="$(normalize_binary_flag "$STRICT_SMOKE" "STRICT_SMOKE")"
@@ -170,13 +208,18 @@ run_optional() {
     fi
   fi
 
+  local fix_applied=0
+
   if [ "$AUTO_FIX" = "1" ]; then
     say "[QUALITY][FIX] Starte Auto-Korrektur mit $tool_name …"
     eval "$fix_cmd"
+    fix_applied=1
     if ! eval "$check_cmd"; then
       say "[QUALITY][WARN] $tool_name konnte nicht alle Abweichungen automatisch korrigieren."
       say "[QUALITY][HILFE] Nächster Schritt: Log lesen und die verbleibenden Meldungen einzeln beheben."
       WARNINGS=$((WARNINGS + 1))
+    else
+      say "[QUALITY][OK] $tool_name Auto-Korrektur abgeschlossen."
     fi
   else
     say "[QUALITY][CHECK] Prüfe Code mit $tool_name …"
@@ -184,6 +227,7 @@ run_optional() {
       if [ "$AUTO_FIX_ON_WARN" = "1" ]; then
         say "[QUALITY][FIX] $tool_name meldet Abweichungen. Starte automatische Korrektur (AUTO_FIX_ON_WARN=1)."
         eval "$fix_cmd"
+        fix_applied=1
         if eval "$check_cmd"; then
           say "[QUALITY][OK] $tool_name hat die Abweichungen automatisch behoben."
         else
@@ -195,7 +239,14 @@ run_optional() {
         say "[QUALITY][WARN] $tool_name meldet Abweichungen. Kein Abbruch, bitte bei Bedarf AUTO_FIX=1 nutzen."
         WARNINGS=$((WARNINGS + 1))
       fi
+    else
+      say "[QUALITY][OK] $tool_name Prüfung bestanden."
     fi
+  fi
+
+  if [ "$fix_applied" = "1" ]; then
+    say "[QUALITY][HILFE] Prüfung der Änderungen: git diff --stat"
+    say "[QUALITY][HILFE] Rückgängig machen (falls nötig): git restore <datei>"
   fi
 }
 
