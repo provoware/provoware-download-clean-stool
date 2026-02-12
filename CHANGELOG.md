@@ -1,3 +1,8 @@
+## 2026-02-12 – Quality-Iteration: Zahlenbereichsprüfung + Hilfetexte + robuste JSON-Checks
+- **Was:** `tools/run_quality_checks.sh` erweitert den JSON-Check um optionale Min/Max-Bereiche und prüft `confirm_threshold` in allen Presets auf den Bereich 1–100.
+- **Warum:** Falsche Zahlenwerte sollen früh und eindeutig erkannt werden, bevor sie später zu schwer verständlichen Laufzeitproblemen führen.
+- **Wirkung:** Der Qualitätslauf liefert bei Bereichsverstößen jetzt klare Korrekturbeispiele in einfacher Sprache und erhöht die Release-Sicherheit.
+
 ## 2026-02-12 – AppImage-Readiness-Kurzcheck
 - **Was:** `tools/release_gap_report.py` prüft AppImage-Mindestkriterien mit `--appimage-only`; `start.sh` zeigt den JA/NEIN-Status jetzt direkt beim Start.
 - **Warum:** Die Frage „Ist das AppImage releasefertig?“ sollte ohne manuelles Durchsuchen der Logs in einem Schritt beantwortbar sein.
