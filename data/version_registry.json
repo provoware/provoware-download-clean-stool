@@ -1,9 +1,9 @@
 {
   "global_version": "2026.02.12",
   "files": {
-    "app/main.py": "2026.02.12.7",
+    "app/main.py": "2026.02.12.8",
     "core/settings.py": "2026.02.11",
-    "start.sh": "2026.02.12.8",
+    "start.sh": "2026.02.12.9",
     "AGENTS.md": "2.4",
     "data/ui_texts.json": "2026.02.11.1",
     "data/presets/quick_docs.json": "2026.02.11.1",
