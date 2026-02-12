@@ -41,6 +41,12 @@ run_preflight_health_checks() {
     fi
   done
 
+  if ! ensure_optional_info_files; then
+    echo "[WARN] Vorprüfung: Optionale Info-Dateien konnten nicht automatisch vorbereitet werden." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Schreibrechte im Projektordner prüfen und danach bash start.sh erneut ausführen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
   if [ "${#missing_paths[@]}" -eq 0 ]; then
     echo "[CHECK] Vorprüfung: Alle Pflichtdateien sind vorhanden." | tee -a "$SETUP_LOG"
     return 0
@@ -53,6 +59,44 @@ run_preflight_health_checks() {
   echo "[HILFE] Nächster Schritt 1: Fehlende Dateien aus dem Repository wiederherstellen (git restore <datei>)." | tee -a "$SETUP_LOG"
   echo "[HILFE] Nächster Schritt 2: Danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
   return 1
+}
+
+ensure_optional_info_files() {
+  # Repariert fehlende Info-Dateien automatisch mit minimalem Standardinhalt.
+  # Output: 0 wenn alle Ziel-Dateien vorhanden sind, sonst 1.
+  local info_files=("README.md" "CHANGELOG.md" "todo.txt")
+  local file_path
+  local created_count=0
+
+  for file_path in "${info_files[@]}"; do
+    if [ -f "$file_path" ]; then
+      continue
+    fi
+
+    case "$file_path" in
+      "README.md")
+        printf '%s\n\n%s\n' "# Projektübersicht" "Diese Datei wurde automatisch wiederhergestellt. Nächster Schritt: Inhalte aus Git ergänzen (git restore README.md)." > "$file_path"
+        ;;
+      "CHANGELOG.md")
+        printf '%s\n\n- Was: Datei automatisch wiederhergestellt.\n- Warum: Startablauf benötigt vollständige Basis-Doku.\n- Wirkung: Startroutine kann ohne Abbruch weiterlaufen.\n' "# CHANGELOG" > "$file_path"
+        ;;
+      "todo.txt")
+        printf '%s\n%s\n' "DONE: Automatische Wiederherstellung von todo.txt durchgeführt ($(date +%Y-%m-%d))." "NEXT: Inhalte aus Versionsverwaltung prüfen und ergänzen ($(date +%Y-%m-%d))." > "$file_path"
+        ;;
+    esac
+
+    if [ -f "$file_path" ]; then
+      created_count=$((created_count + 1))
+      echo "[CHECK] Info-Datei automatisch wiederhergestellt: $file_path" | tee -a "$SETUP_LOG"
+      echo "[HILFE] Nächster Schritt: git diff $file_path prüfen und bei Bedarf git restore $file_path verwenden." | tee -a "$SETUP_LOG"
+    else
+      echo "[WARN] Info-Datei konnte nicht erstellt werden: $file_path" | tee -a "$SETUP_LOG"
+      return 1
+    fi
+  done
+
+  echo "[CHECK] Optionale Info-Dateien geprüft. Neu erstellt: $created_count" | tee -a "$SETUP_LOG"
+  return 0
 }
 
 run_auto_format_step() {
@@ -73,6 +117,25 @@ run_auto_format_step() {
 
   echo "[WARN] Auto-Formatierung meldet Warnungen. Der normale Qualitätslauf folgt trotzdem." | tee -a "$SETUP_LOG"
   echo "[HILFE] Nächster Schritt: quality_report prüfen und die erste Warnung beheben." | tee -a "$SETUP_LOG"
+  return 1
+}
+
+run_mini_ux_gate() {
+  # Führt das Mini-UX-Gate (G5) direkt in der Startroutine aus.
+  # Output: 0 bei bestandenem Gate, 1 bei Warnungen oder technischen Fehlern.
+  if [ ! -f "tools/mini_ux_gate.py" ]; then
+    echo "[WARN] Mini-UX-Gate nicht gefunden: tools/mini_ux_gate.py" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Datei wiederherstellen (git restore tools/mini_ux_gate.py) und erneut starten." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if "$VENV_PY" tools/mini_ux_gate.py >> "$QUALITY_LOG" 2>&1; then
+    echo "[STATUS] ✅ Mini-UX-Gate: OK" | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] Mini-UX-Gate meldet offene Hinweise." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: $VENV_PY tools/mini_ux_gate.py ausführen und zuerst die erste Warnung beheben." | tee -a "$SETUP_LOG"
   return 1
 }
 
@@ -910,6 +973,12 @@ if ! run_quality_with_autofix "$QUALITY_LOG"; then
   QUALITY_HINT="Bitte zuerst die erste Warnung beheben, dann Qualitätslauf erneut starten und danach erneut starten."
   echo "[WARN] Qualitätsprüfung meldet etwas. Tool versucht trotzdem zu starten."
   python3 tools/quality_gate_gui.py || true
+fi
+
+if ! run_mini_ux_gate; then
+  QUALITY_STATUS="WARN"
+  QUALITY_ICON="⚠️"
+  QUALITY_HINT="Mini-UX-Gate meldet Hinweise: zuerst die erste Warnung im UX-Check beheben und danach erneut starten."
 fi
 
 QUALITY_WARN_COUNT="$(extract_quality_count "\[QUALITY\]\[WARN\]" "$QUALITY_LOG")"

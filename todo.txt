@@ -122,3 +122,5 @@ NEXT: Responsive Feinschliff für Scan-/Plan-Detailzeilen mit festen Testprofile
 
 DONE: start.sh prüft jetzt Pflichtdateien vor dem Setup, validiert ENABLE_AUTO_FORMAT (0/1) und startet optional eine automatische Formatierung vor dem Qualitäts-Gate. (2026-02-12)
 NEXT: Vorprüfung um optionalen Selbstreparaturmodus für fehlende Info-Dateien erweitern (nur README/CHANGELOG/todo), damit Startabbrüche weiter reduziert werden. (2026-02-12)
+DONE: Start-Optimierung ergänzt: automatische Wiederherstellung von README/CHANGELOG/todo in der Vorprüfung plus festes Mini-UX-Gate (G5) im Startlauf. (2026-02-12)
+NEXT: Mini-UX-Gate um einen kleinen interaktiven Klickpfad-Test erweitern, damit nicht nur Texte, sondern echte Bedienabläufe automatisch geprüft werden. (2026-02-12)

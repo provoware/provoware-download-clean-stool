@@ -23,6 +23,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+## 0.20) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Vorprüfung repariert jetzt fehlende Info-Dateien automatisch**  
+   `start.sh` erstellt bei Bedarf `README.md`, `CHANGELOG.md` und `todo.txt` mit sicherem Basisinhalt, damit der Start nicht wegen reiner Doku-Dateien abbricht.
+2. **Mini-UX-Gate direkt in den Startablauf integriert**  
+   Nach den Qualitätschecks läuft nun automatisch `tools/mini_ux_gate.py` als fester G5-Schritt, inklusive klarer Hilfe bei Warnungen.
+3. **Start-Hilfe bei UX-Warnungen verbessert (A11y/Text)**  
+   Bei Mini-UX-Fehlern zeigt der Startprozess jetzt eine klare nächste Aktion in einfacher Sprache und verweist direkt auf den konkreten Prüf-Befehl.
+
+### Zwei kurze Laienvorschläge
+- Wenn beim Start UX-Hinweise erscheinen: zuerst nur die **erste** Warnung im Mini-UX-Check beheben.
+- Wenn versehentlich eine Doku-Datei gelöscht wurde: einfach erneut `bash start.sh` ausführen, die Datei wird automatisch als Basis wieder angelegt.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Teste den Selbstreparaturfall einmal gezielt: Benenne `todo.txt` kurz um, starte `bash start.sh`, prüfe die automatische Wiederherstellung und führe danach `git diff todo.txt` aus. So sehen Sie direkt, welche Standardinhalte ergänzt wurden und können sie anschließend fachlich verfeinern.
+
 ## 0.19) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Vorprüfung prüft jetzt Pflichtdateien vor dem Setup-Lauf**  
