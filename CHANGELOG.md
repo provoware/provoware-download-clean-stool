@@ -1,3 +1,8 @@
+## 2026-02-12 (Quality-Dialog Folgeaktionen)
+- Was: `tools/quality_gate_gui.py` unterstützt jetzt direkte Aktionen (`auto_fix`, `quality`, `restart`) plus sicheren `report`-Fallback.
+- Warum: Nach einem fehlgeschlagenen Qualitätslauf sollen Nutzende ohne Umweg den nächsten sinnvollen Schritt starten können.
+- Wirkung: Klarere Hilfe, robustere Debug-Flag-Validierung (`DEBUG_LOG_MODE`) und bessere Tastatur-/A11y-Hinweise im Dialog.
+
 ## 2026-02-12 – Quality-Iteration: Exit-Knoten-Audit + klare Selfcheck-Next-Steps
 - **Was:** Neues Tool `tools/exit_path_audit.py` ergänzt und in `tools/run_quality_checks.sh` als fester Schritt integriert; `core/selfcheck.py` liefert jetzt bei Erfolg/Fehlern klare „Nächster Schritt“-Hinweise.
 - **Warum:** Exit-Pfade sollten nicht nur abbrechen, sondern immer eine direkte, laienfreundliche Lösung anbieten und automatisch geprüft werden.

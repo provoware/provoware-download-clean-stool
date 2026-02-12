@@ -1,3 +1,6 @@
+DONE: Qualitätsdialog kann jetzt Folgeaktionen direkt ausführen (Auto-Fix, Qualitätslauf, Start), validiert DEBUG_LOG_MODE robust und zeigt Tastatur-Hilfe für bessere Barrierefreiheit. (2026-02-12)
+NEXT: Mini-UX-Gate-Skript um einen automatischen Dialog-Interaktionscheck für `tools/quality_gate_gui.py` erweitern, damit die neuen Aktionen auch im CI-Smokelauf abgesichert sind. (2026-02-12)
+
 DONE: Exit-Knoten-Audit (`tools/exit_path_audit.py`) ergänzt, Quality-Check um festen Exit-Hilfe-Schritt erweitert und Selfcheck-Texte auf klare Next Steps vereinheitlicht. (2026-02-12)
 NEXT: Exit-Audit im nächsten Schritt auf weitere UI-Fehlerdialoge ausweiten (z. B. QMessageBox-Fehlerpfade), damit auch dort jeder Abbruch eine direkte Lösung zeigt. (2026-02-12)
 DONE: Debugging-HTML-Datei für aktuellen GUI-Zustand automatisch erzeugt, inklusive Button „Debug-HTML öffnen“ und Smoke-Test-Check. (2026-02-12)
