@@ -197,6 +197,52 @@ def run_core_scanner_checks(scanner_module: object) -> None:
             )
 
 
+def run_core_validation_checks(validation_module: object) -> None:
+    """Prüft zentrale Input-/Output-Validierung mit klaren Next Steps."""
+    if validation_module is None:
+        raise AssertionError("Validation-Modul fehlt. Bitte Import prüfen.")
+
+    require_non_empty_text = getattr(validation_module, "require_non_empty_text", None)
+    require_output = getattr(validation_module, "require_output", None)
+    validation_error_cls = getattr(validation_module, "ValidationError", None)
+    if (
+        require_non_empty_text is None
+        or require_output is None
+        or validation_error_cls is None
+    ):
+        raise AssertionError(
+            "Validation-Standards fehlen: require_non_empty_text, require_output oder ValidationError."
+        )
+
+    if require_non_empty_text("  ok  ", "feld") != "ok":
+        raise AssertionError(
+            "require_non_empty_text sollte Text trimmen und zurückgeben."
+        )
+
+    try:
+        require_non_empty_text("   ", "feld")
+        raise AssertionError("Leerer Text muss eine ValidationError auslösen.")
+    except validation_error_cls as exc:
+        if "Nächster Schritt" not in str(exc):
+            raise AssertionError(
+                "ValidationError sollte einen einfachen Next Step enthalten."
+            )
+
+    if require_output({"ok": True}, "result") != {"ok": True}:
+        raise AssertionError(
+            "require_output sollte vorhandene Ergebnisse unverändert zurückgeben."
+        )
+
+    try:
+        require_output(None, "result")
+        raise AssertionError("Fehlender Output muss eine ValidationError auslösen.")
+    except validation_error_cls as exc:
+        if "Nächster Schritt" not in str(exc):
+            raise AssertionError(
+                "Output-Fehler sollte einen einfachen Next Step enthalten."
+            )
+
+
 def run_gui_status_filter_checks(main_module: object) -> None:
     """Prüft den Hilfebereich 'Implementiert vs. Geplant' inkl. Filter ohne GUI-Crash."""
     if main_module is None:
@@ -251,6 +297,7 @@ def main() -> int:
     planner_module = importlib.import_module("core.planner")
     scanner_module = importlib.import_module("core.scanner")
     settings_module = importlib.import_module("core.settings")
+    validation_module = importlib.import_module("core.validation")
 
     run_selfcheck = getattr(selfcheck_module, "run_selfcheck", None)
     settings_cls = getattr(settings_module, "Settings", None)
@@ -282,6 +329,12 @@ def main() -> int:
         run_core_scanner_checks(scanner_module)
     except Exception as e:
         print("Core scanner checks failed:", e)
+        return 1
+
+    try:
+        run_core_validation_checks(validation_module)
+    except Exception as e:
+        print("Core validation checks failed:", e)
         return 1
 
     try:

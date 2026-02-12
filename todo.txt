@@ -61,3 +61,7 @@ NEXT: Optional-Checks (Web/AppImage) um dieselbe kompakte Hilfe mit Auto-Reparat
 
 DONE: Release-Checkliste synchronisiert: Punkt 'Automatische Codeformatierung fest integrieren' als abgeschlossen markiert und Fortschritt auf 16/18 aktualisiert. (2026-02-12)
 NEXT: Zwei verbleibende Release-Punkte in einer neuen 3-Punkte-Iteration schließen: zusätzliche Kernmodul-Tests und technische Erzwingung von Input/Output-Validierung. (2026-02-12)
+
+DONE: Kernmodul-Tests erweitert (core.validation im Smoke-Test) und Validierungsstandard technisch im Quality-Check erzwungen. (2026-02-12)
+DONE: Release-Checkliste auf 100% (18/18) synchronisiert und Doku-Status in README aktualisiert. (2026-02-12)
+NEXT: Nächste 3-Punkte-Iteration planen: UX-Feinschliff mit klareren Hilfetexten, Theme-Voreinstellungen und zusätzlichem Tastaturfokus-Check. (2026-02-12)

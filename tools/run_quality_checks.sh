@@ -216,21 +216,21 @@ fi
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
-say "[QUALITY] 1/6 Syntaxprüfung (compileall)"
+say "[QUALITY] 1/7 Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
   "$ROOT_DIR/core" \
   "$ROOT_DIR/tools" \
   "$ROOT_DIR/start.sh"
 
-say "[QUALITY] 2/6 Formatprüfung"
+say "[QUALITY] 2/7 Formatprüfung"
 run_optional "black" "black --check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "black \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 run_optional "isort" "isort --check-only \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "isort \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 3/6 Lintprüfung"
+say "[QUALITY] 3/7 Lintprüfung"
 run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "ruff check --fix \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 4/6 Smoke-Test"
+say "[QUALITY] 4/7 Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
     say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
@@ -242,7 +242,7 @@ else
 fi
 
 
-say "[QUALITY] 5/6 A11y-Theme-Check"
+say "[QUALITY] 5/7 A11y-Theme-Check"
 if [ -f "$ROOT_DIR/tools/a11y_theme_check.py" ]; then
   if ! python3 "$ROOT_DIR/tools/a11y_theme_check.py"; then
     say "[QUALITY][WARN] A11y-Theme-Check meldet Probleme bei Kontrast oder Fokusregeln."
@@ -255,12 +255,35 @@ else
   WARNINGS=$((WARNINGS + 1))
 fi
 
-say "[QUALITY] 6/6 JSON-Struktur-Check"
+say "[QUALITY] 6/7 JSON-Struktur-Check"
 validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
 validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
 validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
 validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
 validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
+
+
+say "[QUALITY] 7/7 Validierungsstandard-Check"
+if ! python3 - "$ROOT_DIR/core/validation.py" <<'PY'
+import ast
+import sys
+from pathlib import Path
+
+validation_file = Path(sys.argv[1])
+source = validation_file.read_text(encoding="utf-8")
+tree = ast.parse(source)
+functions = {node.name for node in tree.body if isinstance(node, ast.FunctionDef)}
+required = {"require_type", "require_non_empty_text", "require_output"}
+missing = sorted(required - functions)
+if missing:
+    print(f"[QUALITY][WARN] Validierungsstandard unvollständig: {', '.join(missing)} fehlt.")
+    print("[QUALITY][HILFE] Nächster Schritt: Fehlende Standardfunktion in core/validation.py ergänzen und Check erneut starten.")
+    raise SystemExit(1)
+print("[QUALITY][OK] Validierungsstandard geprüft: require_type, require_non_empty_text, require_output vorhanden.")
+PY
+then
+  WARNINGS=$((WARNINGS + 1))
+fi
 
 if [ "$WARNINGS" -eq 0 ]; then
   write_state "ok" "$CURRENT_SIGNATURE"
