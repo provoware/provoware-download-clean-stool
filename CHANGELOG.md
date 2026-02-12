@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: Arbeitsordner-Autoprüfung + Rechtecheck + Hilfe
+- **Was:** `start.sh` prüft beim Start den Arbeitsordner im Linux-Nutzerpfad (`~/.local/share/provoware-clean-tool-2026`), legt ihn bei Bedarf an und synchronisiert ihn in `data/settings.json`.
+- **Warum:** Das Tool soll ohne manuelle Vorarbeit mit einem sicheren Projektstandard-Ordner starten und Rechteprobleme früh, verständlich und reproduzierbar melden.
+- **Wirkung:** Höhere Startstabilität, klare Reparaturhinweise bei Linux-Rechten und barriereärmere Nutzerführung durch einfache Next Steps.
+
 ## 2026-02-12 – Start/Quality-Iteration: Venv-Autoreparatur + Auto-Tool-Install + A11y-Kurzhilfe
 - **Was:** `start.sh` erkennt jetzt den verfügbaren Paketmanager (`apt-get`/`dnf`/`pacman`) für eine automatische Venv-Reparatur, `tools/run_quality_checks.sh` installiert fehlende Qualitätswerkzeuge optional automatisch, und die Startausgabe ergänzt feste A11y-Hinweise.
 - **Warum:** Abhängigkeiten und Qualitätswerkzeuge sollen ohne manuelle Hürden nachgezogen werden, während Nutzer:innen klare Hilfe zu Tastatur und Kontrast direkt beim Start sehen.

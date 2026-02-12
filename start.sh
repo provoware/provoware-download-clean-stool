@@ -8,6 +8,83 @@ mkdir -p logs exports
 SETUP_LOG="exports/setup_log.txt"
 ERR_LOG="exports/last_start_error.txt"
 QUALITY_LOG="exports/quality_report.txt"
+TOOL_WORKDIR_SLUG="provoware-clean-tool-2026"
+
+determine_default_workdir() {
+  # Ermittelt den Linux-Standardarbeitsordner im Nutzerpfad.
+  # Output: voller Pfad oder leer bei ungültiger HOME-Umgebung.
+  local home_dir="${HOME:-}"
+  if [ -z "$home_dir" ] || [ ! -d "$home_dir" ]; then
+    printf '%s' ""
+    return 1
+  fi
+  printf '%s' "$home_dir/.local/share/$TOOL_WORKDIR_SLUG"
+}
+
+ensure_tool_workdir() {
+  # Prüft den Arbeitsordner bei Start und legt ihn bei Bedarf mit sicheren Linux-Rechten an.
+  # Output: Pfad wird in TOOL_WORKDIR gesetzt, Return 0 bei Erfolg.
+  local default_workdir
+  default_workdir="$(determine_default_workdir)"
+  if [ -z "$default_workdir" ]; then
+    echo "[WARN] HOME-Pfad ist ungültig. Standard-Arbeitsordner konnte nicht ermittelt werden." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Mit normalem Benutzerkonto anmelden und danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if [ ! -e "$default_workdir" ]; then
+    echo "[CHECK] Arbeitsordner fehlt. Lege Standardordner an: $default_workdir" | tee -a "$SETUP_LOG"
+    if ! mkdir -p "$default_workdir"; then
+      echo "[WARN] Arbeitsordner konnte nicht angelegt werden (Linux-Rechte fehlen)." | tee -a "$SETUP_LOG"
+      echo "[HILFE] Nächster Schritt: Rechte prüfen (z. B. chmod u+rwx '$HOME/.local/share') und erneut starten." | tee -a "$SETUP_LOG"
+      return 1
+    fi
+  fi
+
+  if [ ! -d "$default_workdir" ] || [ ! -r "$default_workdir" ] || [ ! -w "$default_workdir" ] || [ ! -x "$default_workdir" ]; then
+    echo "[WARN] Arbeitsordner ist vorhanden, aber Linux-Rechte sind unvollständig: $default_workdir" | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Im Terminal ausführen: chmod u+rwx '$default_workdir'" | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  chmod u+rwx "$default_workdir" 2>/dev/null || true
+  TOOL_WORKDIR="$default_workdir"
+  export TOOL_WORKDIR
+  echo "[OK] Arbeitsordner geprüft: $TOOL_WORKDIR" | tee -a "$SETUP_LOG"
+  return 0
+}
+
+sync_settings_workdir() {
+  # Schreibt den geprüften Arbeitsordner als Download-Ordner in data/settings.json.
+  # Input: TOOL_WORKDIR muss gesetzt sein. Output: 0 bei erfolgreicher Synchronisierung.
+  if [ -z "${TOOL_WORKDIR:-}" ]; then
+    echo "[WARN] TOOL_WORKDIR fehlt. Einstellungen konnten nicht synchronisiert werden." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  "$PROJECT_DIR/venv/bin/python" - <<'PY' >>"$SETUP_LOG" 2>&1
+from __future__ import annotations
+
+import json
+import os
+from pathlib import Path
+
+settings_path = Path("data/settings.json")
+workdir = os.environ.get("TOOL_WORKDIR", "").strip()
+if not workdir:
+    raise SystemExit(1)
+
+if settings_path.exists():
+    data = json.loads(settings_path.read_text(encoding="utf-8"))
+else:
+    data = {}
+
+configured = str(data.get("download_dir", "")).strip()
+if configured != workdir:
+    data["download_dir"] = workdir
+    settings_path.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+PY
+}
 
 normalize_status_value() {
   # Validiert Statuswerte für die Abschluss-Zusammenfassung.
@@ -146,6 +223,18 @@ print_accessibility_next_steps() {
 echo "[START] Provoware Clean Tool 2026 – Auto-Setup"
 echo "=== START $(date -Is) ===" >> "$SETUP_LOG"
 
+if ! ensure_tool_workdir; then
+  python3 tools/boot_error_gui.py "Der Standard-Arbeitsordner konnte nicht korrekt vorbereitet werden.
+
+Lösung:
+- Prüfe Linux-Rechte im Nutzerpfad (~/.local/share).
+- Falls nötig: chmod u+rwx ~/.local/share
+- Danach erneut starten: bash start.sh
+
+Details: exports/setup_log.txt" "Arbeitsordner-Problem"
+  exit 1
+fi
+
 # 1) venv sicher erstellen
 if [ ! -d "venv" ]; then
   echo "[SETUP] Erstelle virtuelle Umgebung (venv/)"
@@ -170,6 +259,12 @@ fi
 
 VENV_PY="$PROJECT_DIR/venv/bin/python"
 VENV_PIP="$PROJECT_DIR/venv/bin/pip"
+
+if sync_settings_workdir; then
+  echo "[OK] Einstellungen auf Arbeitsordner synchronisiert: $TOOL_WORKDIR" | tee -a "$SETUP_LOG"
+else
+  echo "[WARN] Einstellungen konnten nicht synchronisiert werden. Nächster Schritt: start.sh erneut starten." | tee -a "$SETUP_LOG"
+fi
 
 echo "[SETUP] Aktualisiere pip (wenn möglich)"
 "$VENV_PIP" install --upgrade pip >>"$SETUP_LOG" 2>&1 || true

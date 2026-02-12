@@ -52,3 +52,5 @@ DONE: Start-Routine repariert fehlendes venv jetzt automatisch paketmanager-neut
 DONE: Qualitätslauf installiert fehlende Tools (black/isort/ruff) jetzt optional automatisch und meldet den Installstatus klar. (2026-02-12)
 DONE: Feste A11y-Kurzhilfe (Tastatur, Kontrast, nächster Klick) wird nach der Start-Zusammenfassung ausgegeben. (2026-02-12)
 NEXT: Paketmanager-neutrale Reparatur auch für Linux-Systembibliotheken (libGL/libEGL/libxkbcommon) in kleiner 3-Punkte-Iteration erweitern. (2026-02-12)
+DONE: Startroutine prüft jetzt den Linux-Standardarbeitsordner (~/.local/share/provoware-clean-tool-2026), legt ihn bei Bedarf an und validiert Rechte mit klaren Next Steps. (2026-02-12)
+NEXT: Arbeitsordner auch für Export-/Profil-Unterordner standardisieren und denselben Pfad in Web-API sowie GUI-Hinweisen konsistent anzeigen. (2026-02-12)
