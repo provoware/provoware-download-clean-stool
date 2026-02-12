@@ -1,3 +1,8 @@
+## 2026-02-12 – A11y/Quality/Start-Iteration: Zustandskontrast, Registry-Gate und Debug-Hilfe
+- **Was:** `tools/a11y_theme_check.py` prüft nun Standard-, Auswahl- und Disabled-Kontrast; `tools/run_quality_checks.sh` ergänzt einen 8/8-Check für `data/version_registry.json`; `start.sh` validiert `DEBUG_LOG_MODE` strikt und protokolliert im Debug-Modus zusätzliche Hinweise.
+- **Warum:** Kontrastprobleme entstehen oft in Zuständen (ausgewählt/deaktiviert), Registry-Fehler sollen früh auffallen und Debug-Ausgaben sollen ohne Fachsprache klar steuerbar sein.
+- **Wirkung:** Bessere Barrierefreiheit über mehrere Theme-Zustände, höhere Doku-/Release-Sicherheit und verständlichere Fehlersuche mit klaren Next Steps.
+
 ## 2026-02-12 – Quality-Iteration: robustere Auto-Prüfung mit klarer Abschlusshilfe
 - **Was:** `tools/run_quality_checks.sh` nutzt für Tool-Installationen jetzt bevorzugt `venv/bin/python`, validiert alle zentralen 0/1-Flags strikt und ergänzt eine kurze Abschluss-Zusammenfassung mit klarer Reparatur-Reihenfolge.
 - **Warum:** Dadurch laufen automatische Abhängigkeitsauflösungen stabiler im Projektkontext, Fehlkonfigurationen werden früh abgefangen und Nutzer:innen erhalten besser verständliche Next Steps.

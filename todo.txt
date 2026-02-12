@@ -68,3 +68,8 @@ NEXT: Nächste 3-Punkte-Iteration planen: UX-Feinschliff mit klareren Hilfetexte
 
 DONE: Quality-Check robust gemacht: venv-Python für Auto-Installationen, strikte 0/1-Flag-Validierung und laienfreundliche Abschluss-Zusammenfassung ergänzt. (2026-02-12)
 NEXT: Optional-Checks (Web/AppImage) auf denselben Kurzbericht-Stil mit klarer 3-Schritt-Reihenfolge umstellen und im Start-Log vereinheitlichen. (2026-02-12)
+
+DONE: A11y-Theme-Check prüft jetzt zusätzlich Auswahl- und Disabled-Kontrast für bessere Lesbarkeit in allen Zuständen. (2026-02-12)
+DONE: Quality-Gate enthält jetzt einen Versions-Registry-Check (Format + Pflichtfelder) als festen Schritt 8/8. (2026-02-12)
+DONE: Start-Routine hat jetzt DEBUG_LOG_MODE-Validierung (0/1) mit klarer Hilfe und Debug-Protokollhinweisen. (2026-02-12)
+NEXT: Optional-Checks (Web/AppImage) auf denselben Debug- und Kurzbericht-Standard bringen (inkl. einheitlicher Hilfe-Texte). (2026-02-12)
