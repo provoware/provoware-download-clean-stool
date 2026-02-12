@@ -1,3 +1,8 @@
+## 2026-02-12 – Qualitäts-Iteration: GUI-Kurzbericht an Start-Log angeglichen
+- **Was:** `tools/quality_gate_gui.py` enthält jetzt eine robuste Warn-/Hinweis-Erkennung aus dem Report, Input-Validierung und denselben Kompaktblock mit Auto-Fix-Schritten wie `start.sh`.
+- **Warum:** GUI- und Terminal-Nutzer sollten identische, laienfreundliche Next Steps erhalten, damit die Fehlerbehebung konsistent bleibt.
+- **Wirkung:** Einheitlicher Qualitätsdialog mit klarer 3-Schritt-Hilfe, besserer Barrierefreiheit und weniger Missverständnissen bei Warnungen.
+
 ## 2026-02-12 – Iteration
 - **Was:** AGENTS-Regeln präzisiert (README alle 2–3 Iterationen; 3-Punkte-Zählung nur für Funktionsaspekte außerhalb von Info-Dateien) und detaillierte Projektbeschreibung inkl. Dateinamen-Suffix-Strategie ergänzt.
 - **Warum:** Mehr Klarheit bei Scope, Wartbarkeit und sicherer Umstellung auf versionierte Dateinamen.
