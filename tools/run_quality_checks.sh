@@ -70,6 +70,7 @@ run_optional() {
 validate_required_json() {
   local file_path="$1"
   local required_keys_csv="$2"
+  local required_types_csv="${3:-}"
 
   if [ ! -f "$file_path" ]; then
     say "[QUALITY][WARN] JSON-Datei fehlt: $file_path"
@@ -78,13 +79,34 @@ validate_required_json() {
     return 0
   fi
 
-  if ! python3 - "$file_path" "$required_keys_csv" <<'PY'
+  if ! python3 - "$file_path" "$required_keys_csv" "$required_types_csv" <<'PY'
 import json
 import sys
 from pathlib import Path
 
 file_path = Path(sys.argv[1])
 required_keys = [key for key in sys.argv[2].split(",") if key]
+required_types_raw = [entry for entry in sys.argv[3].split(",") if entry]
+required_types: dict[str, str] = {}
+for entry in required_types_raw:
+    if ":" not in entry:
+        continue
+    key, expected = entry.split(":", 1)
+    required_types[key.strip()] = expected.strip()
+
+
+def is_type_ok(value: object, expected: str) -> bool:
+    if expected == "str":
+        return isinstance(value, str)
+    if expected == "bool":
+        return isinstance(value, bool)
+    if expected == "dict":
+        return isinstance(value, dict)
+    if expected == "list":
+        return isinstance(value, list)
+    if expected == "number":
+        return isinstance(value, (int, float)) and not isinstance(value, bool)
+    return value is not None
 
 try:
     payload = json.loads(file_path.read_text(encoding="utf-8"))
@@ -97,6 +119,16 @@ missing = [key for key in required_keys if key not in payload]
 if missing:
     print(f"[QUALITY][WARN] Pflichtfelder fehlen in {file_path}: {', '.join(missing)}")
     print("[QUALITY][HILFE] Nächster Schritt: Fehlende Felder ergänzen und danach erneut prüfen.")
+    raise SystemExit(1)
+
+invalid_types = []
+for key, expected in required_types.items():
+    if key in payload and not is_type_ok(payload[key], expected):
+        invalid_types.append(f"{key} (erwartet: {expected})")
+
+if invalid_types:
+    print(f"[QUALITY][WARN] Inhalt unvollständig oder Typ passt nicht in {file_path}: {', '.join(invalid_types)}")
+    print("[QUALITY][HILFE] Nächster Schritt: Werte in einfacher Form korrigieren (z. B. Text statt leerem Wert) und erneut prüfen.")
     raise SystemExit(1)
 
 print(f"[QUALITY][OK] JSON-Struktur geprüft: {file_path}")
@@ -184,21 +216,21 @@ fi
 say "[QUALITY] Starte Qualitätsprüfung (AUTO_FIX=$AUTO_FIX)"
 say "[QUALITY] Automatische Korrektur bei Warnungen: AUTO_FIX_ON_WARN=$AUTO_FIX_ON_WARN"
 say "[QUALITY] Auto-Installation fehlender Werkzeuge: AUTO_INSTALL_TOOLS=$AUTO_INSTALL_TOOLS"
-say "[QUALITY] 1/4 Syntaxprüfung (compileall)"
+say "[QUALITY] 1/6 Syntaxprüfung (compileall)"
 python3 -m compileall -q \
   "$ROOT_DIR/app" \
   "$ROOT_DIR/core" \
   "$ROOT_DIR/tools" \
   "$ROOT_DIR/start.sh"
 
-say "[QUALITY] 2/4 Formatprüfung"
+say "[QUALITY] 2/6 Formatprüfung"
 run_optional "black" "black --check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "black \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 run_optional "isort" "isort --check-only \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "isort \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 3/4 Lintprüfung"
+say "[QUALITY] 3/6 Lintprüfung"
 run_optional "ruff" "ruff check \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\"" "ruff check --fix \"$ROOT_DIR/app\" \"$ROOT_DIR/core\" \"$ROOT_DIR/tools\""
 
-say "[QUALITY] 4/5 Smoke-Test"
+say "[QUALITY] 4/6 Smoke-Test"
 if [ -f "$ROOT_DIR/tools/smoke_test.py" ]; then
   if ! python3 "$ROOT_DIR/tools/smoke_test.py"; then
     say "[QUALITY][WARN] Smoke-Test fehlgeschlagen (oft fehlende Linux-GUI-Bibliotheken im Headless-System)."
@@ -210,7 +242,7 @@ else
 fi
 
 
-say "[QUALITY] 5/5 A11y-Theme-Check"
+say "[QUALITY] 5/6 A11y-Theme-Check"
 if [ -f "$ROOT_DIR/tools/a11y_theme_check.py" ]; then
   if ! python3 "$ROOT_DIR/tools/a11y_theme_check.py"; then
     say "[QUALITY][WARN] A11y-Theme-Check meldet Probleme bei Kontrast oder Fokusregeln."
@@ -224,11 +256,11 @@ else
 fi
 
 say "[QUALITY] 6/6 JSON-Struktur-Check"
-validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode"
-validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy"
-validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold"
-validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold"
-validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold"
+validate_required_json "$ROOT_DIR/data/settings.json" "theme,large_text,download_dir,presets,filters,duplicates_mode" "theme:str,large_text:bool,download_dir:str,presets:str,filters:dict,duplicates_mode:str"
+validate_required_json "$ROOT_DIR/data/standards_manifest.json" "manifest_version,language_policy,accessibility,quality_gates,validation_policy,structure_policy" "manifest_version:str,language_policy:dict,accessibility:dict,quality_gates:list,validation_policy:dict,structure_policy:dict"
+validate_required_json "$ROOT_DIR/data/presets/standard.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
+validate_required_json "$ROOT_DIR/data/presets/power.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
+validate_required_json "$ROOT_DIR/data/presets/senior.json" "name,description,filters,duplicates_mode,confirm_threshold" "name:str,description:str,filters:dict,duplicates_mode:str,confirm_threshold:number"
 
 if [ "$WARNINGS" -eq 0 ]; then
   write_state "ok" "$CURRENT_SIGNATURE"

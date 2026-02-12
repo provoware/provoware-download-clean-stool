@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **95%**
- - **Abgeschlossene Punkte:** **92**
+ - **Entwicklungsfortschritt:** **96%**
+ - **Abgeschlossene Punkte:** **95**
  - **Offene Punkte:** **0**
- - **Nächster Schritt:** Arbeitsordner-Standard auch für optionale Export-Profile und Web-API konsistent nutzen, damit alle Modi denselben sicheren Nutzerpfad verwenden.
+ - **Nächster Schritt:** Startzusammenfassung um einen kompakten Qualitätsblock mit klaren Auto-Fix-Befehlen erweitern, damit Warnungen noch schneller behoben werden.
 
 ### Schnellüberblick (laienfreundlich)
 
@@ -65,6 +65,23 @@ bash start.sh
 ### Detaillierter nächster Schritt (einfach erklärt)
 Teste die Startroutine einmal auf einem System ohne `python3-venv`. Prüfe dann in `exports/setup_log.txt`, ob der richtige Paketmanager erkannt wurde, die Installation versucht wurde und danach der Venv-Aufbau erfolgreich lief.
 
+
+
+## 0.6) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Qualitätslauf zählt Schritte jetzt korrekt und verständlich (1/6 bis 6/6)**  
+   Die Statusanzeige in `tools/run_quality_checks.sh` wurde auf eine durchgängige, laienfreundliche Schrittzählung korrigiert.
+2. **JSON-Qualitätsprüfung validiert jetzt auch wichtige Datentypen**  
+   Neben Pflichtfeldern werden nun auch zentrale Typen geprüft (z. B. Text, Ja/Nein-Wert, Liste/Objekt), damit fehlerhafte Konfigurationen früher auffallen.
+3. **Hilfeausgaben bei JSON-Fehlern wurden barriereärmer präzisiert**  
+   Bei unpassenden Werten gibt es klarere Next Steps in einfacher Sprache, damit Nutzer:innen gezielt korrigieren können.
+
+### Zwei kurze Laienvorschläge
+- Bei Warnungen zuerst `AUTO_FIX=1 bash tools/run_quality_checks.sh` ausführen und dann die erste verbleibende Meldung beheben.
+- Wenn Einstellungen nicht greifen, `data/settings.json` auf leere oder falsche Werte prüfen und den Qualitätslauf erneut starten.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitere als nächstes die Typprüfung um Zahlenbereiche (z. B. Mindest- und Maximalwerte bei Schwellwerten), damit nicht nur der Datentyp, sondern auch der sinnvolle Wertebereich automatisch geprüft wird.
 
 ## 0.5) Aktuelle Iteration (3 Punkte, DONE)
 
