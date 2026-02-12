@@ -1,3 +1,8 @@
+## 2026-02-12 – Start-Iteration: robustere Vorprüfung + CLI-Autoreparatur
+- Was: `start.sh` erweitert die Pflichtdatei-Vorprüfung (inkl. Smoke-Test/Versions-Registry), ergänzt einen automatischen CLI-Tool-Check mit Reparaturpfad und nutzt für den A11y-Theme-Check das venv-Python.
+- Warum: Kritische Startbausteine und Werkzeuge sollen früh, verständlich und möglichst automatisch abgesichert werden.
+- Wirkung: Weniger unklare Startabbrüche, klarere Next Steps in einfacher Sprache und konsistentere Ausführung der Qualitäts-/A11y-Prüfungen.
+
 ## 2026-02-12 – Quality-Iteration: robustere UX-/Smoke-Validierung
 - Was: `tools/mini_ux_gate.py` validiert jetzt seine Check-Konfiguration; `tools/run_quality_checks.sh` kapselt Bibliotheksprüfungen in `check_shared_library_exists` und erweitert die Smoke-Hilfe um distro-spezifische Schritte.
 - Warum: Qualitätsprüfungen sollten bei Konfigurationsfehlern früh, verständlich und reproduzierbar stoppen statt unklar weiterzulaufen.

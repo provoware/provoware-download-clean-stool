@@ -31,6 +31,8 @@ run_preflight_health_checks() {
     "tools/a11y_theme_check.py"
     "tools/boot_error_gui.py"
     "requirements.txt"
+    "tools/smoke_test.py"
+    "data/version_registry.json"
   )
   local missing_paths=()
   local path
@@ -47,6 +49,12 @@ run_preflight_health_checks() {
     return 1
   fi
 
+  if ! ensure_required_cli_tools; then
+    echo "[WARN] Vorprüfung: Benötigte Befehle konnten nicht vollständig vorbereitet werden." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Hinweise im Log befolgen und danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
   if [ "${#missing_paths[@]}" -eq 0 ]; then
     echo "[CHECK] Vorprüfung: Alle Pflichtdateien sind vorhanden." | tee -a "$SETUP_LOG"
     return 0
@@ -58,6 +66,111 @@ run_preflight_health_checks() {
   done
   echo "[HILFE] Nächster Schritt 1: Fehlende Dateien aus dem Repository wiederherstellen (git restore <datei>)." | tee -a "$SETUP_LOG"
   echo "[HILFE] Nächster Schritt 2: Danach erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+  return 1
+}
+
+detect_linux_pkg_manager() {
+  # Ermittelt den verfügbaren Linux-Paketmanager für automatische Reparatur.
+  # Output: apt-get|dnf|pacman oder leer, wenn keiner erkannt wurde.
+  if command -v apt-get >/dev/null 2>&1; then
+    printf '%s' "apt-get"
+    return 0
+  fi
+  if command -v dnf >/dev/null 2>&1; then
+    printf '%s' "dnf"
+    return 0
+  fi
+  if command -v pacman >/dev/null 2>&1; then
+    printf '%s' "pacman"
+    return 0
+  fi
+  printf '%s' ""
+  return 1
+}
+
+try_install_cli_tool() {
+  # Installiert ein fehlendes CLI-Werkzeug automatisch, wenn ein unterstützter Paketmanager verfügbar ist.
+  # Input: tool_name. Output: 0 bei Erfolg, sonst 1 mit Next Steps.
+  local tool_name="${1:-}"
+  local pkg_manager
+  local package_name=""
+
+  if [ -z "$tool_name" ]; then
+    echo "[WARN] CLI-Reparatur ohne Tool-Namen aufgerufen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  case "$tool_name" in
+    rg)
+      package_name="ripgrep"
+      ;;
+    *)
+      echo "[WARN] Für CLI-Tool '$tool_name' ist keine Auto-Reparatur hinterlegt." | tee -a "$SETUP_LOG"
+      return 1
+      ;;
+  esac
+
+  pkg_manager="$(detect_linux_pkg_manager || true)"
+  if [ -z "$pkg_manager" ]; then
+    echo "[WARN] Kein unterstützter Paketmanager gefunden. '$tool_name' konnte nicht automatisch installiert werden." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: '$tool_name' manuell installieren und danach bash start.sh erneut ausführen." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  echo "[SETUP] Auto-Reparatur: installiere '$tool_name' über $pkg_manager." | tee -a "$SETUP_LOG"
+  case "$pkg_manager" in
+    apt-get)
+      run_with_sudo "apt-get update" apt-get update >>"$SETUP_LOG" 2>&1 || return 1
+      run_with_sudo "apt-get install $package_name" apt-get install -y "$package_name" >>"$SETUP_LOG" 2>&1 || return 1
+      ;;
+    dnf)
+      run_with_sudo "dnf install $package_name" dnf install -y "$package_name" >>"$SETUP_LOG" 2>&1 || return 1
+      ;;
+    pacman)
+      run_with_sudo "pacman install $package_name" pacman -Sy --noconfirm "$package_name" >>"$SETUP_LOG" 2>&1 || return 1
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+
+  if command -v "$tool_name" >/dev/null 2>&1; then
+    echo "[OK] CLI-Tool erfolgreich vorbereitet: $tool_name" | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] '$tool_name' wurde installiert, ist aber noch nicht im PATH verfügbar." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: Terminal neu öffnen und erneut starten: bash start.sh" | tee -a "$SETUP_LOG"
+  return 1
+}
+
+ensure_required_cli_tools() {
+  # Prüft wichtige Befehle für den Start und repariert fehlende Tools soweit möglich automatisch.
+  # Output: 0 wenn alle Befehle bereit sind, sonst 1.
+  local required_tools=("bash" "python3" "rg")
+  local tool_name
+  local missing_count=0
+
+  for tool_name in "${required_tools[@]}"; do
+    if command -v "$tool_name" >/dev/null 2>&1; then
+      echo "[CHECK] Befehl verfügbar: $tool_name" | tee -a "$SETUP_LOG"
+      continue
+    fi
+
+    echo "[WARN] Benötigter Befehl fehlt: $tool_name" | tee -a "$SETUP_LOG"
+    if try_install_cli_tool "$tool_name"; then
+      continue
+    fi
+
+    missing_count=$((missing_count + 1))
+    echo "[HILFE] Nächster Schritt: Tool '$tool_name' installieren und danach erneut starten." | tee -a "$SETUP_LOG"
+  done
+
+  if [ "$missing_count" -eq 0 ]; then
+    echo "[CHECK] CLI-Vorprüfung vollständig: alle Befehle sind bereit." | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
   return 1
 }
 
@@ -575,7 +688,13 @@ run_a11y_theme_gate() {
     return 1
   fi
 
-  if python3 tools/a11y_theme_check.py >> "$a11y_log_path" 2>&1; then
+  if [ -z "${VENV_PY:-}" ] || [ ! -x "${VENV_PY:-}" ]; then
+    echo "[WARN] VENV-Python ist nicht verfügbar. A11y-Theme-Check kann nicht sicher gestartet werden." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Prüfen Sie die virtuelle Umgebung (venv/) und starten Sie danach bash start.sh erneut." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if "$VENV_PY" tools/a11y_theme_check.py >> "$a11y_log_path" 2>&1; then
     echo "[OK] A11y-Theme-Check ist grün." | tee -a "$SETUP_LOG"
     return 0
   fi
@@ -1118,6 +1237,18 @@ check_and_repair_linux_lib "libxkbcommon.so.0" "libxkbcommon0" "Tastatur-Baustei
 
 # 7) Smoke-Test mit venv python
 echo "[CHECK] Starte Smoke-Test"
+if [ ! -f "tools/smoke_test.py" ]; then
+  echo "[ERROR] Smoke-Test-Datei fehlt: tools/smoke_test.py" | tee -a "$SETUP_LOG"
+  python3 tools/boot_error_gui.py "Smoke-Test-Datei fehlt.
+
+Lösung:
+- Datei wiederherstellen: git restore tools/smoke_test.py
+- Danach erneut starten: bash start.sh
+
+Details: exports/setup_log.txt" "Smoke-Test-Datei fehlt"
+  exit 1
+fi
+
 if ! "$VENV_PY" tools/smoke_test.py >>"$SETUP_LOG" 2>&1; then
   echo "[ERROR] Smoke-Test fehlgeschlagen"
   python3 tools/boot_error_gui.py "Smoke-Test fehlgeschlagen.

@@ -25,6 +25,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+## 0.24) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Start-Vorprüfung prüft jetzt zusätzlich Smoke- und Registry-Pflichtdateien**  
+   `start.sh` validiert nun schon vor dem Setup auch `tools/smoke_test.py` und `data/version_registry.json`, damit fehlende Kernbausteine früh und klar erkannt werden.
+2. **Startroutine ergänzt automatische CLI-Tool-Prüfung mit Reparaturpfad**  
+   Die neue Vorprüfung kontrolliert `bash`, `python3` und `rg`; fehlendes `rg` wird (wenn möglich) automatisch über den Linux-Paketmanager installiert.
+3. **A11y-/Fehlerhilfe erweitert: A11y-Check nutzt venv-Python und Smoke meldet fehlende Datei klar (A11y/Text)**  
+   Der Theme-Check nutzt jetzt den aktiven Projekt-Interpreter (`venv`), und bei fehlender Smoke-Datei zeigt der Start eine klare, laienfreundliche Wiederherstellungsanleitung.
+
+### Zwei kurze Laienvorschläge
+- Wenn der Start gleich am Anfang stoppt: erst `cat exports/setup_log.txt` öffnen und nur die erste Warnung lösen.
+- Wenn „rg“ fehlt: einfach `bash start.sh` erneut ausführen, die Startroutine versucht die Installation automatisch.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Prüfen Sie in einer Desktop-Umgebung einmal bewusst den kompletten Ablauf mit `DEBUG_LOG_MODE=1 bash start.sh`. Kontrollieren Sie danach im `setup_log`, ob Vorprüfung, CLI-Checks und A11y-Check jeweils mit klaren „Nächster Schritt“-Hinweisen dokumentiert sind.
+
 ## 0.23) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Mini-UX-Gate validiert jetzt zuerst seine eigene Check-Konfiguration**  
