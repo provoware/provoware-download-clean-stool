@@ -11,7 +11,7 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **97%**
+ - **Entwicklungsfortschritt:** **98%**
  - **Abgeschlossene Punkte:** **21**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
@@ -26,6 +26,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+
+## 0.28) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Schnellstart-Kacheln mit einheitlichem visuellem Akzent pro Bereich**  
+   `app/main.py` markiert die Raster-Kacheln jetzt mit klaren Rahmenfarben für **Medien** und **Aufräumen**, damit die Bereiche schneller erkannt werden.
+2. **Bereichsüberschriften als validierte Design-Bausteine vereinheitlicht**  
+   Die bisherigen statischen Überschriften wurden in eine validierte Hilfsfunktion überführt (Badge, Hinweistext, Akzentfarbe), um Designangleichung und Wartbarkeit zu verbessern.
+3. **Neue Tastaturhilfe direkt am Schnellstart-Raster ergänzt (A11y/Text)**  
+   Der Hilfetext erklärt jetzt zusätzlich Tab-/Enter-Bedienung in einfacher Sprache und stärkt Screenreader-/Tastatur-Nutzung.
+
+### Zwei kurze Laienvorschläge
+- Nutzen Sie **Tab**, um nacheinander durch die Schnellstart-Kacheln zu springen.
+- Prüfen Sie nach einer Schnellaktion immer kurz die Vorschau in Schritt 3.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänzen Sie im nächsten kleinen Schritt einen sichtbaren Fokus-Indikator pro Kachelzustand (normal, aktiv, ausgewählt) mit derselben Farblogik wie im Raster. Prüfen Sie danach mit `python tools/mini_ux_gate.py` und `bash tools/run_quality_checks.sh`, ob Lesbarkeit und Bedienung weiter stabil bleiben.
 
 ## 0.27) Aktuelle Iteration (3 Punkte, DONE)
 
