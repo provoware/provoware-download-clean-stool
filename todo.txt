@@ -130,3 +130,6 @@ DONE: Qualitätsdialog versteht jetzt die Alias-Aktionen repair/retry/protokoll 
 NEXT: Release-Status in README, RELEASE_CHECKLIST und docs/developer_manual.md auf denselben Fortschrittswert synchronisieren, damit der Release-Report wieder grün wird. (2026-02-12)
 DONE: Quality-Check erweitert um Smoke-Vorprüfung (Display + libGL/libEGL/libxkbcommon), neues STRICT_SMOKE-Flag und klare Next-Step-Hilfen. (2026-02-12)
 NEXT: AppImage in dist bauen und mit python3 tools/release_gap_report.py --appimage-only auf Releasefertig: JA prüfen. (2026-02-12)
+
+DONE: Mini-UX-Gate validiert jetzt Check-Konfiguration und Smoke-Check nutzt robuste Bibliotheksprüfung mit klareren Linux-Next-Steps. (2026-02-12)
+NEXT: Release-Lücke AppImage schließen und danach `python3 tools/release_gap_report.py --appimage-only` auf Releasefertig: JA bringen. (2026-02-12)

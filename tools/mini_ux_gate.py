@@ -32,11 +32,57 @@ CHECKS = {
 }
 
 
+def validate_check_config(check_name: str, cfg: dict[str, object]) -> tuple[bool, str]:
+    """Validiert die Check-Konfiguration und liefert klare Fehlhinweise.
+
+    Input:
+        check_name: Name des Checks.
+        cfg: Konfigurations-Dictionary.
+    Output:
+        (ok, message) mit laienfreundlicher Hilfe bei Fehlern.
+    """
+    file_path = cfg.get("file")
+    must_contain = cfg.get("must_contain")
+    hint = cfg.get("hint")
+
+    if not isinstance(file_path, Path):
+        return (
+            False,
+            f"[MINI-UX][WARN] {check_name}: Konfiguration ungültig (file ist kein Pfad).",
+        )
+    if (
+        not isinstance(must_contain, list)
+        or not must_contain
+        or any(
+            not isinstance(token, str) or not token.strip() for token in must_contain
+        )
+    ):
+        return (
+            False,
+            f"[MINI-UX][WARN] {check_name}: Konfiguration ungültig (must_contain braucht mindestens ein Text-Token).",
+        )
+    if not isinstance(hint, str) or not hint.strip():
+        return (
+            False,
+            f"[MINI-UX][WARN] {check_name}: Konfiguration ungültig (hint fehlt).",
+        )
+    return True, ""
+
+
 def run() -> int:
     warnings = 0
     print("[MINI-UX] Starte Mini-UX-Gate (2-Minuten-Check, statisch).")
 
     for check_name, cfg in CHECKS.items():
+        ok_cfg, cfg_message = validate_check_config(check_name, cfg)
+        if not ok_cfg:
+            print(cfg_message)
+            print(
+                "[MINI-UX][HILFE] Nächster Schritt: Konfiguration im selben Check-Block korrigieren und Gate erneut starten."
+            )
+            warnings += 1
+            continue
+
         file_path = cfg["file"]
         if not file_path.exists():
             print(f"[MINI-UX][WARN] Datei fehlt: {file_path.relative_to(ROOT)}")
@@ -62,6 +108,7 @@ def run() -> int:
                 f"[MINI-UX][WARN] {check_name}: fehlende Hinweise in {file_path.relative_to(ROOT)} -> {', '.join(missing)}"
             )
             print(f"[MINI-UX][HILFE] Nächster Schritt: {cfg['hint']}")
+            print("[MINI-UX][HILFE] Danach erneut prüfen: python tools/mini_ux_gate.py")
             warnings += 1
         else:
             print(

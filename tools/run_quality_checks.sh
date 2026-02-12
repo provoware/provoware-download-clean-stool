@@ -89,6 +89,33 @@ FAST_MODE="$(normalize_binary_flag "$FAST_MODE" "FAST_MODE")"
 AUTO_INSTALL_TOOLS="$(normalize_binary_flag "$AUTO_INSTALL_TOOLS" "AUTO_INSTALL_TOOLS")"
 STRICT_SMOKE="$(normalize_binary_flag "$STRICT_SMOKE" "STRICT_SMOKE")"
 
+check_shared_library_exists() {
+  # Prüft eine einzelne Bibliothek robust und liefert 0 (gefunden) oder 1 (fehlt).
+  # Input: Bibliotheksname und optionale Fallback-Pfade.
+  local lib_name="${1:-}"
+  local fallback_a="${2:-}"
+  local fallback_b="${3:-}"
+
+  if [ -z "$lib_name" ]; then
+    say "[QUALITY][WARN] Interner Check-Fehler: Bibliotheksname fehlt."
+    return 1
+  fi
+
+  if command -v ldconfig >/dev/null 2>&1 && ldconfig -p 2>/dev/null | grep -q "$lib_name"; then
+    return 0
+  fi
+
+  if [ -n "$fallback_a" ] && [ -e "$fallback_a" ]; then
+    return 0
+  fi
+
+  if [ -n "$fallback_b" ] && [ -e "$fallback_b" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
 check_gui_smoke_prerequisites() {
   # Prüft minimale GUI-Voraussetzungen vor dem Smoke-Test.
   # Output: 0 wenn alles bereit ist; sonst 1 + verständlicher Hinweis mit Next Step.
@@ -97,22 +124,25 @@ check_gui_smoke_prerequisites() {
   if [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then
     missing_items+=("Display/Wayland-Sitzung")
   fi
-  if ! ldconfig -p 2>/dev/null | grep -q "libGL.so.1" && [ ! -e "/usr/lib/x86_64-linux-gnu/libGL.so.1" ] && [ ! -e "/lib/x86_64-linux-gnu/libGL.so.1" ]; then
+  if ! check_shared_library_exists "libGL.so.1" "/usr/lib/x86_64-linux-gnu/libGL.so.1" "/lib/x86_64-linux-gnu/libGL.so.1"; then
     missing_items+=("libGL.so.1")
   fi
-  if ! ldconfig -p 2>/dev/null | grep -q "libEGL.so.1" && [ ! -e "/usr/lib/x86_64-linux-gnu/libEGL.so.1" ] && [ ! -e "/lib/x86_64-linux-gnu/libEGL.so.1" ]; then
+  if ! check_shared_library_exists "libEGL.so.1" "/usr/lib/x86_64-linux-gnu/libEGL.so.1" "/lib/x86_64-linux-gnu/libEGL.so.1"; then
     missing_items+=("libEGL.so.1")
   fi
-  if ! ldconfig -p 2>/dev/null | grep -q "libxkbcommon.so.0" && [ ! -e "/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0" ] && [ ! -e "/lib/x86_64-linux-gnu/libxkbcommon.so.0" ]; then
+  if ! check_shared_library_exists "libxkbcommon.so.0" "/usr/lib/x86_64-linux-gnu/libxkbcommon.so.0" "/lib/x86_64-linux-gnu/libxkbcommon.so.0"; then
     missing_items+=("libxkbcommon.so.0")
   fi
 
   if [ "${#missing_items[@]}" -eq 0 ]; then
+    say "[QUALITY][OK] Smoke-Voraussetzungen vorhanden (Display/Wayland + Basis-Bibliotheken)."
     return 0
   fi
 
   say "[QUALITY][WARN] Smoke-Voraussetzungen fehlen: ${missing_items[*]}"
-  say "[QUALITY][HILFE] Nächster Schritt: Im Desktop-Terminal ausführen: sudo apt update && sudo apt install -y libgl1 libegl1 libxkbcommon0"
+  say "[QUALITY][HILFE] Nächster Schritt 1 (Ubuntu/Debian): sudo apt update && sudo apt install -y libgl1 libegl1 libxkbcommon0"
+  say "[QUALITY][HILFE] Nächster Schritt 2 (Fedora): sudo dnf install -y mesa-libGL mesa-libEGL libxkbcommon"
+  say "[QUALITY][HILFE] Nächster Schritt 3: Danach erneut prüfen: STRICT_SMOKE=1 bash tools/run_quality_checks.sh"
   return 1
 }
 

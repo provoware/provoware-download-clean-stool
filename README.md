@@ -25,6 +25,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+## 0.23) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Mini-UX-Gate validiert jetzt zuerst seine eigene Check-Konfiguration**  
+   `tools/mini_ux_gate.py` prüft vor dem Datei-Scan, ob `file`, `must_contain` und `hint` vollständig und korrekt gesetzt sind.
+2. **Smoke-Vorprüfung nutzt robuste Bibliotheks-Erkennung mit bestätigter Erfolgsmeldung**  
+   `tools/run_quality_checks.sh` verwendet dafür jetzt die neue Hilfsfunktion `check_shared_library_exists` und bestätigt den Erfolgsfall explizit.
+3. **Hilfetexte für Smoke-Fehler wurden plattformfreundlich und klarer erweitert (A11y/Text)**  
+   Der Qualitätslauf zeigt jetzt getrennte Next Steps für Ubuntu/Debian und Fedora plus einen direkten Wiederhol-Befehl.
+
+### Zwei kurze Laienvorschläge
+- Wenn ein UX-Check ausfällt: zuerst die erste `[MINI-UX][WARN]`-Zeile lösen und dann direkt `python tools/mini_ux_gate.py` erneut starten.
+- Wenn Smoke-Bibliotheken fehlen: nutzen Sie den passenden Installationsbefehl für Ihr Linux-System und prüfen Sie danach mit `STRICT_SMOKE=1 bash tools/run_quality_checks.sh`.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Führen Sie einen strengen Qualitätslauf in einer Desktop-Umgebung aus: `STRICT_SMOKE=1 FAST_MODE=0 bash tools/run_quality_checks.sh`. Wenn danach Warnungen erscheinen, lösen Sie nur die erste Warnung vollständig und starten Sie denselben Befehl erneut. So behalten Sie die Reihenfolge klar und vermeiden Folgefehler.
+
 ## 0.22) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Smoke-Test-Vorprüfung erkennt fehlende GUI-Bausteine vorab**  

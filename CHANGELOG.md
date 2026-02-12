@@ -1,3 +1,8 @@
+## 2026-02-12 – Quality-Iteration: robustere UX-/Smoke-Validierung
+- Was: `tools/mini_ux_gate.py` validiert jetzt seine Check-Konfiguration; `tools/run_quality_checks.sh` kapselt Bibliotheksprüfungen in `check_shared_library_exists` und erweitert die Smoke-Hilfe um distro-spezifische Schritte.
+- Warum: Qualitätsprüfungen sollten bei Konfigurationsfehlern früh, verständlich und reproduzierbar stoppen statt unklar weiterzulaufen.
+- Wirkung: Stabilere Prüfpfade, klarere Next Steps in einfacher Sprache und bessere Nachvollziehbarkeit für Desktop- und Headless-Setups.
+
 ## 2026-02-12 – Quality-Iteration: robuste Smoke-Vorprüfung für Headless und Desktop
 - **Was:** `tools/run_quality_checks.sh` prüft vor dem Smoke-Test jetzt Display/Wayland und zentrale GUI-Linux-Bibliotheken (`libGL`, `libEGL`, `libxkbcommon`), ergänzt `STRICT_SMOKE` und klare Next-Step-Befehle.
 - **Warum:** In Headless-Umgebungen führte der GUI-nahe Smoke-Test zu irreführenden Warnungen statt zu klarer, steuerbarer Rückmeldung.

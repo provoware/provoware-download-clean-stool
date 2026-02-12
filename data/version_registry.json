@@ -12,11 +12,11 @@
     "app/web_api.py": "2026.02.12.5",
     "core/__init__.py": "2026.02.11.1",
     "tools/smoke_test.py": "2026.02.12.4",
-    "README.md": "2026.02.12.33",
-    "CHANGELOG.md": "2026.02.12.31",
-    "todo.txt": "2026.02.12.31",
-    "data/version_registry.json": "2026.02.12.33",
-    "tools/run_quality_checks.sh": "2026.02.12.11",
+    "README.md": "2026.02.12.34",
+    "CHANGELOG.md": "2026.02.12.32",
+    "todo.txt": "2026.02.12.32",
+    "data/version_registry.json": "2026.02.12.34",
+    "tools/run_quality_checks.sh": "2026.02.12.12",
     "RELEASE_CHECKLIST.md": "2026.02.12.9",
     "core/history.py": "2026.02.12.5",
     "core/validation.py": "2026.02.12.7",
@@ -29,6 +29,6 @@
     "docs/debugging_gui_state.html": "2026.02.12.1",
     "core/selfcheck.py": "2026.02.12.1",
     "tools/exit_path_audit.py": "2026.02.12.1",
-    "tools/mini_ux_gate.py": "2026.02.12.1"
+    "tools/mini_ux_gate.py": "2026.02.12.2"
   }
 }
