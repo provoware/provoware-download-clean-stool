@@ -1,3 +1,5 @@
+DONE: AppImage-Readiness-Prüfung liefert jetzt eine klare JA/NEIN-Antwort und direkte Next-Step-Befehle (`python3 tools/release_gap_report.py --appimage-only`). (2026-02-12)
+NEXT: Minimalen AppDir-Build einmal vollständig ausführen und erzeugte AppImage-Datei in `dist/` mit dem neuen Readiness-Check verifizieren. (2026-02-12)
 DONE: Entwicklerhandbuch ergänzt: separate feste Tabelle „Standard → konkrete Prüfroutine" mit Auto-Status und verständlichem Nutzerfeedback. (2026-02-12)
 NEXT: Mini-UX-Dialogprüfung (2 Minuten) als kleines Script teilautomatisieren und Ergebnis im Quality-Report ausgeben. (2026-02-12)
 DONE: GUI-Qualitätsdialog zeigt jetzt denselben Kompaktblock wie start.sh (Warnungen/Hinweise + klare 3-Schritt-Hilfe mit Auto-Fix-Befehl). (2026-02-12)

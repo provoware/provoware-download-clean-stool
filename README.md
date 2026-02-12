@@ -11,10 +11,10 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **100%**
- - **Abgeschlossene Punkte:** **23**
- - **Offene Punkte:** **0**
- - **Nächster Schritt:** README-Bild mit echter Live-Screenshot-Datei aus der GUI ergänzen und bei UI-Änderungen automatisch aktualisieren.
+ - **Entwicklungsfortschritt:** **95%**
+ - **Abgeschlossene Punkte:** **26**
+ - **Offene Punkte:** **1**
+ - **Nächster Schritt:** AppDir-Buildpfad einmal real durchlaufen und die erste echte AppImage-Datei in `dist/` erzeugen.
 
 ### Neuer Release-Lücken-Report (schnelle Antwort auf „Was fehlt noch?“)
 
@@ -104,6 +104,23 @@ bash start.sh
 
 
 
+
+
+## 0.12) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **AppImage-Releasecheck mit klarer JA/NEIN-Antwort ergänzt**  
+   `tools/release_gap_report.py` hat jetzt `--appimage-only` und zeigt für Laien direkt „Releasefertig: JA/NEIN“.
+2. **Start-Routine zeigt AppImage-Status als festen Start-Statusblock**  
+   `start.sh` ruft den AppImage-Check automatisch auf und gibt bei „NEIN“ sofort den nächsten Befehl aus.
+3. **A11y-/Hilfe-Text für fehlende AppImage-Bausteine erweitert**  
+   Der Report nennt zu jeder Warnung einen klaren Next Step in einfacher Sprache (kopierbarer Befehl).
+
+### Zwei kurze Laienvorschläge
+- Wenn du nur die AppImage-Reife prüfen willst: `python3 tools/release_gap_report.py --appimage-only`.
+- Bei „NEIN“ immer zuerst nur den **ersten** Warnpunkt lösen, dann erneut prüfen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Lege als Nächstes im Projektordner einen minimalen `AppDir` mit `AppRun` an, führe danach den Build-Befehl aus und prüfe mit `--appimage-only`, ob alle drei Mindestpunkte auf `OK` stehen.
 
 ## 0.11) Aktuelle Iteration (3 Punkte, DONE)
 

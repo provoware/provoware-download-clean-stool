@@ -4,15 +4,15 @@ Stand: 2026-02-12
 
 ## Entwicklungsfortschritt
 
-- **Gesamtfortschritt:** **100%**
-- **Abgeschlossene Punkte:** **18**
-- **Offene Punkte:** **0**
+- **Gesamtfortschritt:** **95%**
+- **Abgeschlossene Punkte:** **19**
+- **Offene Punkte:** **1**
 
-Berechnung (einfach): `18 abgeschlossen / 18 gesamt = 100%`.
+Berechnung (einfach): `19 abgeschlossen / 20 gesamt = 95%`.
 
 ## Release-Checkliste
 
-### ✅ Abgeschlossen (18)
+### ✅ Abgeschlossen (19)
 - [x] Startroutine mit klaren Auto-Reparatur-Endstatusmeldungen.
 - [x] Qualitäts-Gate-Skript vorhanden (`tools/run_quality_checks.sh`).
 - [x] Automatische Codeformatierung fest in Quality-Gate integrieren.
@@ -30,12 +30,12 @@ Berechnung (einfach): `18 abgeschlossen / 18 gesamt = 100%`.
 - [x] Startbefehl und manuelle Fallback-Befehle sind dokumentiert.
 - [x] Standardisierte A11y-Checkliste (Kontrast, Fokus) wird automatisch im Quality-Gate geprüft.
 
-### ⏳ Offen (0)
-- [ ] Keine offenen Release-Pflichtpunkte.
+### ⏳ Offen (1)
+- [ ] AppImage-Artefakt in `dist/` erzeugen und mit `python3 tools/release_gap_report.py --appimage-only` als "Releasefertig: JA" bestätigen.
 
 ## Nächster Schritt (eine Iteration)
 
-1. Fokus auf UX-Feinschliff: verständliche Hilfetexte und schnelle Theme-Voreinstellungen im GUI-Startbereich weiter verbessern.
+1. AppDir finalisieren, AppImage bauen und Readiness-Check auf "JA" bringen.
 
 ### Vollständige Befehle
 

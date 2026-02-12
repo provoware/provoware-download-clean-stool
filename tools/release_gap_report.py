@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import re
 import sys
 from dataclasses import dataclass
@@ -16,6 +17,14 @@ class StatusSnapshot:
     source: str
     progress: int | None
     open_points: int | None
+
+
+@dataclass(frozen=True)
+class AppImageCheckResult:
+    name: str
+    ok: bool
+    detail: str
+    next_step: str
 
 
 def _read_text(file_path: Path) -> str:
@@ -108,7 +117,87 @@ def _build_release_gaps(snapshots: list[StatusSnapshot]) -> list[str]:
     return gaps
 
 
+def _collect_appimage_checks() -> list[AppImageCheckResult]:
+    appimage_dir = ROOT / "tools" / "appimage"
+    appdir_dir = ROOT / "AppDir"
+    dist_dir = ROOT / "dist"
+
+    appimagetool_local = appimage_dir / "appimagetool-x86_64.AppImage"
+    linuxdeploy_local = appimage_dir / "linuxdeploy-x86_64.AppImage"
+    app_run = appdir_dir / "AppRun"
+
+    appimage_outputs = list(dist_dir.glob("*.AppImage")) if dist_dir.exists() else []
+
+    return [
+        AppImageCheckResult(
+            name="Build-Werkzeug vorhanden",
+            ok=(appimagetool_local.exists() or linuxdeploy_local.exists()),
+            detail=(
+                "Lokales AppImage-Build-Werkzeug gefunden."
+                if (appimagetool_local.exists() or linuxdeploy_local.exists())
+                else "Kein lokales Build-Werkzeug in tools/appimage gefunden."
+            ),
+            next_step=(
+                "mkdir -p tools/appimage && cd tools/appimage && wget https://github.com/AppImage/AppImageKit/releases/latest/download/appimagetool-x86_64.AppImage && chmod +x appimagetool-x86_64.AppImage"
+            ),
+        ),
+        AppImageCheckResult(
+            name="AppDir vorbereitet",
+            ok=(appdir_dir.exists() and app_run.exists()),
+            detail=(
+                "AppDir und AppRun sind vorhanden."
+                if (appdir_dir.exists() and app_run.exists())
+                else "AppDir oder AppRun fehlt noch für den Build."
+            ),
+            next_step="mkdir -p AppDir/usr/bin && cp start.sh AppDir/AppRun && chmod +x AppDir/AppRun",
+        ),
+        AppImageCheckResult(
+            name="Build-Artefakt vorhanden",
+            ok=bool(appimage_outputs),
+            detail=(
+                f"{len(appimage_outputs)} AppImage-Datei(en) in dist gefunden."
+                if appimage_outputs
+                else "Noch keine fertige .AppImage-Datei im Ordner dist gefunden."
+            ),
+            next_step="mkdir -p dist && tools/appimage/appimagetool-x86_64.AppImage AppDir dist/Provoware-Clean-Tool-x86_64.AppImage",
+        ),
+    ]
+
+
+def _print_appimage_report(checks: list[AppImageCheckResult]) -> int:
+    missing = [check for check in checks if not check.ok]
+    ready = not missing
+
+    print("[RELEASE][APPIMAGE] Kompaktprüfung")
+    for check in checks:
+        icon = "OK" if check.ok else "WARN"
+        print(f"- [{icon}] {check.name}: {check.detail}")
+        if not check.ok:
+            print(f"  [HILFE] Nächster Schritt: {check.next_step}")
+
+    print(f"[RELEASE][APPIMAGE] Releasefertig: {'JA' if ready else 'NEIN'}")
+    if not ready:
+        print(
+            "[RELEASE][APPIMAGE] Bitte zuerst die erste WARN-Zeile lösen und erneut prüfen."
+        )
+        return 1
+
+    print("[RELEASE][APPIMAGE] Alle Mindestpunkte erfüllt.")
+    return 0
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(add_help=True)
+    parser.add_argument(
+        "--appimage-only",
+        action="store_true",
+        help="Prüft nur die AppImage-Bereitschaft in kompakter Form.",
+    )
+    args = parser.parse_args()
+
+    if args.appimage_only:
+        return _print_appimage_report(_collect_appimage_checks())
+
     tracked_files = [
         ROOT / "README.md",
         ROOT / "RELEASE_CHECKLIST.md",
@@ -131,14 +220,18 @@ def main() -> int:
         print(
             "[RELEASE][HILFE] Optional: UI-Live-Screenshot ergänzen und bei jeder UI-Änderung erneuern."
         )
-        return 0
+    else:
+        print(f"[RELEASE][WARN] Es fehlen noch {len(gaps)} Release-Punkt(e):")
+        for index, gap in enumerate(gaps, start=1):
+            print(f"  {index}. {gap}")
+        print(
+            "[RELEASE][HILFE] Bitte zuerst Punkt 1 lösen und den Report erneut starten."
+        )
 
-    print(f"[RELEASE][WARN] Es fehlen noch {len(gaps)} Release-Punkt(e):")
-    for index, gap in enumerate(gaps, start=1):
-        print(f"  {index}. {gap}")
-
-    print("[RELEASE][HILFE] Bitte zuerst Punkt 1 lösen und den Report erneut starten.")
-    return 1
+    appimage_exit = _print_appimage_report(_collect_appimage_checks())
+    if gaps:
+        return 1
+    return appimage_exit
 
 
 if __name__ == "__main__":

@@ -1,3 +1,8 @@
+## 2026-02-12 – AppImage-Readiness-Kurzcheck
+- **Was:** `tools/release_gap_report.py` prüft AppImage-Mindestkriterien mit `--appimage-only`; `start.sh` zeigt den JA/NEIN-Status jetzt direkt beim Start.
+- **Warum:** Die Frage „Ist das AppImage releasefertig?“ sollte ohne manuelles Durchsuchen der Logs in einem Schritt beantwortbar sein.
+- **Wirkung:** Klarer Release-Status in einfacher Sprache plus direkte Next Steps bei fehlenden Build-Bausteinen.
+
 ## 2026-02-12 – Doku-Iteration: Feste Standard-Prüfroutinen-Tabelle im Entwicklerhandbuch
 - **Was:** In `docs/developer_manual.md` wurde eine separate Tabelle „Standard → konkrete Prüfroutine" ergänzt, inklusive Automatisierungsstatus und Nutzerfeedback in einfacher Sprache.
 - **Warum:** Für das letzte kleine Refactoring-Teilstück fehlte eine feste, schnell prüfbare Zuordnung von Standards zu konkreten Checks.

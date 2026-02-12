@@ -144,15 +144,15 @@ Pflichtkriterien:
 Verbindlicher Verweis: `RELEASE_CHECKLIST.md` ist die zentrale Statusdatei für den Release-Zustand.
 
 Aktueller Stand (Iteration):
-- **Fortschritt:** 92%
-- **Abgeschlossen:** 31 Punkte
-- **Offen:** 2 Punkte
+- **Fortschritt:** 95%
+- **Abgeschlossen:** 19 Punkte
+- **Offen:** 1 Punkt
 
 Nächste Release-Iteration (technisch sinnvoll):
-1. Dashboard-Verlaufsstatistik (Dateien/MB je Lauf) als zentrale Nutzertransparenz ergänzen.
-2. Hilfebereich „Implementiert vs. Geplant“ als feste Ansicht in der GUI ergänzen.
+1. AppDir-Struktur finalisieren und erste echte AppImage-Datei in `dist/` bauen.
+2. Readiness-Check (`python3 tools/release_gap_report.py --appimage-only`) auf „Releasefertig: JA“ heben.
 
-Einfache Begründung: Der Kern ist technisch stabil; jetzt erhöhen diese zwei UX-Punkte die Release-Reife sichtbar für Laien und Support.
+Einfache Begründung: Kernfunktionen sind stabil; der letzte offene Schritt ist die verifizierte portable Auslieferung als AppImage mit klarer JA/NEIN-Prüfung.
 
 
 ## 12) Konkrete Start- und Prüfkommandos (vollständig, kopierbar)
