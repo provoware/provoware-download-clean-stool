@@ -28,6 +28,23 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+## 0.29) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Abhängigkeits-Manifest stark erweitert und vollständig aufgelistet**  
+   `data/standards_manifest.json` enthält jetzt Pflicht-/Optional-Abhängigkeiten für Python, CLI und alle zentralen Befehle als klare Referenz.
+2. **Startroutine exportiert detaillierten Dependency-Report mit Gegencheck**  
+   `start.sh` erzeugt nun `exports/dependency_manifest_report.json` mit Ist-Status aller gelisteten Pakete/Befehle (ok/fehlend) und zeigt klare Hinweise.
+3. **Design-Näherung + Thumbnail-Gegenprüfung ergänzt (A11y/Text/Layout)**  
+   Schnellstart-Karten orientieren sich stärker am Domotic-Referenzlook, und `tools/design_reference_check.py` prüft jetzt zusätzlich ein Projekt-Thumbnail (`docs/design_reference_thumbnail.svg`).
+
+### Zwei kurze Laienvorschläge
+- Führen Sie nach Updates immer zuerst `bash start.sh` aus und lesen Sie dann `exports/dependency_manifest_report.json`.
+- Nutzen Sie für bessere Lesbarkeit das blaue oder Kontrast-Theme und bedienen Sie die Schnellstart-Karten mit Tab + Enter.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitern Sie im nächsten Mini-Schritt den Dependency-Report um Versionsnummern aus `pip freeze` (nur für installierte Pakete), damit Sie bei Fehlern sofort sehen, welche Version tatsächlich aktiv ist. Prüfen Sie danach mit `bash tools/run_quality_checks.sh` und `python tools/design_reference_check.py`.
+
 ## 0.28) Aktuelle Iteration (3 Punkte, DONE)
 
 1. **Schnellstart-Kacheln mit einheitlichem visuellem Akzent pro Bereich**  

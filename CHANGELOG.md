@@ -1,3 +1,7 @@
+- Was: Abhängigkeits-Manifest erweitert, Start-Dependency-Report erzeugt und Design-Thumbnail-Check ergänzt. (2026-02-12)
+- Warum: Alle genutzten Abhängigkeiten/Befehle sollen vollständig gegenprüfbar und die Design-Näherung dauerhaft kontrollierbar sein.
+- Wirkung: Start liefert jetzt ein detailliertes Manifest-Protokoll; UI-Karten wirken näher am Referenzbild; Design-Check erkennt fehlendes Thumbnail sofort.
+
 ## 2026-02-12 – Designangleichung Schnellstart-Raster
 
 - **Was:** `app/main.py` ergänzt einheitliche Schnellstart-Kachelstile mit Bereichsakzenten (Medien/Aufräumen), validierte Bereichsheader als zentrale Hilfsfunktion und neue Tastaturhilfe direkt im Raster.

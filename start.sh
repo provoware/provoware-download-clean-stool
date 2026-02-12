@@ -8,6 +8,7 @@ mkdir -p logs exports
 SETUP_LOG="exports/setup_log.txt"
 ERR_LOG="exports/last_start_error.txt"
 QUALITY_LOG="exports/quality_report.txt"
+DEPENDENCY_REPORT="exports/dependency_manifest_report.json"
 TOOL_WORKDIR_SLUG="provoware-clean-tool-2026"
 
 normalize_enable_auto_format_flag() {
@@ -151,6 +152,44 @@ ensure_required_cli_tools() {
   local tool_name
   local missing_count=0
 
+  if [ -x "${VENV_PY:-}" ] && [ -f "data/standards_manifest.json" ]; then
+    local manifest_tools
+    manifest_tools="$($VENV_PY - "data/standards_manifest.json" <<'PYCODE'
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+manifest = Path(sys.argv[1])
+fallback = ["bash", "python3", "rg"]
+try:
+    payload = json.loads(manifest.read_text(encoding="utf-8"))
+except Exception:
+    print("\n".join(fallback))
+    raise SystemExit(0)
+
+deps = payload.get("dependency_manifest", {})
+tools = deps.get("cli_required", fallback)
+if not isinstance(tools, list):
+    tools = fallback
+
+clean = []
+for item in tools:
+    if isinstance(item, str) and item.strip():
+        clean.append(item.strip())
+
+if not clean:
+    clean = fallback
+
+print("\n".join(clean))
+PYCODE
+    )"
+    if [ -n "$manifest_tools" ]; then
+      mapfile -t required_tools <<<"$manifest_tools"
+    fi
+  fi
+
   for tool_name in "${required_tools[@]}"; do
     if command -v "$tool_name" >/dev/null 2>&1; then
       echo "[CHECK] Befehl verfügbar: $tool_name" | tee -a "$SETUP_LOG"
@@ -171,6 +210,100 @@ ensure_required_cli_tools() {
     return 0
   fi
 
+  return 1
+}
+
+export_dependency_manifest_report() {
+  # Schreibt eine detaillierte Abhängigkeitsübersicht für Start-/Release-Nachweise.
+  # Output: 0 bei erfolgreicher Erstellung, sonst 1 mit klaren Next Steps.
+  local manifest_path="data/standards_manifest.json"
+  if [ -z "${VENV_PY:-}" ] || [ ! -x "${VENV_PY:-}" ]; then
+    echo "[WARN] Dependency-Report übersprungen: VENV-Python fehlt." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: bash start.sh erneut ausführen, damit die venv vorbereitet wird." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+  if [ ! -f "$manifest_path" ]; then
+    echo "[WARN] Dependency-Report übersprungen: $manifest_path fehlt." | tee -a "$SETUP_LOG"
+    echo "[HILFE] Nächster Schritt: Manifest-Datei wiederherstellen und erneut starten." | tee -a "$SETUP_LOG"
+    return 1
+  fi
+
+  if "$VENV_PY" - "$manifest_path" "$DEPENDENCY_REPORT" <<'PYCODE'
+from __future__ import annotations
+
+import importlib
+import json
+import subprocess
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def _clean_list(raw: object) -> list[str]:
+    if not isinstance(raw, list):
+        return []
+    return [str(item).strip() for item in raw if str(item).strip()]
+
+
+manifest_path = Path(sys.argv[1])
+out_path = Path(sys.argv[2])
+payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+deps = payload.get("dependency_manifest", {})
+
+module_aliases = {"Pillow": "PIL", "PyYAML": "yaml"}
+python_required = _clean_list(deps.get("python_required"))
+python_optional_web = _clean_list(deps.get("python_optional_web"))
+cli_required = _clean_list(deps.get("cli_required"))
+cli_optional_release = _clean_list(deps.get("cli_optional_release"))
+commands_used = deps.get("commands_used", {})
+if not isinstance(commands_used, dict):
+    commands_used = {}
+
+def module_name(requirement: str) -> str:
+    pkg = requirement.split("=")[0].split("<")[0].split(">")[0].split("!")[0].split("~")[0].strip()
+    return module_aliases.get(pkg, pkg)
+
+
+python_checks = []
+for req in python_required + python_optional_web:
+    import_name = module_name(req)
+    state = "missing"
+    if import_name:
+        try:
+            importlib.import_module(import_name)
+            state = "ok"
+        except Exception:
+            state = "missing"
+    python_checks.append({"requirement": req, "import": import_name, "state": state})
+
+cli_checks = []
+for cmd in cli_required + cli_optional_release:
+    check = subprocess.run(["bash", "-lc", f"command -v {cmd}"], capture_output=True, text=True)
+    cli_checks.append({"command": cmd, "state": "ok" if check.returncode == 0 else "missing"})
+
+result = {
+    "created_at": datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z"),
+    "manifest_version": payload.get("manifest_version", "unknown"),
+    "python_required": python_required,
+    "python_optional_web": python_optional_web,
+    "cli_required": cli_required,
+    "cli_optional_release": cli_optional_release,
+    "commands_used": commands_used,
+    "checks": {
+        "python": python_checks,
+        "cli": cli_checks,
+    },
+}
+out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+print("ok")
+PYCODE
+  then
+    echo "[CHECK] Dependency-Report aktualisiert: $DEPENDENCY_REPORT" | tee -a "$SETUP_LOG"
+    return 0
+  fi
+
+  echo "[WARN] Dependency-Report konnte nicht geschrieben werden." | tee -a "$SETUP_LOG"
+  echo "[HILFE] Nächster Schritt: exports/ und data/standards_manifest.json prüfen, dann erneut starten." | tee -a "$SETUP_LOG"
   return 1
 }
 
@@ -999,6 +1132,10 @@ fi
 
 echo "[STATUS] $OVERALL_ICON Gesamtstatus Abhängigkeiten: $OVERALL_STATUS"
 echo "[STATUS] $OVERALL_MESSAGE"
+
+if ! export_dependency_manifest_report; then
+  echo "[WARN] Abhängigkeits-Manifest-Report ist nicht vollständig. Start läuft weiter." | tee -a "$SETUP_LOG"
+fi
 
 # 3) Optionalen Ausbau prüfen (Web-Frontend + AppImage)
 normalize_optional_status() {

@@ -1,3 +1,6 @@
+DONE: Abhängigkeits-Manifest vollständig strukturiert, Start-Report ergänzt und Design-Thumbnail mit Gegenprüfung eingeführt. (2026-02-12)
+NEXT: Dependency-Report um konkrete Paket-Versionen erweitern und im Quality-Gate als Pflichtausgabe validieren. (2026-02-12)
+
 DONE: Designangleichung Schnellstart-Raster abgeschlossen: Bereichs-Kacheln mit einheitlichem Akzent, validierte Bereichsheader und neue Tastaturhilfe im Raster ergänzt. (2026-02-12)
 NEXT: Als nächsten Mini-Schritt Fokuszustände der Schnellstart-Kacheln (normal/aktiv/ausgewählt) sichtbar vereinheitlichen und mit Mini-UX-Gate + Theme-Check gegenprüfen. (2026-02-12)
 
