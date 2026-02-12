@@ -45,3 +45,5 @@ NEXT: Iteration mit genau 3 Umsetzungen starten: (1) Accessibility-Hilfe in Anal
 
 DONE: Nächste logische Schritte als klare 3-Punkte-Iteration in README ergänzt (A11y-Hilfe, Start-Autoreparatur, Quality-Automation) inkl. kopierbarer Befehle. (2026-02-11)
 NEXT: Umsetzung starten: (1) feste Hilfezeile in Analyse/Plan, (2) Modul-Autoreparatur mit klarem Endstatus, (3) automatisches Format+Lint im Quality-Check. (2026-02-11)
+DONE: Reine Textpflege-Iteration abgeschlossen: README-Status geschärft, Laienhinweise ergänzt und Changelog-Mini-Eintrag im 3-Zeilen-Format ergänzt. (2026-02-12)
+NEXT: Nächste 3 Mini-Punkte planen: Start-Log verständlicher machen, Theme-/Kontrast-Checks in Startausgabe bündeln, finalen Release-Check auf 95% heben. (2026-02-12)

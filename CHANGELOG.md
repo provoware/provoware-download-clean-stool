@@ -1,3 +1,8 @@
+## 2026-02-12 – Text-Iteration: Status, Hilfe, Aufgabenpflege
+- **Was:** README-Status (Fortschritt/Abgeschlossen/Offen/Nächster Schritt) präzisiert, zwei Laienvorschläge ergänzt und `todo.txt` konsistent mit DONE/NEXT aktualisiert.
+- **Warum:** Reine Textdateien sollten den aktuellen Stand ohne Umwege verständlich, barrierearm und direkt ausführbar zeigen.
+- **Wirkung:** Bessere Orientierung für Nicht-Techniker, klarere Übergabe für das Team und nachvollziehbarer nächster Arbeitsschritt.
+
 ## 2026-02-11 – Planungs-Iteration: Nächste logische 3-Schritte klar dokumentiert
 - **Was:** README um einen laienfreundlichen Abschnitt „Nächste logische Schritte“ mit genau drei priorisierten Punkten, Abnahmekriterien und vollständigen Befehlen ergänzt.
 - **Warum:** Die Frage nach den nächsten sinnvollen Arbeiten sollte als sofort nutzbarer, standardisierter 3-Punkte-Plan beantwortet werden.
