@@ -1,3 +1,5 @@
+DONE: GUI-Qualitätsdialog zeigt jetzt denselben Kompaktblock wie start.sh (Warnungen/Hinweise + klare 3-Schritt-Hilfe mit Auto-Fix-Befehl). (2026-02-12)
+NEXT: Im GUI-Qualitätsdialog zusätzlich direkte Buttons für 'Auto-Fix starten' und 'Start erneut ausführen' ergänzen. (2026-02-12)
 DONE: AGENTS-Regeln für README-Zyklus + Aufgaben-Zählung präzisiert, Projektdetailbeschreibung mit Migrationsplan angelegt. (2026-02-12)
 NEXT: Sichere Alias-Phase für versionierte Dateinamen technisch vorbereiten (Inventar + Referenztests). (2026-02-12)
 DONE: Quality-Checks zählen Schritte jetzt konsistent (1/6–6/6), prüfen JSON-Typen mit und geben bei Typfehlern klare Next Steps in einfacher Sprache. (2026-02-12)
