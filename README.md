@@ -16,7 +16,7 @@ Für eine Schritt‑für‑Schritt‑Anleitung zur Nutzung des Werkzeugs, einsch
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
  - **Entwicklungsfortschritt:** **99%**
- - **Abgeschlossene Punkte:** **21**
+ - **Abgeschlossene Punkte:** **22**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
 
@@ -39,6 +39,22 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+## 0.34) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Start-Zusammenfassung zeigt jetzt die Qualitätslaufzeit in Sekunden**  
+   `start.sh` misst die Dauer des vollständigen Qualitätslaufs (`run_quality_with_autofix`) und schreibt die Laufzeit sowohl ins Setup-Log als auch in die laienfreundliche Abschluss-Übersicht.
+2. **Schreibtest für den Nutzerordner wird jetzt explizit im Abschlussstatus gemeldet**  
+   Der bestehende Probe-Schreibtest für `~/.local/share/...` setzt jetzt einen klaren Status (`OK/WARN`), der in der Übersicht sichtbar ist.
+3. **Neue Hilfe bei langen Qualitätsläufen ergänzt (A11y/Text)**  
+   Wenn der Qualitätslauf länger als 30 Sekunden dauert, zeigt die Start-Zusammenfassung einen einfachen Next Step für einen schnellen Vorab-Check (`FAST_MODE=1`).
+
+### Zwei kurze Laienvorschläge
+- Wenn der Qualitätslauf lange dauert, nutzen Sie zuerst `FAST_MODE=1 bash tools/run_quality_checks.sh` für eine schnelle Vorprüfung.
+- Prüfen Sie nach dem Start immer die Zeile „Schreibtest Nutzerordner“, damit spätere Export-Fehler früh sichtbar werden.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Erweitern Sie als nächsten Mini-Schritt die Qualitätslaufzeit um eine kleine Vergleichsanzeige (z. B. „schneller als letztes Mal“). Speichern Sie dazu den letzten Zeitwert in `exports/` und zeigen Sie danach im Start-Block einen einfachen Hinweis „schneller/langsamer“ an.
 
 ## 0.33) Aktuelle Iteration (3 Punkte, DONE)
 
