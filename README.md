@@ -11,8 +11,8 @@ Der Fokus liegt auf:
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **96%**
- - **Abgeschlossene Punkte:** **20**
+ - **Entwicklungsfortschritt:** **97%**
+ - **Abgeschlossene Punkte:** **21**
  - **Offene Punkte:** **1**
  - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
 
@@ -26,6 +26,22 @@ Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
 
 
+
+## 0.27) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **Schnellstart-Aktionen als Raster im Hauptfenster gebündelt**  
+   `app/main.py` nutzt jetzt ein gridartiges Hauptfeld statt zwei loser Button-Reihen und macht die Bedienstruktur klarer.
+2. **Befehle in zwei Bereiche gruppiert (Medien/Aufräumen)**  
+   Die sechs Schnellaktionen sind logisch unterteilt, damit Nutzer:innen schneller den passenden Bereich finden.
+3. **Neue Hilfe- und A11y-Texte für die Raster-Navigation ergänzt (A11y/Text)**  
+   Zusätzliche Hinweise, Bereichsüberschriften und klare Accessible-Labels verbessern Verständlichkeit und Tastatur-/Screenreader-Nutzung.
+
+### Zwei kurze Laienvorschläge
+- Nutzen Sie zuerst den Bereich **Medien**, wenn Sie Fotos, Musik oder Dokumente sortieren möchten.
+- Nutzen Sie den Bereich **Aufräumen**, wenn Sie gezielt Speicher freimachen wollen.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Ergänzen Sie als nächsten kleinen Schritt pro Raster-Kachel ein kurzes Statusfeld (z. B. „zuletzt genutzt“). Prüfen Sie danach mit `python tools/mini_ux_gate.py` und `bash tools/run_quality_checks.sh`, ob die Hinweise weiterhin klar und barrierearm sind.
 
 ## 0.26) Aktuelle Iteration (3 Punkte, DONE)
 
