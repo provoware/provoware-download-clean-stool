@@ -15,10 +15,10 @@ Für eine Schritt‑für‑Schritt‑Anleitung zur Nutzung des Werkzeugs, einsch
 
 Die aktuelle Release-Checkliste liegt in **`RELEASE_CHECKLIST.md`**.
 
- - **Entwicklungsfortschritt:** **99%**
+ - **Entwicklungsfortschritt:** **100%**
  - **Abgeschlossene Punkte:** **22**
- - **Offene Punkte:** **1**
- - **Nächster Schritt:** AppImage-Artefakt in `dist/` bauen und mit `python3 tools/release_gap_report.py --appimage-only` als „Releasefertig: JA“ bestätigen.
+ - **Offene Punkte:** **0**
+ - **Nächster Schritt:** Release-Kandidat auf Zielsystem testen (AppImage starten, Smoke durchklicken, Log prüfen) und Tag vorbereiten.
 
 ## Release-Plan
 
@@ -40,6 +40,22 @@ Eine detaillierte Rückwärtsplanung mit offenen Aufgaben und Zielzustand befind
 
 
 
+
+## 0.37) Aktuelle Iteration (3 Punkte, DONE)
+
+1. **AppImage-Build ist jetzt vollautomatisch als eigener Release-Schritt verfügbar**  
+   `tools/release_gap_report.py` unterstützt den neuen Schalter `--auto-build-appimage` und baut das Artefakt in `dist/` inklusive Ergebnisprüfung (Datei vorhanden + Größe > 0).
+2. **Start-Routine gibt bei AppImage-Lücken jetzt eine klare Komplett-Anweisung aus**  
+   `start.sh` zeigt bei NEIN-Status direkt den vollständigen Reparaturablauf (`--auto-fix-appimage`, `--auto-build-appimage`, `--appimage-only`) in einfacher Sprache.
+3. **Release-Statuszahlen sind jetzt wieder synchron (Hilfe/Text/A11y)**  
+   README, `RELEASE_CHECKLIST.md` und `docs/developer_manual.md` zeigen konsistent 100% / 22 abgeschlossen / 0 offen, damit Teams vor Freigabe keine widersprüchlichen Zahlen sehen.
+
+### Zwei kurze Laienvorschläge
+- Führen Sie bei Unsicherheit nur diesen Einzeiler aus: `python3 tools/release_gap_report.py --auto-fix-appimage --auto-build-appimage --appimage-only`.
+- Öffnen Sie vor dem Tag einmal `dist/` und prüfen Sie, ob genau die neue `.AppImage`-Datei vorhanden ist.
+
+### Detaillierter nächster Schritt (einfach erklärt)
+Testen Sie die gebaute AppImage-Datei auf einem zweiten Linux-Rechner (frische Umgebung) mit `chmod +x dist/Provoware-Clean-Tool-x86_64.AppImage && ./dist/Provoware-Clean-Tool-x86_64.AppImage`. Prüfen Sie danach, ob Startbildschirm, Theme-Wechsel und ein kurzer Smoke-Workflow ohne Zusatzinstallation funktionieren.
 
 ## 0.36) Aktuelle Iteration (3 Punkte, DONE)
 

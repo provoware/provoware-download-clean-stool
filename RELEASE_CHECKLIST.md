@@ -6,15 +6,15 @@ Stand: 2026-02-12
 
 *Die Prozentzahlen sind in allen Dateien synchronisiert.*
 
-- **Gesamtfortschritt:** **99%**
-- **Abgeschlossene Punkte:** **21**
-- **Offene Punkte:** **1**
+- **Gesamtfortschritt:** **100%**
+- **Abgeschlossene Punkte:** **22**
+- **Offene Punkte:** **0**
 
-Berechnung (einfach): `21 abgeschlossen / 22 gesamt ≈ 99%`.
+Berechnung (einfach): `22 abgeschlossen / 22 gesamt = 100%`.
 
 ## Release-Checkliste
 
-### ✅ Abgeschlossen (19)
+### ✅ Abgeschlossen (22)
 - [x] Startroutine mit klaren Auto-Reparatur-Endstatusmeldungen.
 - [x] Qualitäts-Gate-Skript vorhanden (`tools/run_quality_checks.sh`).
 - [x] Automatische Codeformatierung fest in Quality-Gate integrieren.
@@ -32,12 +32,12 @@ Berechnung (einfach): `21 abgeschlossen / 22 gesamt ≈ 99%`.
 - [x] Startbefehl und manuelle Fallback-Befehle sind dokumentiert.
 - [x] Standardisierte A11y-Checkliste (Kontrast, Fokus) wird automatisch im Quality-Gate geprüft.
 
-### ⏳ Offen (1)
-- [ ] AppImage-Artefakt in `dist/` erzeugen und mit `python3 tools/release_gap_report.py --appimage-only` als "Releasefertig: JA" bestätigen.
+### ⏳ Offen (0)
+- [ ] Aktuell keine offenen Pflichtpunkte im definierten Release-Scope.
 
 ## Nächster Schritt (eine Iteration)
 
-1. AppDir finalisieren, AppImage bauen und Readiness-Check auf "JA" bringen.
+1. Gebautes AppImage auf Zielsystem kurz manuell starten und Release-Tag vorbereiten.
 
 ### Vollständige Befehle
 

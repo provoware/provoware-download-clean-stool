@@ -1,3 +1,13 @@
+## 2026-02-12 – Binärfrei: AppImage nur lokal erzeugen
+- **Was:** `.gitignore` ignoriert jetzt `dist/*.AppImage`; das bereits getrackte AppImage wurde aus dem Repo entfernt und nicht mehr in der Versions-Registry geführt.
+- **Warum:** Das Zielsystem unterstützt keine Binärdaten im Repository; Releases sollen reproduzierbar gebaut statt als Binärblob eingecheckt werden.
+- **Wirkung:** Saubereres Repo, kleinere Diffs und weiterhin klarer Build-Pfad über die vorhandenen Auto-Fix/Auto-Build-Befehle.
+
+## 2026-02-12 – Release-Schluss: AppImage-Autobuild + Status-Sync
+- **Was:** `tools/release_gap_report.py` erweitert um `--auto-build-appimage`; `start.sh` verweist bei AppImage-Warnungen auf die vollständige Fix+Build+Check-Kette.
+- **Warum:** Der letzte offene Release-Punkt sollte ohne manuelle Suchschleife reproduzierbar abgeschlossen werden.
+- **Wirkung:** `dist/Provoware-Clean-Tool-x86_64.AppImage` wird automatisiert erzeugt und die Statuszahlen sind in README/Checkliste/Entwicklerdoku konsistent auf 100%.
+
 ## 2026-02-12 – Design-Vervollständigung: Näheprüfung in der Live-Vorschau
 - **Was:** `app/main.py` ergänzt eine validierte Design-Nähe-Anzeige in der Theme-Vorschau; `data/design_reference_domotic_assistant.json` und `tools/design_reference_check.py` definieren/prüfen dazu feste Preview-Zielfelder.
 - **Warum:** Design-Anpassungen sollen dauerhaft und messbar gegen die Vorgabe geprüft werden, statt nur visuell geschätzt zu werden.

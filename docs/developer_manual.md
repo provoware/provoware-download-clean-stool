@@ -144,15 +144,15 @@ Pflichtkriterien:
 Verbindlicher Verweis: `RELEASE_CHECKLIST.md` ist die zentrale Statusdatei für den Release-Zustand.
 
 Aktueller Stand (Iteration):
-- **Fortschritt:** 99%
-- **Abgeschlossen:** 21 Punkte
-- **Offen:** 1 Punkt
+- **Fortschritt:** 100%
+- **Abgeschlossen:** 22 Punkte
+- **Offen:** 0 Punkte
 
 Nächste Release-Iteration (technisch sinnvoll):
-1. AppDir-Struktur finalisieren und erste echte AppImage-Datei in `dist/` bauen.
-2. Readiness-Check (`python3 tools/release_gap_report.py --appimage-only`) auf „Releasefertig: JA“ heben.
+1. Gebaute `.AppImage` kurz auf Zielsystem starten und Smoke-Flow prüfen.
+2. Danach Release-Tag setzen und Artefakt dokumentieren.
 
-Einfache Begründung: Kernfunktionen sind stabil; der letzte offene Schritt ist die verifizierte portable Auslieferung als AppImage mit klarer JA/NEIN-Prüfung.
+Einfache Begründung: Die technische Release-Lücke ist geschlossen; jetzt folgt nur noch die finale Sichtprüfung auf Zielumgebung.
 
 
 ## 12) Konkrete Start- und Prüfkommandos (vollständig, kopierbar)

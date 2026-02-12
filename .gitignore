@@ -5,3 +5,4 @@ logs/
 exports/
 *.log
 data/quality_state.json
+dist/*.AppImage
